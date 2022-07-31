@@ -57,3 +57,13 @@ exports.deleteCustomer = catchAsyncErrors(async(req, res, next)=>{
         success:true
        })
 })
+
+exports.getAllCustomer = catchAsyncErrors(async(req, res, next)=>{
+
+    const customers = await Customer.find(t)
+
+    res.status(200).json({
+        customers,
+        success:true
+       })
+})

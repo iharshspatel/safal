@@ -26,6 +26,7 @@ const dealerSchema = new mongoose.Schema({
     companyName:String,
     birthdate:Date,
     marriagedate:Date,
+    date:Date,
     remarks:String,
     bankname:String,
     IFSCcode:String,

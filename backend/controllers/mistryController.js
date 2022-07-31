@@ -58,3 +58,13 @@ exports.deleteMistry = catchAsyncErrors(async(req, res, next)=>{
         success:true
        })
 })
+
+exports.getAllMistry = catchAsyncErrors(async(req, res, next)=>{
+
+    const mistries = await Mistry.find()
+
+    res.status(200).json({
+        mistries,
+        success:true
+       })
+})

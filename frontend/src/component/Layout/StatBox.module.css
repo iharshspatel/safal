@@ -1,0 +1,44 @@
+.container{
+    /* border: 1px solid red; */
+    /* height: 20vh; */
+    background-color: #F0F0F0;
+    padding: 10px;
+    
+}
+.header{
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-left: 10px;
+    margin-bottom: 15px;
+}
+.BoxContainers{
+    /* border: 1px solid green; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.Box{
+    /* border: 1px solid brown; */
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #FCFCFC;
+    border: 1px solid #EBEBEB;
+    border-radius: 8px;
+    padding:15px 5px;
+}
+
+.subBox > p {
+    color: rgba(13, 13, 13, 0.7);
+    font-size: 1rem;
+}
+
+.subBox > h1{
+   font-size: 1.5rem !important;
+   color: black;
+   margin: 5px 0px;
+}
+

@@ -58,3 +58,13 @@ exports.deletePMC = catchAsyncErrors(async(req, res, next)=>{
         success:true
        })
 })
+
+exports.getAllPMC = catchAsyncErrors(async(req, res, next)=>{
+
+    const pmcs = await PMC.find()
+
+    res.status(200).json({
+        pmcs,
+        success:true
+       })
+})

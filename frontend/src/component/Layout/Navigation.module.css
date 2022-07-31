@@ -1,0 +1,30 @@
+.container{
+    background-color: #F0F0F0;
+    height: 100vh;
+    width: 300px;
+}
+
+.itemContainer{
+    /* border: 1px solid black; */
+    padding: 0px 20px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.item{
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 5px;
+    margin: 10px 1px;
+    width: 100%;
+    text-decoration: none;
+    color: black;
+    /* border: 1px solid red; */
+    display: flex;
+
+}
+
+.item p{
+    margin-left: 20px;
+}

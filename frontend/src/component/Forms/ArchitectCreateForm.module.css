@@ -1,0 +1,85 @@
+.container{
+    /* border: 1px solid black; */
+    width: 80vw;
+    background: #FFFFFF;
+    box-shadow: 0px 12px 26px rgba(16, 30, 115, 0.06);
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 1em;
+    position: relative;
+    z-index: 999 !important;
+}
+
+.closebutton{
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: scale(1.5);
+    opacity: 0.8;
+}
+
+.personalDetails{
+    display: flex;
+}
+
+
+.personalDetails1, .personalDetails2
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0em 1em;
+
+}
+
+
+.heading{
+    font-family: Inter;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    font-size: 1.5rem ;
+    border-bottom: 1px solid #EBEBEB;
+    margin: 0.5em;
+}
+
+.bankDetails{
+    /* border: 1px solid green; */
+    display: flex;
+}
+
+.bankDetails1 , .bankDetails2{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding:0.5em
+}
+
+label{
+    margin-left: 0.5em;
+    margin: 0.5em 0em 0.5em 0.5em;
+    color: #222222;
+    font-weight: bold;
+    /* border: 1px solid red; */
+}
+
+.inputTag{
+    border: 1px solid rgba(138, 142, 186, 0.3);
+    border-radius: 10px;
+    padding: 7px 14px;
+    margin: 2px ;
+    width: 95%;
+   
+}
+
+
+.submitButton{
+    padding: 10px 20px;
+    background: #005EA1;
+    border-radius: 8px;
+    margin-left: auto;
+    border: none;
+    display: block;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;
+}

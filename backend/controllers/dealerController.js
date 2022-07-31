@@ -57,3 +57,13 @@ exports.deleteDealer = catchAsyncErrors(async(req, res, next)=>{
         success:true
        })
 })
+
+exports.getAllDealer = catchAsyncErrors(async(req, res, next)=>{
+
+    const dealers = await Dealer.find()
+
+    res.status(200).json({
+        dealers,
+        success:true
+       })
+})
