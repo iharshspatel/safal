@@ -1,10 +1,10 @@
 import React,{useState} from 'react'
-import Styles from './ArchitectCreateForm.module.css'
+import Styles from './DealerCreateForm.module.css'
 import {AiFillCloseCircle} from 'react-icons/ai'
 import axios from "axios"
 import {ToastContainer, toast} from 'react-toastify'
 
-const ArchitectEditForm = ({modalHandler, data}) => {
+const DealerEditForm = ({modalHandler, data}) => {
     let initialState = {
         name:data.name,
         email:data.email,
@@ -13,13 +13,13 @@ const ArchitectEditForm = ({modalHandler, data}) => {
         AddressLine2:data.address,
         AddressLine3:data.address,
         companyName:data.companyName,
-        birthdate:data.birthdate.substr(0, 10),
-        marriagedate:data.marriagedate.substr(0, 10),
+        birthdate:data.birthdate ? data.birthdate.substr(0, 10) : null,
+        marriagedate:data.marriagedate ? data.marriagedate.substr(0, 10) : null,
         remarks:data.remarks,
         bankname:data.bankname,
         adharcard:data.adharcard,
         pancard:data.pancard,
-        date:data.date.substr(0,10)
+        date:data.date ? data.date.substr(0,10) : null
     }
     let id = data._id;
     const [formData, setFormData] = useState(initialState)
@@ -52,9 +52,9 @@ const ArchitectEditForm = ({modalHandler, data}) => {
         }
         console.log(data)
         try{
-        const response = await axios.put(`/api/v1/architect/update/${id}`, data, {headers:{"Content-Type" : "application/json"}});
+        const response = await axios.put(`/api/v1/dealer/update/${id}`, data, {headers:{"Content-Type" : "application/json"}});
         console.log(response);
-        toast.success("Architech is Edited ");
+        toast.success("dealer is Edited ");
         
         }
         catch(e){
@@ -81,7 +81,7 @@ pauseOnHover
         <div className={Styles.closebutton} onClick={modalHandler}>
             <AiFillCloseCircle/>
         </div>
-        <h1 className={Styles.heading}>Architect Details</h1>
+        <h1 className={Styles.heading}>Dealer Details</h1>
         <div className={Styles.personalDetails}>
         
         <div className={Styles.personalDetails1}>
@@ -107,7 +107,7 @@ pauseOnHover
         <div className={Styles.personalDetails2}>
 
         <label htmlFor='date'>Date</label>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.date} type="date" value={formData.date} name="date" placeholder='Created At'/>
+        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.date} value={formData.date} name="date" type="date" placeholder='Created At'/>
         
         <label htmlFor='birthdate'>Birth Date</label>
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.birthdate} value={formData.birthdate} name="birthdate" type="date" placeholder='Birthdate'/>
@@ -151,4 +151,4 @@ pauseOnHover
   )
 }
 
-export default ArchitectEditForm
+export default DealerEditForm

@@ -4,7 +4,7 @@ import {AiFillCloseCircle} from 'react-icons/ai'
 import axios from "axios"
 import {ToastContainer, toast} from 'react-toastify'
 
-const ArchitectEditForm = ({modalHandler, data}) => {
+const PMCEditForm = ({modalHandler, data}) => {
     let initialState = {
         name:data.name,
         email:data.email,
@@ -13,13 +13,13 @@ const ArchitectEditForm = ({modalHandler, data}) => {
         AddressLine2:data.address,
         AddressLine3:data.address,
         companyName:data.companyName,
-        birthdate:data.birthdate.substr(0, 10),
-        marriagedate:data.marriagedate.substr(0, 10),
+        birthdate:data.birthdate ? data.birthdate.substr(0, 10) : null,
+        marriagedate:data.marriagedate ? data.marriagedate.substr(0, 10) : null,
         remarks:data.remarks,
         bankname:data.bankname,
         adharcard:data.adharcard,
         pancard:data.pancard,
-        date:data.date.substr(0,10)
+        date:data.date ? data.date.substr(0,10) : null
     }
     let id = data._id;
     const [formData, setFormData] = useState(initialState)
@@ -52,9 +52,9 @@ const ArchitectEditForm = ({modalHandler, data}) => {
         }
         console.log(data)
         try{
-        const response = await axios.put(`/api/v1/architect/update/${id}`, data, {headers:{"Content-Type" : "application/json"}});
+        const response = await axios.put(`/api/v1/pmc/update/${id}`, data, {headers:{"Content-Type" : "application/json"}});
         console.log(response);
-        toast.success("Architech is Edited ");
+        toast.success("PMC is Edited ");
         
         }
         catch(e){
@@ -81,7 +81,7 @@ pauseOnHover
         <div className={Styles.closebutton} onClick={modalHandler}>
             <AiFillCloseCircle/>
         </div>
-        <h1 className={Styles.heading}>Architect Details</h1>
+        <h1 className={Styles.heading}>PMC Details</h1>
         <div className={Styles.personalDetails}>
         
         <div className={Styles.personalDetails1}>
@@ -151,4 +151,4 @@ pauseOnHover
   )
 }
 
-export default ArchitectEditForm
+export default PMCEditForm
