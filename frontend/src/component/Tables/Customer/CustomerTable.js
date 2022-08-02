@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import Styles from './CustomerTable.module.css'
 import Add  from '../../../Assets/Add.svg'
 import MaterialTable from 'material-table';
+import Modal from '../../Layout/Modal/Modal';
 import { Paper } from '@material-ui/core';
 import axios from 'axios';
+import CustomerEditForm from '../../Forms/CustomerEditForm';
+import DummyEditForm from '../../Forms/DummyEditForm';
 
 const CustomerTable = ({modalHandler}) => {
 
@@ -14,23 +17,8 @@ const CustomerTable = ({modalHandler}) => {
 
   const modifyData = (data) => {
 
-     let datass = data.map((d)=>{
-
-      let address= d.address;
-      if(address){
-      let newaddress = `${address.AddressLine1}  ${address.AddressLine2}  ${address.AddressLine3}`
-
-      return {
-        ...d,
-        address:newaddress
-      }
-    }
-    else{
-      return d;
-    }
-     });
-
-     let datass1 = datass.map((d)=>{
+     
+     let datass1 = data.map((d)=>{
       if(d.architectTag){
         return{
           ...d,
@@ -62,7 +50,7 @@ const CustomerTable = ({modalHandler}) => {
   } 
 
   const delteHandler = async(id) => {
-      const data = await axios.delete(`/api/v1/architect/delete/${id}`);
+      const data = await axios.delete(`/api/v1/customer/delete/${id}`);
       fetchCustomers();
   }
 
@@ -73,7 +61,8 @@ const CustomerTable = ({modalHandler}) => {
   }
   useEffect(() => {
     fetchCustomers(); 
-  }, []);
+    console.log(`editModal`, editModal)
+  }, [editModal]);
 
 
   return (
@@ -122,19 +111,43 @@ const CustomerTable = ({modalHandler}) => {
         style={{
           padding: 20,
           width:"100%",
-        }}/>
-        
-   }}
+      }}/>
+    }}
 
-    />
-  }
+    
+   actions={[
+    {
+      icon: 'edit',
+      tooltip: 'Edit',
+      onClick: (event, rowData) => {
+        setEditModalData(rowData);
+        setEditModal(!editModal);
+        console.log(`Edit ` , rowData)
+      }
+    },
+    {
+      icon: 'delete',
+      tooltip: 'Delete',
+      onClick: (event, rowData) => {
+        // Do save operation
+        delteHandler(rowData._id);
+        console.log(`delete ` , rowData)
+      }
+    }
+  ]}
 
-    </div>
+    />}
+  </div>
+  
+{
+   editModal ? <Modal><CustomerEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData}/></Modal>: null
+} 
 
     <div className={Styles.filter}>
 
     </div>
     </div>
+ 
   )
 }
 

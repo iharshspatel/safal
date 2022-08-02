@@ -31,7 +31,7 @@ exports.updateCustomer = catchAsyncErrors(async(req, res, next)=>{
     
     let t = req.params.id;
     let body = req.body
-
+    console.log(t)
     const customer = await Customer.findByIdAndUpdate(t,body,{
         new:true,
         runValidators:true,

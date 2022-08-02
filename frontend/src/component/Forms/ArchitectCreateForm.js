@@ -9,17 +9,17 @@ const ArchitectCreateForm = ({modalHandler}) => {
         name:"",
         email:"",
         mobileno:"",
-        AddressLine1:"",
-        AddressLine2:"",
-        AddressLine3:"",
+        address:"",
         companyName:"",
         birthdate:"",
         marriagedate:"",
         remarks:"",
         bankname:"",
+        branchname:"",
         adharcard:"",
         pancard:"",
-        date:""
+        date:"",
+        salesMan:""
     }
     const [formData, setFormData] = useState(initialState)
 
@@ -34,20 +34,18 @@ const ArchitectCreateForm = ({modalHandler}) => {
         name:formData.name,
         email:formData.email,
         mobileno:formData.mobileno,
-        address:{
-            AddressLine1:formData.AddressLine1,
-            AddressLine2:formData.AddressLine2,
-            AddressLine3:formData.AddressLine3,
-        },
+        address:formData.address,
         companyName:formData.companyName,
         birthdate:formData.birthdate,
         marriagedate:formData.marriagedate,
         remarks:formData.remarks,
         bankname:formData.bankname,
+        branchname:formData.branchname,
         adharcard:formData.adharcard,
         pancard:formData.pancard,
         date:formData.date,
-        IFSCcode:formData.IFSCcode
+        IFSCcode:formData.IFSCcode,
+        salesMan:formData.salesMan
         }
         console.log(data)
         try{
@@ -66,7 +64,7 @@ const ArchitectCreateForm = ({modalHandler}) => {
     <div className={Styles.container}>
 <ToastContainer
 position="top-right"
-autoClose={5000}
+autoClose={2000}
 hideProgressBar={false}
 newestOnTop={false}
 closeOnClick
@@ -95,9 +93,7 @@ pauseOnHover
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={FormData.email} name="email" placeholder='email'/>
 
         <label htmlFor='AddressLine1'>Address</label>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.AddressLine1} name="AddressLine1" placeholder='address Line 1'/>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.AddressLine2} name="AddressLine2" placeholder='address Line 2'/>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.AddressLine3} name="AddressLine3" placeholder='address Line 3'/>
+        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.address} name="address" placeholder='address'/>
 
         <label htmlFor='AddressLine1'>Remarks</label>
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.remarks} name="remarks" placeholder='Remarks'/>
@@ -118,7 +114,7 @@ pauseOnHover
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.companyName} name="companyName" placeholder='Company Name'/>
 
         <label htmlFor='salesMan'>Sales Man </label>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.companyName} name="salesMan" placeholder='Company Name'/>
+        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.salesMan} name="salesMan" placeholder='Company Name'/>
         </div>
         </div>
 

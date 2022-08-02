@@ -9,14 +9,14 @@ const DealerEditForm = ({modalHandler, data}) => {
         name:data.name,
         email:data.email,
         mobileno:data.mobileno,
-        AddressLine1:data.address,
-        AddressLine2:data.address,
-        AddressLine3:data.address,
+        address:data.address,
         companyName:data.companyName,
         birthdate:data.birthdate ? data.birthdate.substr(0, 10) : null,
         marriagedate:data.marriagedate ? data.marriagedate.substr(0, 10) : null,
         remarks:data.remarks,
         bankname:data.bankname,
+        branchname:data.branchname,
+        IFSCcode:data.IFSCcode,
         adharcard:data.adharcard,
         pancard:data.pancard,
         date:data.date ? data.date.substr(0,10) : null
@@ -35,16 +35,13 @@ const DealerEditForm = ({modalHandler, data}) => {
         name:formData.name,
         email:formData.email,
         mobileno:formData.mobileno,
-        address:{
-            AddressLine1:formData.AddressLine1,
-            AddressLine2:formData.AddressLine2,
-            AddressLine3:formData.AddressLine3,
-        },
+        address:formData.address,
         companyName:formData.companyName,
         birthdate:formData.birthdate,
         marriagedate:formData.marriagedate,
         remarks:formData.remarks,
         bankname:formData.bankname,
+        branchname:formData.branchname,
         adharcard:formData.adharcard,
         pancard:formData.pancard,
         date:formData.date,
@@ -96,9 +93,7 @@ pauseOnHover
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.email} value={FormData.email} name="email" placeholder='email'/>
 
         <label htmlFor='AddressLine1'>Address</label>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.AddressLine1}  value={formData.AddressLine1} name="AddressLine1" placeholder='address Line 1'/>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.AddressLine2} value={formData.AddressLine2} name="AddressLine2" placeholder='address Line 2'/>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.AddressLine3} value={formData.AddressLine3} name="AddressLine3" placeholder='address Line 3'/>
+        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.address}  value={formData.address} name="address" placeholder='address'/>
 
         <label htmlFor='AddressLine1'>Remarks</label>
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.remarks} value={formData.remarks} name="remarks" placeholder='Remarks'/>
@@ -119,7 +114,7 @@ pauseOnHover
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.companyName} name="companyName" placeholder='Company Name'/>
 
         <label htmlFor='salesMan'>Sales Man </label>
-        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.companyName} value={formData.companyName} name="salesMan" placeholder='Company Name'/>
+        <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} defaultValue={formData.salesMan} value={formData.salesMan} name="salesMan" placeholder='Sales Man'/>
         </div>
         </div>
 

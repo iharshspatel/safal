@@ -14,7 +14,7 @@
 
 .table{
     /* border: 1px solid yellowgreen; */
-    width: 75%;
+    width: 100%;
     background: #FFFFFF;
     border: 1px solid #EBEBEB;
     border-radius: 8px;
@@ -29,6 +29,7 @@
     border: 1px solid #EBEBEB;
     border-radius: 8px;
     margin: 10px;
+    display: none;
 }
 
 .header{

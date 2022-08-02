@@ -16,14 +16,9 @@ const customerSchema = new mongoose.Schema({
         unique:true,
         required:[true, "Please Enter Mobile Number"]
     },
-    address:
-        {
-        AddressLine1:String,
-        AddressLine2:String,
-        AddressLine3:String
-        },
-    birthDate:String,
-    marriageAnniversary:String,
+    address:String,
+    birthdate:String,
+    marriagedate:String,
     date:Date,
     remarks:String,
     orderValue:String,

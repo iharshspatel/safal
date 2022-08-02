@@ -13,29 +13,6 @@ const DealerTable = ({modalHandler}) => {
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
 
-  const modifyData = (data) => {
-
-     let datass = data.map((d)=>{
-
-      let address= d.address;
-      if(address){
-      let newaddress = `${address.AddressLine1}  ${address.AddressLine2}  ${address.AddressLine3}`
-
-      return {
-        ...d,
-        address:newaddress
-      }
-    }
-    else{
-      return d;
-    }
-
-
-     })
-
-     return datass
-    
-  } 
 
   const delteHandler = async(id) => {
       const data = await axios.delete(`/api/v1/dealer/delete/${id}`);
@@ -44,7 +21,7 @@ const DealerTable = ({modalHandler}) => {
 
   const fetchDealer = async() =>{
     const {data} = await axios.get("/api/v1/dealer/getall");
-    setDealers(modifyData(data.dealers));
+    setDealers(data.dealers);
   }
   useEffect(() => {
     fetchDealer();

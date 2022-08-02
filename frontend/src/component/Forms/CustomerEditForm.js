@@ -5,28 +5,27 @@ import Styles from './CustomerCreateForm.module.css'
 import axios from 'axios'
 import Select from 'react-select'
 
-const CustomerCreateForm = ({modalHandler}) => {
- const [architects, setArchitects] = useState([]);
- const [Mistries, setMistries] = useState([]);
- const [Dealers, setDealers] = useState([]);
- const [PMCs, setPMCs] = useState([]);
-
+const CustomerEditForm = ({modalHandler,data}) => {
+  const [architects, setArchitects] = useState([]);
+  const [Mistries, setMistries] = useState([]);
+  const [Dealers, setDealers] = useState([]);
+  const [PMCs, setPMCs] = useState([]);
+  let id = data._id
   let initialState = {
-    name:"",
-    email:"",
-    mobileno:"",
-    address:"",
-    companyName:"",
-    birthdate:"",
-    marriagedate:"",
-    remarks:"",
-    orderValue:"",
-    salesPerson:"",
-    mistryTag:null,
-    architectTag:null,
-    dealerTag:null,
-    pmcTag:null,
-    date:""
+    name:data.name,
+    email:data.email,
+    mobileno:data.mobileno,
+    address:data.address,
+    remarks:data.remarks,
+    orderValue:data.orderValue,
+    salesPerson:data.salesPerson,
+    mistryTag:data.mistryTag,
+    architectTag:data.architectTag,
+    dealerTag:data.dealerTag,
+    pmcTag:data.pmcTag,
+    birthdate:data.birthdate ? data.birthdate.substr(0, 10) : null,
+    marriagedate:data.marriagedate ? data.marriagedate.substr(0, 10) : null,
+    date:data.date ? data.date.substr(0,10):null
 }
 const [formData, setFormData] = useState(initialState)
 
@@ -34,6 +33,41 @@ const formHandler = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value })
 }
+
+
+const submitHandler = async(e) => {
+    e.preventDefault();
+    let data1={
+    name:formData.name,
+    email:formData.email,
+    mobileno:formData.mobileno,
+    address:formData.address,
+    companyName:formData.companyName,
+    birthdate:formData.birthdate,
+    marriagedate:formData.marriagedate,
+    remarks:formData.remarks,
+    date:formData.date,
+    orderValue:formData.orderValue,
+    salesPerson:formData.salesPerson,
+    mistryTag:formData.mistryTag,
+    architectTag:formData.architectTag,
+    dealerTag:formData.dealerTag,
+    pmcTag:formData.pmcTag,
+    }
+
+    try{
+    const response = await axios.put(`/api/v1/customer/update/${id}`, data1, {headers:{"Content-Type" : "application/json"}});
+    console.log(response);
+    toast.success("customer is edited");
+    
+    }
+    catch(e){
+    //  toast.error(e.response.data.message);
+     console.log(e.response.data.message)
+    }
+
+}
+
 
 const getAllArchitects = async() => {
 
@@ -77,44 +111,11 @@ useEffect(() => {
   getAllPMC();
 }, []);
 
-const submitHandler = async(e) => {
-    e.preventDefault();
-    let data={
-    name:formData.name,
-    email:formData.email,
-    mobileno:formData.mobileno,
-    address:formData.address,
-    companyName:formData.companyName,
-    birthdate:formData.birthdate,
-    marriagedate:formData.marriagedate,
-    remarks:formData.remarks,
-    date:formData.date,
-    orderValue:formData.orderValue,
-    salesPerson:formData.salesPerson,
-    mistryTag:formData.mistryTag,
-    architectTag:formData.architectTag,
-    dealerTag:formData.dealerTag,
-    pmcTag:formData.pmcTag,
-    }
-    console.log(data)
-    try{
-    const response = await axios.post("/api/v1/customer/create", data, {headers:{"Content-Type" : "application/json"}});
-    console.log(response);
-    toast.success("customer is Created");
-    
-    }
-    catch(e){
-     toast.error(e.response.data.message);
-     console.log(e.response.data.message)
-    }
-    
-}
 
 const ArchitectFormHandler = (e) => {
   console.log(e.value);
   setFormData({...formData, architectTag:e.value})
 }
-
   return (
     <div className={Styles.container}>
       <ToastContainer
@@ -197,4 +198,4 @@ pauseOnHover
   )
 }
 
-export default CustomerCreateForm
+export default CustomerEditForm
