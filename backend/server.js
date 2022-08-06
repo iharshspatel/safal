@@ -9,16 +9,17 @@ process.on("uncaughtException", (err)=>{
    console.log(`Shutting down the server due to Unhandled UnCaught Exception`)
    process.exit(1);
 })
-
+const port = process.env.PORT || 3000;
 
 
 // Config
-dotenv.config({path:"backend/config/config.env"});
-
+if(process.env.NODE_ENV!=="PRODUCTION"){
+   dotenv.config({ path: "backend/config/config.env" });
+ }
 //Database Connection
 connectDatabase();
 
-const server = app.listen(process.env.PORT, ()=>{
+const server = app.listen(port, ()=>{
    console.log(`Server is working on http://localhost:${process.env.PORT}`) 
 })
 
