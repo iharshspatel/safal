@@ -23,9 +23,13 @@ const CustomerCreateForm = ({modalHandler}) => {
     orderValue:"",
     salesPerson:"",
     mistryTag:null,
+    mistryName:"",
     architectTag:null,
+    architectName:"",
     dealerTag:null,
+    dealerName:"",
     pmcTag:null,
+    pmcName:"",
     date:""
 }
 const [formData, setFormData] = useState(initialState)
@@ -92,9 +96,13 @@ const submitHandler = async(e) => {
     orderValue:formData.orderValue,
     salesPerson:formData.salesPerson,
     mistryTag:formData.mistryTag,
+    mistryName:formData.mistryName,
     architectTag:formData.architectTag,
+    architectName:formData.architectName,
     dealerTag:formData.dealerTag,
+    dealerName:formData.dealerName,
     pmcTag:formData.pmcTag,
+    pmcName:formData.pmcName,
     }
     console.log(data)
     try{
@@ -111,9 +119,25 @@ const submitHandler = async(e) => {
 }
 
 const ArchitectFormHandler = (e) => {
-  console.log(e.value);
-  setFormData({...formData, architectTag:e.value})
+  console.log(e.value, e.label);
+  setFormData({...formData, architectTag:e.value, architectName:e.label})
 }
+
+const MistryFormHandler = (e) => {
+  console.log(e.value);
+  setFormData({...formData, mistryTag:e.value, mistryName:e.label})
+}
+
+const DealerFormHandler = (e) => {
+  console.log(e.value);
+  setFormData({...formData, dealerTag:e.value, dealerName:e.label})
+}
+
+const PMCFormHandler = (e) => {
+  console.log(e.value);
+  setFormData({...formData, pmcTag:e.value, pmcName:e.label})
+}
+
 
   return (
     <div className={Styles.container}>
@@ -177,19 +201,19 @@ pauseOnHover
         <div className={Styles.bankDetails1}>
 
         <label htmlFor='name'>Mistry Tag</label>
-        <Select onChange={(e)=>formHandler(e)} options={Mistries}/>
+        <Select selectedValue={formData.mistryTag} onChange={(e)=> MistryFormHandler(e)} options={Mistries}/>
 
         <label htmlFor='name'>Architect Tag</label>
-        <Select onChange={(e)=>ArchitectFormHandler(e)} options={architects}/>
+        <Select selectedValue={formData.architectTag} onChange={(e)=>ArchitectFormHandler(e)} options={architects}/>
         </div>
 
         <div className={Styles.bankDetails2}>
         
         <label htmlFor='name'>Dealer Tag</label>
-        <Select onChange={(e)=>formHandler(e)} options={Dealers}/>
+        <Select selectedValue={formData.dealerTag} onChange={(e)=>DealerFormHandler(e)} options={Dealers}/>
 
         <label htmlFor='name'>PMC Tag</label>
-        <Select onChange={(e)=>formHandler(e)} options={PMCs}/>
+        <Select selectedValue={formData.pmcTag} onChange={(e)=>PMCFormHandler(e)} options={PMCs}/>
         </div>
         </div>
         <button className={Styles.submitButton} onClick={(e)=>submitHandler(e)} type="Submit">Submit</button>

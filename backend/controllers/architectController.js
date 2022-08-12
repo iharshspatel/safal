@@ -2,6 +2,16 @@ const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncError");
 const Architect = require("../models/architectModel")
 
+exports.totalarchitect = catchAsyncErrors(async(req, res, next)=>{
+   
+    const architects = await Architect.find();
+
+    res.status(200).json({
+        archlength:architects.length,
+        success:true
+       })
+})
+
 
 exports.createArchitect = catchAsyncErrors(async(req, res, next)=>{
     let t = req.body;

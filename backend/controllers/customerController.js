@@ -3,6 +3,17 @@ const catchAsyncErrors = require("../middleware/catchAsyncError");
 const Customer = require("../models/customerModel")
 
 
+exports.totalCustomer = catchAsyncErrors(async(req, res, next)=>{
+   
+    const customers = await Customer.find();
+
+    res.status(200).json({
+        custlength:customers.length,
+        success:true
+       })
+})
+
+
 exports.createCustomer = catchAsyncErrors(async(req, res, next)=>{
     const t = req.body;
     console.log(req.body);

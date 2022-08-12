@@ -22,24 +22,24 @@ const CustomerTable = ({modalHandler}) => {
       if(d.architectTag){
         return{
           ...d,
-         tag:d.architectTag + '(A)'
+         tag:d.architectName + '(A)'
         }}
       if(d.mistryTag){
           return{
             ...d,
-           tag:d.mistryTag + '(M)'
+           tag:d.mistryName + '(M)'
           }
       }
       if(d.PMCTag){
         return{
           ...d,
-         tag:d.PMCTag + '(P)'
+         tag:d.PMCName + '(P)'
         }
       }
       if(d.dealerTag){
         return{
           ...d,
-         tag:d.dealerTag + '(D)'
+         tag:d.dealerName + '(D)'
         }
       }
       return d

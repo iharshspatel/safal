@@ -3,6 +3,17 @@ const catchAsyncErrors = require("../middleware/catchAsyncError");
 const Mistry = require("../models/mistryModel")
 
 
+exports.totalMistry = catchAsyncErrors(async(req, res, next)=>{
+   
+    const mistry = await Mistry.find();
+
+    res.status(200).json({
+        mistrylength:mistry.length,
+        success:true
+       })
+})
+
+
 exports.createMistry = catchAsyncErrors(async(req, res, next)=>{
     const t = req.body;
     console.log(req.body);

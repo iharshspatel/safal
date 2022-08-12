@@ -3,6 +3,17 @@ const catchAsyncErrors = require("../middleware/catchAsyncError");
 const Dealer = require("../models/dealerModel")
 
 
+exports.totalDealer = catchAsyncErrors(async(req, res, next)=>{
+   
+    const dealers = await Dealer.find();
+
+    res.status(200).json({
+        dealerlength:dealers.length,
+        success:true
+       })
+})
+
+
 exports.createDealer = catchAsyncErrors(async(req, res, next)=>{
     const t = req.body;
     console.log(req.body);

@@ -31,18 +31,22 @@ const customerSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"mistry"
     },
+    mistryName:String,
     architectTag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"architect"
     },
+    architectName:String,
     dealerTag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"dealer"
     },
+    dealerName:String,
     pmcTag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"pmc"
     },
+    pmcName:String,
 });
 
 

@@ -3,6 +3,17 @@ const catchAsyncErrors = require("../middleware/catchAsyncError");
 const PMC = require("../models/pmcModel")
 
 
+exports.totalPMC = catchAsyncErrors(async(req, res, next)=>{
+   
+    const pmc = await PMC.find();
+
+    res.status(200).json({
+        pmclength:pmc.length,
+        success:true
+       })
+})
+
+
 exports.createPMC = catchAsyncErrors(async(req, res, next)=>{
     const t = req.body;
     console.log(req.body);
