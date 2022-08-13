@@ -13,6 +13,39 @@ const PMCTable = ({modalHandler}) => {
   const [PMC, setPMC] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
+  const [tabledata, setTableData] = useState([])
+  const [startDate, setStartDate] = useState(new Date('2022-08-01'));
+  const [endDate, setEndDate] = useState(new Date());
+
+  const startDateHandler = (e) => {
+    setStartDate(new Date(e.target.value));
+  }
+
+  const endDateHandler = (e) => {
+    setEndDate(new Date(e.target.value));
+  }
+
+  const dateformater = (date) => {
+   let year = date.getFullYear();
+   let month = (date.getMonth()+1)>9 ? date.getMonth()+1 : '0'+date.getMonth();
+   let day =  (date.getDay()+1)>9 ? date.getDay()+1 : '0'+date.getDay();
+    return `${year}-${month}-${day}`
+  }
+
+  const submitDateRangeHandler = (e) => {
+    console.log(startDate, endDate);
+    let data = PMC.filter((item)=> {
+      let date = item.date;
+      date = new Date(date);
+      if(date<endDate && date>startDate){
+        return true
+      }
+      else{
+        return false
+      }
+    })
+    setTableData(data)
+  }
 
 
   const delteHandler = async(id) => {
@@ -22,6 +55,7 @@ const PMCTable = ({modalHandler}) => {
 
   const fetchPMC = async() =>{
     const {data} = await axios.get("/api/v1/pmc/getall");
+    setPMC(data.pmcs);
     setPMC(data.pmcs);
   }
   useEffect(() => {
@@ -40,6 +74,12 @@ const PMCTable = ({modalHandler}) => {
      </p>
      </div>
      </div>
+
+     <div className={Styles.DateRangeContainer}>
+  <input  className={Styles.InputDate} onChange={(e)=>startDateHandler(e)} type="date"/>
+  <input className={Styles.InputDate}  onChange={(e)=>endDateHandler(e)} type="date"/>
+  <button className={Styles.SubmitButton} onClick={(e)=>submitDateRangeHandler(e)} type="submit"> Submit </button>
+  </div>
 
     {PMC && <MaterialTable
      className={Styles.Table}

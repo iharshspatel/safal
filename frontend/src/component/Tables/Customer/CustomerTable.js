@@ -12,8 +12,12 @@ import DummyEditForm from '../../Forms/DummyEditForm';
 const CustomerTable = ({modalHandler}) => {
 
   const [customers, setCustomers] = useState([]);
+  const [tabledata, setTableData] = useState([])
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
+  const [startDate, setStartDate] = useState(new Date('2022-08-01'));
+  const [endDate, setEndDate] = useState(new Date());
+
 
   const modifyData = (data) => {
 
@@ -54,10 +58,44 @@ const CustomerTable = ({modalHandler}) => {
       fetchCustomers();
   }
 
+
+
+  const startDateHandler = (e) => {
+    setStartDate(new Date(e.target.value));
+  }
+
+  const endDateHandler = (e) => {
+    setEndDate(new Date(e.target.value));
+  }
+
+  const dateformater = (date) => {
+   let year = date.getFullYear();
+   let month = (date.getMonth()+1)>9 ? date.getMonth()+1 : '0'+date.getMonth();
+   let day =  (date.getDay()+1)>9 ? date.getDay()+1 : '0'+date.getDay();
+    return `${year}-${month}-${day}`
+  }
+
+  const submitDateRangeHandler = (e) => {
+    console.log(startDate, endDate);
+    let data = customers.filter((item)=> {
+      let date = item.date;
+      date = new Date(date);
+      if(date<endDate && date>startDate){
+        return true
+      }
+      else{
+        return false
+      }
+    })
+    console.log(data)
+    setTableData(data)
+   console.log(new Date(customers[0].date));
+  }
   const fetchCustomers = async() =>{
     const {data} = await axios.get("/api/v1/customer/getall");
     console.log(data)
     setCustomers(modifyData(data.customers));
+    setTableData(modifyData(data.customers));
   }
   useEffect(() => {
     fetchCustomers(); 
@@ -78,6 +116,12 @@ const CustomerTable = ({modalHandler}) => {
      </p>
      </div>
      </div>
+{/* = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); */}
+    <div className={Styles.DateRangeContainer}>
+     <input  className={Styles.InputDate} onChange={(e)=>startDateHandler(e)} type="date"/>
+     <input className={Styles.InputDate}  onChange={(e)=>endDateHandler(e)} type="date"/>
+     <button className={Styles.SubmitButton} onClick={(e)=>submitDateRangeHandler(e)} type="submit"> Submit </button>
+     </div>
 
      { customers && <MaterialTable
      className={Styles.Table}
@@ -95,7 +139,7 @@ const CustomerTable = ({modalHandler}) => {
         
         
       ]}
-      data={customers}        
+      data={tabledata}        
       options={{
         sorting: true,
         headerStyle: {
@@ -103,7 +147,8 @@ const CustomerTable = ({modalHandler}) => {
         },
         showTitle:false,
         actionsColumnIndex: -1,
-        filtering:true
+         filtering:true,
+        
       }}
       components={{
         Container: props => <Paper {...props} 

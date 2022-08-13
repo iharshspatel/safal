@@ -8,8 +8,6 @@ const customerSchema = new mongoose.Schema({
     },
     email:{
         type:String,
-        required:[true, "Please Enter Your Email"],
-        unique:true,
     },
     mobileno:{
         type:Number,

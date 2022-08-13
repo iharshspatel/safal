@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom'
 import Logo from './Logo'
 import Styles from './Navigation.module.css'
 import customer from '../../Assets/Menu/Customers-menu.svg'
+import customerSelected from '../../Assets/Menu/Customers-menu-selected.svg'
 import architect from '../../Assets/Menu/VectorArchitectMenu.svg'
+import architectSelected from '../../Assets/Menu/VectorArchitectMenu-selected.svg'
 import pmc from '../../Assets/Menu/PMCmenu.svg'
+import pmcSelected from '../../Assets/Menu/PMCmenu-selected.svg'
 import dealer from '../../Assets/Menu/VectorDealerMenu.svg'
-
+import dealerSelected from '../../Assets/Menu/VectorDealerMenu-selected.svg'
 const Navigation = () => {
   return (
     <div className={Styles.container}>
