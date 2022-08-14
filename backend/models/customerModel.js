@@ -19,7 +19,7 @@ const customerSchema = new mongoose.Schema({
     marriagedate:String,
     date:Date,
     remarks:String,
-    orderValue:String,
+    orderValue:Number,
     salesPerson:String,
     // mistryTag:String,
     // architectTag:String,

@@ -13,6 +13,18 @@ exports.totalCustomer = catchAsyncErrors(async(req, res, next)=>{
        })
 })
 
+exports.totalOrderValue = catchAsyncErrors(async(req,res,next)=>{
+    const customers = await Customer.find();
+    var total=0
+    customers.map((item)=>{
+        total = total + item.orderValue
+    })
+    total = total/1000;
+    res.status(200).json({
+        orderValue:total,
+        success:true
+    })
+})
 
 exports.createCustomer = catchAsyncErrors(async(req, res, next)=>{
     const t = req.body;

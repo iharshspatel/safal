@@ -79,6 +79,7 @@ const submitHandler = async(e) => {
     }
     catch(e){
      console.log(e.response.data.message)
+     setIsDisabled(false);
     }
 
 }

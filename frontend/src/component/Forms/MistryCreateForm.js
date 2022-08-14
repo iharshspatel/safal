@@ -58,6 +58,7 @@ const MistryCreateForm = ({modalHandler}) => {
             catch(e){
              toast.error(e.response.data.message);
              console.log(e.response.data.message)
+             setIsDisabled(false);
             }
     }
   return (

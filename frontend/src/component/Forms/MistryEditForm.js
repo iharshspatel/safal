@@ -61,6 +61,7 @@ const MistryEditForm = ({modalHandler, data}) => {
         catch(e){
          toast.error(e.response.data.message);
          console.log(e.response.data.message)
+         setIsDisabled(false);
         }
         
     }

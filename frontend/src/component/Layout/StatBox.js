@@ -12,7 +12,7 @@ const StatBox = ({name}) => {
   const [totaldealer, setTotalDealer] = useState(0);
   const [totalcustomers, setTotalCustomer] = useState(0);
   const [totalPMC, setTotalPMC] = useState(0);
-
+ const [totalHealth, setTotalHealth] = useState(0);
   const getStats = async() => {
     {
    let {data} = await axios.get("/api/v1/architect/totalarchitects");
@@ -44,6 +44,9 @@ const StatBox = ({name}) => {
    setTotalPMC(pmclength);
     }
 
+    let {data} = await axios.get("/api/v1/customer/totalOrder");
+    let {orderValue} = data
+    setTotalHealth(orderValue);
    
    
   
@@ -96,7 +99,7 @@ const StatBox = ({name}) => {
           <div className={Styles.Box}>
           <div className={Styles.subBox}>
             <p>Total Health</p>
-            <h1>678</h1>
+            <h1>{totalHealth}</h1>
           </div>
 
           <div className={Styles.imgContainer}>

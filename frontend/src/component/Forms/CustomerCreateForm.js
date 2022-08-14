@@ -121,6 +121,7 @@ const submitHandler = async(e) => {
     }
     catch(e){
      toast.error(e.response.data.message);
+     setIsDisabled(false);
     }
     
 }
