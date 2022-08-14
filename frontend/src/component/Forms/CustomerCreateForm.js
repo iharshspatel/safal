@@ -24,12 +24,16 @@ const CustomerCreateForm = ({modalHandler}) => {
     salesPerson:"",
     mistryTag:null,
     mistryName:"",
+    mistryNumber:"",
     architectTag:null,
     architectName:"",
+    architectNumber:"",
     dealerTag:null,
     dealerName:"",
+    dealerNumber:"",
     pmcTag:null,
     pmcName:"",
+    pmcNumber:"",
     date:""
 }
 const [formData, setFormData] = useState(initialState)
@@ -43,7 +47,7 @@ const getAllArchitects = async() => {
 
   const {data} = await axios.get("/api/v1/architect/getall");
 
-  const architects = data.architects.map((arch)=>({value:arch._id,label:arch.name}))
+  const architects = data.architects.map((arch)=>({value:arch._id,label:`${arch.name}-${arch.mobileno}`}))
 
   setArchitects(architects);
 
@@ -52,15 +56,14 @@ const getAllArchitects = async() => {
 const getAllMistry = async() => {
 
   const {data} = await axios.get("/api/v1/mistry/getall");
-
-  const mistries = data.mistries.map((mistry)=>({value:mistry._id,label:mistry.name}))
+  const mistries = data.mistries.map((mistry)=>({value:mistry._id,label:`${mistry.name}-${mistry.mobileno}` }))
   setMistries(mistries);
 }
 
 const getAllDealer = async() => {
   const {data} = await axios.get("/api/v1/dealer/getall");
 
-  const dealers = data.dealers.map((dealer)=>({value:dealer._id,label:dealer.name}))
+  const dealers = data.dealers.map((dealer)=>({value:dealer._id,label:`${dealer.name}-${dealer.mobileno}`}))
   setDealers(dealers);
 }
 
@@ -68,7 +71,7 @@ const getAllPMC = async() => {
 
   const {data} = await axios.get("/api/v1/pmc/getall");
 
-  const pmcs = data.pmcs.map((pmc)=>({value:pmc._id,label:pmc.name}))
+  const pmcs = data.pmcs.map((pmc)=>({value:pmc._id,label:`${pmc.name}-${pmc.mobileno}`}))
   setPMCs(pmcs);
   
 
@@ -97,14 +100,17 @@ const submitHandler = async(e) => {
     salesPerson:formData.salesPerson,
     mistryTag:formData.mistryTag,
     mistryName:formData.mistryName,
+    mistryNumber:formData.mistryNumber,
     architectTag:formData.architectTag,
+    architectNumber:formData.architectNumber,
     architectName:formData.architectName,
     dealerTag:formData.dealerTag,
+    dealerNumber:formData.dealerNumber,
     dealerName:formData.dealerName,
     pmcTag:formData.pmcTag,
     pmcName:formData.pmcName,
+    pmcNumber:formData.pmcNumber,
     }
-    console.log(data)
     try{
     const response = await axios.post("/api/v1/customer/create", data, {headers:{"Content-Type" : "application/json"}});
     console.log(response);
@@ -113,29 +119,27 @@ const submitHandler = async(e) => {
     }
     catch(e){
      toast.error(e.response.data.message);
-     console.log(e.response.data.message)
     }
     
 }
 
 const ArchitectFormHandler = (e) => {
-  console.log(e.value, e.label);
-  setFormData({...formData, architectTag:e.value, architectName:e.label})
+  setFormData({...formData, architectTag:e.value, architectName:e.label.split('-')[0], architectNumber:e.label.split('-')[1]})
 }
 
 const MistryFormHandler = (e) => {
   console.log(e.value);
-  setFormData({...formData, mistryTag:e.value, mistryName:e.label})
+  setFormData({...formData, mistryTag:e.value, mistryName:e.label.split('-')[0], mistryNumber:e.label.split('-')[1]})
 }
 
 const DealerFormHandler = (e) => {
   console.log(e.value);
-  setFormData({...formData, dealerTag:e.value, dealerName:e.label})
+  setFormData({...formData, dealerTag:e.value, dealerName:e.label.split('-')[0], dealerNumber:e.label.split('-')[1]})
 }
 
 const PMCFormHandler = (e) => {
   console.log(e.value);
-  setFormData({...formData, pmcTag:e.value, pmcName:e.label})
+  setFormData({...formData, pmcTag:e.value, pmcName:e.label.split('-')[0], pmcNumber:e.label.split('-')[1]})
 }
 
 

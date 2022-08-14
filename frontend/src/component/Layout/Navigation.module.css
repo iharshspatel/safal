@@ -25,6 +25,13 @@
 
 }
 
+.selected{
+   background-color: #005EA1;
+   border-radius: 8px;
+   color: white;
+   padding: 5px 10px;
+}
+
 .item p{
     margin-left: 20px;
 }

@@ -7,10 +7,10 @@ import Select from 'react-select'
 
 const CustomerEditForm = ({modalHandler,data}) => {
   const [architects, setArchitects] = useState([]);
-  const [defalutArchitect, setDefaultArchitect] = useState({value:data.architectTag, label:data.architectName});
-  const [defaultMistry, setDefaultMistry] = useState({value:data.mistryTag, label:data.mistryName});
-  const [defaultDealer, setDefaultDealer] = useState({value:data.dealerTag, label:data.dealerName});
-  const [deafultPMC, setDefaultPMC] = useState({value:data.PMCTag, label:data.PMCName});
+  const [defalutArchitect, setDefaultArchitect] = useState(()=>data.architectTag?{value:data.architectTag, label:`${data.architectName}-${data.architectNumber}`}:"");
+  const [defaultMistry, setDefaultMistry] = useState(()=>data.mistryTag?{value:data.mistryTag, label:`${data.mistryName}-${data.mistryNumber}`}:"");
+  const [defaultDealer, setDefaultDealer] = useState(()=>data.dealerTag?{value:data.dealerTag, label:`${data.dealerName}-${data.dealerNumber}`}:"");
+  const [deafultPMC, setDefaultPMC] = useState(()=>data.pmcTag?{value:data.PMCTag, label:`${data.PMCName}-${data.PMCNumber}`}:"");
   const [Mistries, setMistries] = useState([]);
   const [Dealers, setDealers] = useState([]);
   const [PMCs, setPMCs] = useState([]);
@@ -25,12 +25,16 @@ const CustomerEditForm = ({modalHandler,data}) => {
     salesPerson:data.salesPerson,
     mistryTag:data.mistryTag,
     mistryName:data.mistryName,
+    mistryNumber:data.mistryNumber,
     architectTag:data.architectTag,
     architectName:data.architectName,
+    architectNumber:data.architectNumber,
     dealerTag:data.dealerTag,
     dealerName:data.dealerName,
+    dealerNumber:data.dealerNumber,
     pmcTag:data.pmcTag,
     pmcName:data.pmcName,
+    pmcNumber:data.pmcNumber,
     birthdate:data.birthdate ? data.birthdate.substr(0, 10) : null,
     marriagedate:data.marriagedate ? data.marriagedate.substr(0, 10) : null,
     date:data.date ? data.date.substr(0,10):null
@@ -80,29 +84,45 @@ const submitHandler = async(e) => {
 
 const getAllArchitects = async() => {
   const {data} = await axios.get("/api/v1/architect/getall");
-  const architects = data.architects.map((arch)=>({value:arch._id,label:arch.name}))
+  const architects = data.architects.map((arch)=>({value:arch._id,label:`${arch.name}-${arch.mobileno}`}))
   setArchitects(architects);
-  let dataone = architects.filter((item) => item.value === formData.architectTag)
-  console.log(dataone[0], `architect data`)
-  setDefaultArchitect(dataone[0]);
+  // let dataone = architects.filter((item) => item.value === formData.architectTag)
+  // console.log(dataone[0], `architect data`)
+  // if(dataone[0]){
+  // setDefaultArchitect(dataone[0]);
+  // }
 }
 
 const getAllMistry = async() => {
   const {data} = await axios.get("/api/v1/mistry/getall");
-  const mistries = data.mistries.map((mistry)=>({value:mistry._id,label:mistry.name}))
+  const mistries = data.mistries.map((mistry)=>({value:mistry._id,label:`${mistry.name}-${mistry.mobileno}`}))
   setMistries(mistries);
+
+  let dataone = mistries.filter((item) => item.value === formData.mistriesTag)
+  console.log(dataone[0], `mistries data`)
+  if(dataone[0]){
+  setDefaultMistry(dataone[0]);
+  }
 }
 
 const getAllDealer = async() => {
   const {data} = await axios.get("/api/v1/dealer/getall");
-  const dealers = data.dealers.map((dealer)=>({value:dealer._id,label:dealer.name}))
+  const dealers = data.dealers.map((dealer)=>({value:dealer._id,label:`${dealer.name}-${dealer.mobileno}`}))
   setDealers(dealers);
+
+  let dataone = dealers.filter((item) => item.value === formData.dealersTag)
+  console.log(dataone[0], `dealers data`)
+  setDefaultDealer(dataone[0]);
 }
 
 const getAllPMC = async() => {
   const {data} = await axios.get("/api/v1/pmc/getall");
-  const pmcs = data.pmcs.map((pmc)=>({value:pmc._id,label:pmc.name}))
+  const pmcs = data.pmcs.map((pmc)=>({value:pmc._id,label:`${pmc.name}-${pmc.mobileno}`}))
   setPMCs(pmcs);
+
+  let dataone = pmcs.filter((item) => item.value === formData.pmcTag)
+  console.log(dataone[0], `pmcs data`)
+  setDefaultPMC(dataone[0]);
 }
 
 useEffect(() => {
@@ -115,19 +135,19 @@ useEffect(() => {
 
 
 const ArchitectFormHandler = (e) => {
-  setFormData({...formData, architectTag:e.value, architectName:e.label})
+  setFormData({...formData, architectTag:e.value, architectName:e.label.split('-')[0], architectNumber:e.label.split('-')[1]})
 }
 
 const MistryFormHandler = (e) => {
-  setFormData({...formData, mistryTag:e.value, mistryName:e.label})
+  setFormData({...formData, mistryTag:e.value, mistryName:e.label.split('-')[0], mistryNumber:e.label.split('-')[1]})
 }
 
 const DealerFormHandler = (e) => {
-  setFormData({...formData, dealerTag:e.value, dealerName:e.label})
+  setFormData({...formData, dealerTag:e.value, dealerName:e.label.split('-')[0], dealerNumber:e.label.split('-')[1]})
 }
 
 const PMCFormHandler = (e) => {
-  setFormData({...formData, pmcTag:e.value, pmcName:e.label})
+  setFormData({...formData, pmcTag:e.value, pmcName:e.label.split('-')[0], pmcNumber:e.label.split('-')[1]})
 }
 
   return (

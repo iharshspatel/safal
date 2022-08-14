@@ -1,10 +1,10 @@
 import React from 'react'
 import Styles from './Logo.module.css'
-
+import logo from '../../Assets/Menu/safal logo.png'
 const Logo = () => {
   return (
     <div className={Styles.container}>
-        SAFAL
+        <img src={logo} />
     </div>
   )
 }
