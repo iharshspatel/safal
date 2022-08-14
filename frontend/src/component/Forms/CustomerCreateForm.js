@@ -10,6 +10,7 @@ const CustomerCreateForm = ({modalHandler}) => {
  const [Mistries, setMistries] = useState([]);
  const [Dealers, setDealers] = useState([]);
  const [PMCs, setPMCs] = useState([]);
+ const [isDisabled, setIsDisabled] = useState(false);
 
   let initialState = {
     name:"",
@@ -86,6 +87,7 @@ useEffect(() => {
 
 const submitHandler = async(e) => {
     e.preventDefault();
+    setIsDisabled(true);
     let data={
     name:formData.name,
     email:formData.email,
@@ -220,7 +222,7 @@ pauseOnHover
         <Select selectedValue={formData.pmcTag} onChange={(e)=>PMCFormHandler(e)} options={PMCs}/>
         </div>
         </div>
-        <button className={Styles.submitButton} onClick={(e)=>submitHandler(e)} type="Submit">Submit</button>
+        <button disabled={isDisabled} className={ isDisabled ? Styles.disable :  Styles.submitButton} onClick={(e)=>submitHandler(e)} type="Submit">Submit</button>
     </div>
   )
 }

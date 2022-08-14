@@ -34,10 +34,10 @@ const CustomerTable = ({modalHandler}) => {
            tag:d.mistryName + '(M)'
           }
       }
-      if(d.PMCTag){
+      if(d.pmcTag){
         return{
           ...d,
-         tag:d.PMCName + '(P)'
+         tag:d.pmcName + '(P)'
         }
       }
       if(d.dealerTag){

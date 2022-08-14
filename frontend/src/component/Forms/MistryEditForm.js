@@ -24,6 +24,7 @@ const MistryEditForm = ({modalHandler, data}) => {
     }
     let id = data._id;
     const [formData, setFormData] = useState(initialState)
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const formHandler = (e) => {
         e.preventDefault();
@@ -32,6 +33,7 @@ const MistryEditForm = ({modalHandler, data}) => {
 
     const submitHandler = async(e) => {
         e.preventDefault();
+        setIsDisabled(true);
         let data={
         name:formData.name,
         email:formData.email,
@@ -144,7 +146,7 @@ pauseOnHover
         </div>
         </div>
         
-        <button className={Styles.submitButton} onClick={submitHandler} type="Submit">Submit</button>
+        <button disabled={isDisabled} className={ isDisabled ? Styles.disable :  Styles.submitButton} onClick={submitHandler} type="Submit">Submit</button>
     </div>
   )
 }

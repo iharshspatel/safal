@@ -83,3 +83,16 @@ label{
     font-weight: bold;
     margin-right: 10px;
 }
+
+.disable{
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-left: auto;
+    border: none;
+    display: block;
+    font-weight: bold;
+    margin-right: 10px;
+    background-color: white;
+    border: 1px solid #005EA1;
+    color: grey;
+}

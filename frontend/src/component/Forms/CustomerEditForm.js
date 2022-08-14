@@ -10,10 +10,11 @@ const CustomerEditForm = ({modalHandler,data}) => {
   const [defalutArchitect, setDefaultArchitect] = useState(()=>data.architectTag?{value:data.architectTag, label:`${data.architectName}-${data.architectNumber}`}:"");
   const [defaultMistry, setDefaultMistry] = useState(()=>data.mistryTag?{value:data.mistryTag, label:`${data.mistryName}-${data.mistryNumber}`}:"");
   const [defaultDealer, setDefaultDealer] = useState(()=>data.dealerTag?{value:data.dealerTag, label:`${data.dealerName}-${data.dealerNumber}`}:"");
-  const [deafultPMC, setDefaultPMC] = useState(()=>data.pmcTag?{value:data.PMCTag, label:`${data.PMCName}-${data.PMCNumber}`}:"");
+  const [deafultPMC, setDefaultPMC] = useState(()=>data.pmcTag?{value:data.pmcTag, label:`${data.pmcName}-${data.pmcNumber}`}:"");
   const [Mistries, setMistries] = useState([]);
   const [Dealers, setDealers] = useState([]);
   const [PMCs, setPMCs] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(false);
   let id = data._id
   let initialState = {
     name:data.name,
@@ -49,6 +50,7 @@ const formHandler = (e) => {
 
 const submitHandler = async(e) => {
     e.preventDefault();
+    setIsDisabled(true);
     let data1={
     name:formData.name,
     email:formData.email,
@@ -74,7 +76,6 @@ const submitHandler = async(e) => {
     try{
     const response = await axios.put(`/api/v1/customer/update/${id}`, data1, {headers:{"Content-Type" : "application/json"}});
     toast.success("customer is edited");
-    
     }
     catch(e){
      console.log(e.response.data.message)
@@ -86,43 +87,24 @@ const getAllArchitects = async() => {
   const {data} = await axios.get("/api/v1/architect/getall");
   const architects = data.architects.map((arch)=>({value:arch._id,label:`${arch.name}-${arch.mobileno}`}))
   setArchitects(architects);
-  // let dataone = architects.filter((item) => item.value === formData.architectTag)
-  // console.log(dataone[0], `architect data`)
-  // if(dataone[0]){
-  // setDefaultArchitect(dataone[0]);
-  // }
 }
 
 const getAllMistry = async() => {
   const {data} = await axios.get("/api/v1/mistry/getall");
   const mistries = data.mistries.map((mistry)=>({value:mistry._id,label:`${mistry.name}-${mistry.mobileno}`}))
   setMistries(mistries);
-
-  let dataone = mistries.filter((item) => item.value === formData.mistriesTag)
-  console.log(dataone[0], `mistries data`)
-  if(dataone[0]){
-  setDefaultMistry(dataone[0]);
-  }
 }
 
 const getAllDealer = async() => {
   const {data} = await axios.get("/api/v1/dealer/getall");
   const dealers = data.dealers.map((dealer)=>({value:dealer._id,label:`${dealer.name}-${dealer.mobileno}`}))
   setDealers(dealers);
-
-  let dataone = dealers.filter((item) => item.value === formData.dealersTag)
-  console.log(dataone[0], `dealers data`)
-  setDefaultDealer(dataone[0]);
 }
 
 const getAllPMC = async() => {
   const {data} = await axios.get("/api/v1/pmc/getall");
   const pmcs = data.pmcs.map((pmc)=>({value:pmc._id,label:`${pmc.name}-${pmc.mobileno}`}))
   setPMCs(pmcs);
-
-  let dataone = pmcs.filter((item) => item.value === formData.pmcTag)
-  console.log(dataone[0], `pmcs data`)
-  setDefaultPMC(dataone[0]);
 }
 
 useEffect(() => {
@@ -227,7 +209,7 @@ const PMCFormHandler = (e) => {
         <Select defaultValue={deafultPMC} onChange={(e)=>PMCFormHandler(e)} options={PMCs}/>
         </div>
         </div>
-        <button className={Styles.submitButton} onClick={(e)=>submitHandler(e)} type="Submit">Submit</button>
+        <button disabled={isDisabled} className={ isDisabled ? Styles.disable :  Styles.submitButton} onClick={(e)=>submitHandler(e)} type="Submit">Submit</button>
     </div>
   )
 }
