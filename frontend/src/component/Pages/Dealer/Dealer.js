@@ -23,7 +23,7 @@ const Dealer = () => {
     <StatBox name="Dealer"/>
     <DealerTable modalHandler={modalHandler}/>
     {
-      isOpen ? <Modal>
+      isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>
           <motion.div
           initial={{ opacity: 0, scale:0 }}

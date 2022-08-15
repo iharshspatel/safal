@@ -5,6 +5,7 @@ import Navigation from '../../Layout/Navigation'
 import StatBox from '../../Layout/StatBox'
 import CustomerTable from '../../Tables/Customer/CustomerTable'
 import Styles from './Customer.module.css'
+import { AnimatePresence,motion } from 'framer-motion'
 
 const Customer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +22,17 @@ const Customer = () => {
     <StatBox name="Customer"/>
     <CustomerTable modalHandler={modalHandler}/>
     {
-      isOpen ? <Modal><CustomerCreateForm modalHandler={modalHandler}/></Modal>: null
+      isOpen ? <Modal setIsOpen={setIsOpen}>
+        <AnimatePresence>
+          <motion.div
+          initial={{ opacity: 0, scale:0 }}
+          animate={{ opacity: 1, scale:1 }}
+          exit={{ scale:0 }}>
+        <CustomerCreateForm modalHandler={modalHandler}/>
+        </motion.div>
+        </AnimatePresence>
+        </Modal>
+        : null
     }
     </div>
     </div>
