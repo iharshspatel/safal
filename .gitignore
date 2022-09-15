@@ -1,5 +1,5 @@
 /node_modules
-/backend/config/config.env
+# /backend/config/config.env     (to add in final build)
 
 
 # dependencies
@@ -14,6 +14,7 @@
 /frontend/build
 
 # misc
+# /backend/config/config.env
 /frontend/.DS_Store
 /frontend/.env.local
 /frontend/.env.development.local
