@@ -3,15 +3,22 @@ import { Link } from 'react-router-dom'
 import Logo from './Logo'
 import Styles from './Navigation.module.css'
 import { useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from "react-redux";
+import { logout} from '../../actions/userAction'
 import customer from '../../Assets/Menu/Customers-menu.svg'
 import customerSelected from '../../Assets/Menu/Customers-menu-selected.svg'
 import architect from '../../Assets/Menu/VectorArchitectMenu.svg'
 import architectSelected from '../../Assets/Menu/VectorArchitectMenu-selected.svg'
 import pmc from '../../Assets/Menu/PMCmenu.svg'
+import LogoutIcon from '@mui/icons-material/Logout';
 import pmcSelected from '../../Assets/Menu/PMCmenu-selected.svg'
 import dealer from '../../Assets/Menu/VectorDealerMenu.svg'
 import dealerSelected from '../../Assets/Menu/VectorDealerMenu-selected.svg'
 const Navigation = () => {
+    const dispatch = useDispatch();
+    function handleclick(){
+        dispatch(logout());
+    }
     const location = useLocation();
 
     const [homepath, setHomepath] = useState(true);
@@ -84,6 +91,10 @@ const Navigation = () => {
                 <img src={dealerpath ? dealerSelected : dealer} alt="customer"/>
                <p>Dealer</p> 
             </Link>
+            <button className={Styles.button} onClick={handleclick}  >
+            <LogoutIcon/>
+            Logout
+            </button>
 
 
         </ul>

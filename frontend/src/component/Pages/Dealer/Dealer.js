@@ -1,12 +1,13 @@
 import { AnimatePresence,motion } from 'framer-motion'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import DealerCreateForm from '../../Forms/DealerCreateForm'
 import Modal from '../../Layout/Modal/Modal'
 import Navigation from '../../Layout/Navigation'
 import StatBox from '../../Layout/StatBox'
 import DealerTable from '../../Tables/Dealer/DealerTable'
 import Styles from './Dealer.module.css'
-
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom";
 const Dealer = () => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,14 @@ const Dealer = () => {
   const modalHandler = () => {
     setIsOpen(!isOpen);
   }
-
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+  let navigate= useNavigate();
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate('/signin')
+    }
+  },[isAuthenticated,navigate]);
   return (
     <>
     <div className={Styles.container}>

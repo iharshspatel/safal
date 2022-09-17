@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import MistryCreateForm from '../../Forms/MistryCreateForm'
 import Modal from '../../Layout/Modal/Modal'
 import Navigation from '../../Layout/Navigation'
@@ -6,14 +6,21 @@ import StatBox from '../../Layout/StatBox'
 import MistryTable from '../../Tables/Mistry/MistryTable'
 import Styles from './Mistry.module.css'
 import {AnimatePresence, motion} from 'framer-motion'
-
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom";
 const Mistry = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const modalHandler = () => {
     setIsOpen(!isOpen);
   }
-
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+  let navigate= useNavigate();
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate('/signin')
+    }
+  },[isAuthenticated,navigate]);
   return (
     <>
     <div className={Styles.container}>
