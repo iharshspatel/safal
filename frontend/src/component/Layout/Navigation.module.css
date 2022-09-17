@@ -11,7 +11,26 @@
     display: flex;
     flex-direction: column;
 }
-
+.button{
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 5px;
+    margin: 10px 1px;
+    width: 100%;
+    text-decoration:none;
+    color: black;
+    border: none;
+    display: flex;
+}
+.button textarea{
+    margin: 100px;
+}
+/* LogoutIcon{ */
+    /* margin-right: 100px; */
+/* } */
+/* .button text{ */
+    /* margin-left: 100px; */
+/* } */
 .item{
     font-weight: 600;
     font-size: 1rem;

@@ -6,6 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
+// import { browserHistory } from 'react-router';
+import { useNavigate } from "react-router-dom";
+// import  { Redirect } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -45,22 +48,23 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-export default function SignIn({history}) {
+export default function SignIn() {
   const dispatch = useDispatch();
+  // const history = createHashHistory();
+  let navigate= useNavigate();
   const {user,isAuthenticated,error}=useSelector(state=>state.user);
   useEffect(() => {
     if (error) {
       dispatch(clearErrors())
     }
     if (isAuthenticated) {
-      history.push("/")
+      navigate('/');
     }
-  }, [isAuthenticated, history,user, error, dispatch, clearErrors])
+  }, [isAuthenticated, user, error, dispatch, clearErrors])
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     dispatch(login(data.get('email'),data.get('password')));
-
     console.log({
       email: data.get('email'),
       password: data.get('password'),
@@ -112,15 +116,15 @@ export default function SignIn({history}) {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href='/password/forgot' variant="body2">
                 Forgot password?
               </Link>
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <Link href="#" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
-            </Grid>
+            </Grid> */}
           </Grid>
         </form>
       </div>

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import CustomerCreateForm from '../../Forms/CustomerCreateForm'
 import Modal from '../../Layout/Modal/Modal'
 import Navigation from '../../Layout/Navigation'
@@ -6,10 +6,18 @@ import StatBox from '../../Layout/StatBox'
 import CustomerTable from '../../Tables/Customer/CustomerTable'
 import Styles from './Customer.module.css'
 import { AnimatePresence,motion } from 'framer-motion'
-
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom";
 const Customer = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+  let navigate= useNavigate();
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate('/signin')
+    }
+  },[isAuthenticated,navigate]);
   const modalHandler = () => {
     setIsOpen(!isOpen);
   }

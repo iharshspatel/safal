@@ -11,8 +11,10 @@ import Dealer from './component/Pages/Dealer/Dealer';
 import Mistry from './component/Pages/Mistry/Mistry';
 import PMC from './component/Pages/PMC/PMC';
 import store from './store';
-import SignIn from './component/Auth/Login/signin';
-import SignUp from './component/Auth/Signup/signup'
+import SignIn from './component/Auth/Signin/signin';
+import ForgotPassword from './component/Auth/Forgot Password/ForgotPassword';
+import ResetPassword from './component/Auth/Forgot Password/ResetPassword';
+// import SignUp from './component/Auth/Signup/signup'
 function App() {
   const dispatch = useDispatch();
 
@@ -23,18 +25,19 @@ function App() {
   }, [])
 
   return (
-    (isAuthenticated && !loading) ? <Customer/>:(
     <>
     <Routes>
-      <Route exact path='/' element={ <Customer /> } />
+      <Route exact path='/' element={ (!loading && isAuthenticated )? <Customer />:<SignIn/> } />
       <Route exact path='/architect' element={(loading === false && isAuthenticated === true) ? <Architect />:<SignIn/>} />
       <Route exact path='/dealer' element={(loading === false && isAuthenticated === true) ? <Dealer />:<SignIn/>} />
       <Route exact path='/mistry' element={(loading === false && isAuthenticated === true) ? <Mistry />:<SignIn/>} />
       <Route exact path='/pmc' element={(loading === false && isAuthenticated === true) ? <PMC />:<SignIn/>} />
       <Route exact path='/signin' element={<SignIn />} />
-      <Route exact path='/signup' element={<SignUp />} />
+      <Route exact path="/password/forgot" element=<ForgotPassword/> />
+      <Route exact path="/password/reset/:token" element=<ResetPassword/> />
+      {/* <Route exact path='/signup' element={<SignUp />} /> */}
     </Routes>
-    </>)
+    </>
   );
 }
 
