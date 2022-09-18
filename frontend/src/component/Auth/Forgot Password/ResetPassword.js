@@ -3,11 +3,16 @@ import "./ResetPassword.css";
 import { useDispatch, useSelector } from "react-redux";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/Lock";
-// import { toast } from "react-toastify"
+import { toast } from "react-toastify"
 // import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom";
+// import {useSearchParams} from "react-router";
+import { useNavigate ,useParams} from "react-router-dom";
 import { loaduser, resetPassword ,clearErrors} from "../../../actions/userAction";
-export default function ResetPassword( {match }) {
+export default function ResetPassword({match}) {
+    const {token}=useParams();
+    // const [searchParams] = useSearchParams();
+    // searchParams.get("__firebase_request_key")
+    // const token=searchParams.get('token');
     const dispatch = useDispatch();
         const { error, success, loading } = useSelector(
         (state) => state.user
@@ -15,14 +20,15 @@ export default function ResetPassword( {match }) {
     const navigate=useNavigate();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
+    console.log(token);
     const resetPasswordSubmit = (e) => {
         e.preventDefault();
         const passwordObj = {
             password: password,
             confirmPassword: confirmPassword
         }
-        dispatch(resetPassword(match.params.token, passwordObj));
+        dispatch(resetPassword(token, passwordObj));
+        // dispatch(resetPassword(token, passwordObj));
         dispatch(loaduser());
         navigate('/');
         // history.push("/")
@@ -31,12 +37,12 @@ export default function ResetPassword( {match }) {
     useEffect(() => {
         if (error) {
 
-            // toast.error(error);
+            toast.error(error);
             dispatch(clearErrors());
         }
 
         if (success) {
-            // toast.success("Password Updated Successfully");
+            toast.success("Password Updated Successfully");
             navigate('/');
             // history.push("/");
         }
