@@ -24,7 +24,7 @@ const Customer = () => {
   const modalHandler = () => {
     setIsOpen(!isOpen);
   }
-  const handleCallback = (childData) => {
+  const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("customer is Created");
   }
@@ -34,7 +34,7 @@ const Customer = () => {
         <Navigation />
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={1500}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -43,8 +43,6 @@ const Customer = () => {
           draggable
           pauseOnHover
         />
-        {/* Same as */}
-        <ToastContainer />
         <div className={Styles.rightcontainer}>
           <StatBox name="Customer" />
           <CustomerTable modalHandler={modalHandler} />
@@ -55,7 +53,7 @@ const Customer = () => {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ scale: 0 }}>
-                  <CustomerCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallback} />
+                  <CustomerCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate} />
                 </motion.div>
               </AnimatePresence>
             </Modal>

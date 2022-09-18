@@ -8,6 +8,7 @@ import { Paper } from '@material-ui/core';
 import axios from 'axios';
 import CustomerEditForm from '../../Forms/CustomerEditForm';
 import DummyEditForm from '../../Forms/DummyEditForm';
+import { toast, ToastContainer } from 'react-toastify'
 
 const CustomerTable = ({modalHandler}) => {
 
@@ -101,7 +102,10 @@ const CustomerTable = ({modalHandler}) => {
     fetchCustomers(); 
     console.log(`editModal`, editModal)
   }, [editModal]);
-
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Customer edited");
+  }
 
   return (
     <div className={Styles.container}>
@@ -185,7 +189,7 @@ const CustomerTable = ({modalHandler}) => {
   </div>
   
 {
-   editModal ? <Modal><CustomerEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData}/></Modal>: null
+   editModal ? <Modal><CustomerEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal>: null
 } 
 
     <div className={Styles.filter}>

@@ -8,6 +8,7 @@ import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import MistryEditForm from '../../Forms/MistryEditForm';
+import { toast, ToastContainer } from 'react-toastify'
 
 const MistryTable = ({modalHandler}) => {
   const [mistry, setMistry] = useState([]);
@@ -60,6 +61,10 @@ const MistryTable = ({modalHandler}) => {
   useEffect(() => {
     fetchMistry();
   }, []);
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Mistry edited");
+  }
   return (
     <div className={Styles.container}>
     <div className={Styles.table}>
@@ -141,7 +146,7 @@ const MistryTable = ({modalHandler}) => {
     </div>
 
     {
-      editModal ? <Modal><MistryEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData}/></Modal> : null   }
+      editModal ? <Modal><MistryEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
 
     <div className={Styles.filter}>
 

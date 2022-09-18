@@ -4,7 +4,7 @@ import {AiFillCloseCircle} from 'react-icons/ai'
 import axios from "axios"
 import {ToastContainer, toast} from 'react-toastify'
 
-const DealerEditForm = ({modalHandler, data}) => {
+const DealerEditForm = ({modalHandler, data ,setIsOpen,parentCallback}) => {
     let initialState = {
         name:data.name,
         email:data.email,
@@ -53,7 +53,9 @@ const DealerEditForm = ({modalHandler, data}) => {
         try{
         const response = await axios.put(`/api/v1/dealer/update/${id}`, data, {headers:{"Content-Type" : "application/json"}});
         console.log(response);
-        toast.success("dealer is Edited ");
+        // toast.success("dealer is Edited ");
+        parentCallback();
+        setIsOpen(false);
         
         }
         catch(e){
@@ -65,7 +67,7 @@ const DealerEditForm = ({modalHandler, data}) => {
     }
   return (
     <div className={Styles.container}>
-<ToastContainer
+{/* <ToastContainer
 position="top-right"
 autoClose={5000}
 hideProgressBar={false}
@@ -75,9 +77,9 @@ rtl={false}
 pauseOnFocusLoss
 draggable
 pauseOnHover
-/>
+/> */}
 {/* Same as */}
-<ToastContainer />
+{/* <ToastContainer /> */}
         <div className={Styles.closebutton} onClick={modalHandler}>
             <AiFillCloseCircle/>
         </div>

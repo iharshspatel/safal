@@ -148,7 +148,7 @@ const PMCFormHandler = (e) => {
 
   return (
     <div className={Styles.container}>
-      <ToastContainer
+      {/* <ToastContainer
 position="top-right"
 autoClose={5000}
 hideProgressBar={false}
@@ -158,7 +158,7 @@ rtl={false}
 pauseOnFocusLoss
 draggable
 pauseOnHover
-/>
+/> */}
       <div className={Styles.closebutton} onClick={modalHandler}>
             <AiFillCloseCircle/>
         </div>

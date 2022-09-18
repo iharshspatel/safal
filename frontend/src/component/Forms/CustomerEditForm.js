@@ -5,7 +5,7 @@ import Styles from './CustomerCreateForm.module.css'
 import axios from 'axios'
 import Select from 'react-select'
 
-const CustomerEditForm = ({modalHandler,data}) => {
+const CustomerEditForm = ({modalHandler,data,setIsOpen,parentCallback}) => {
   const [architects, setArchitects] = useState([]);
   const [defalutArchitect, setDefaultArchitect] = useState(()=>data.architectTag?{value:data.architectTag, label:`${data.architectName}-${data.architectNumber}`}:"");
   const [defaultMistry, setDefaultMistry] = useState(()=>data.mistryTag?{value:data.mistryTag, label:`${data.mistryName}-${data.mistryNumber}`}:"");
@@ -75,7 +75,9 @@ const submitHandler = async(e) => {
 
     try{
     const response = await axios.put(`/api/v1/customer/update/${id}`, data1, {headers:{"Content-Type" : "application/json"}});
-    toast.success("customer is edited");
+    // toast.success("customer is edited");
+    parentCallback();
+    setIsOpen(false);
     }
     catch(e){
      console.log(e.response.data.message)
@@ -135,7 +137,7 @@ const PMCFormHandler = (e) => {
 
   return (
     <div className={Styles.container}>
-      <ToastContainer
+      {/* <ToastContainer
           position="top-right"
           autoClose={5000}
           hideProgressBar={false}
@@ -144,7 +146,7 @@ const PMCFormHandler = (e) => {
           rtl={false}
           pauseOnFocusLoss
           draggable
-          pauseOnHover/>
+          pauseOnHover/> */}
 
         <div className={Styles.closebutton} onClick={modalHandler}>
             <AiFillCloseCircle/>

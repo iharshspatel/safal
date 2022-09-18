@@ -8,6 +8,7 @@ import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import MistryEditForm from '../../Forms/MistryEditForm';
+import { toast, ToastContainer } from 'react-toastify'
 
 const PMCTable = ({modalHandler}) => {
   const [PMC, setPMC] = useState([]);
@@ -61,6 +62,10 @@ const PMCTable = ({modalHandler}) => {
   useEffect(() => {
     fetchPMC();
   }, []);
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("PMC edited");
+  }
   return (
     <div className={Styles.container}>
     <div className={Styles.table}>
@@ -142,7 +147,7 @@ const PMCTable = ({modalHandler}) => {
     </div>
 
     {
-      editModal ? <Modal><MistryEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData}/></Modal> : null   }
+      editModal ? <Modal><MistryEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
 
     <div className={Styles.filter}>
 

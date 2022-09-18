@@ -4,7 +4,7 @@ import axios from "axios"
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { toast, ToastContainer } from 'react-toastify'
 
-const DealerCreateForm = ({modalHandler}) => {
+const DealerCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
     let initialState = {
         name:"",
         email:"",
@@ -52,8 +52,11 @@ const DealerCreateForm = ({modalHandler}) => {
         }
         try{
             const response = await axios.post("/api/v1/dealer/create", data, {headers:{"Content-Type" : "application/json"}});
+            // console.log(response);
             console.log(response);
-            toast.success("Dealer is Created")
+            parentCallback(true);
+            setIsOpen(false);
+            // toast.success("Dealer is Created")
             }
             catch(e){
              toast.error(e.response.data.message);
