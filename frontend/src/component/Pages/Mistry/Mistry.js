@@ -8,6 +8,7 @@ import Styles from './Mistry.module.css'
 import {AnimatePresence, motion} from 'framer-motion'
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify'
 const Mistry = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,10 +22,25 @@ const Mistry = () => {
       navigate('/signin')
     }
   },[isAuthenticated,navigate]);
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Mistry is Created");
+  }
   return (
     <>
     <div className={Styles.container}>
     <Navigation/>
+    <ToastContainer
+          position="top-right"
+          autoClose={1500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
     <div className={Styles.rightcontainer}>
     <StatBox name="Mistry"/>
     <MistryTable modalHandler={modalHandler}/>
@@ -35,7 +51,7 @@ const Mistry = () => {
           initial={{ opacity: 0, scale:0 }}
           animate={{ opacity: 1, scale:1 }}
           exit={{ scale:0 }}>
-            <MistryCreateForm modalHandler={modalHandler}/>
+            <MistryCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate}/>
           </motion.div>
         </AnimatePresence>
       </Modal>: null

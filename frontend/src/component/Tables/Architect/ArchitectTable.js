@@ -7,7 +7,7 @@ import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
-
+import { toast, ToastContainer } from 'react-toastify'
 const ArchitecTable = ({modalHandler}) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
@@ -64,6 +64,10 @@ const ArchitecTable = ({modalHandler}) => {
     fetchArchitect();
     
   }, []);
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Architect edited");
+  }
   return (
     <div className={Styles.container}>
     <div className={Styles.table}>
@@ -145,7 +149,7 @@ const ArchitecTable = ({modalHandler}) => {
     </div>
 
     {
-      editModal ? <Modal><ArchitectEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData}/></Modal> : null   }
+      editModal ? <Modal><ArchitectEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
 
     <div className={Styles.filter}>
 

@@ -7,6 +7,7 @@ import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
 import DealerEditForm from '../../Forms/DealerEditForm';
+import { toast, ToastContainer } from 'react-toastify'
 
 const DealerTable = ({modalHandler}) => {
   const [dealers, setDealers] = useState([]);
@@ -60,6 +61,11 @@ const DealerTable = ({modalHandler}) => {
   useEffect(() => {
     fetchDealer();
   }, []);
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Dealer edited");
+  }
+
   return (
     <div className={Styles.container}>
     <div className={Styles.table}>
@@ -141,7 +147,7 @@ const DealerTable = ({modalHandler}) => {
     </div>
 
     {
-      editModal ? <Modal><DealerEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData}/></Modal> : null   }
+      editModal ? <Modal><DealerEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
 
     <div className={Styles.filter}>
 

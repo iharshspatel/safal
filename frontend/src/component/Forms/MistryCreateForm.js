@@ -4,7 +4,7 @@ import {AiFillCloseCircle} from 'react-icons/ai'
 import axios from "axios"
 import { toast, ToastContainer } from 'react-toastify'
 
-const MistryCreateForm = ({modalHandler}) => {
+const MistryCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
     let initialState = {
         name:"",
         email:"",
@@ -53,7 +53,9 @@ const MistryCreateForm = ({modalHandler}) => {
         try{
             const response = await axios.post("/api/v1/mistry/create", data, {headers:{"Content-Type" : "application/json"}});
             console.log(response);
-            toast.success("Mistry is Created")
+            // toast.success("Mistry is Created")
+            parentCallback(true);
+            setIsOpen(false);
             }
             catch(e){
              toast.error(e.response.data.message);
@@ -63,7 +65,7 @@ const MistryCreateForm = ({modalHandler}) => {
     }
   return (
     <div className={Styles.container}>
-<ToastContainer
+{/* <ToastContainer
 position="top-right"
 autoClose={5000}
 hideProgressBar={false}
@@ -73,7 +75,7 @@ rtl={false}
 pauseOnFocusLoss
 draggable
 pauseOnHover
-/>
+/> */}
     <div className={Styles.closebutton} onClick={modalHandler}>
         <AiFillCloseCircle/>
     </div>

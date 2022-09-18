@@ -8,6 +8,7 @@ import DealerTable from '../../Tables/Dealer/DealerTable'
 import Styles from './Dealer.module.css'
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify'
 const Dealer = () => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -23,10 +24,25 @@ const Dealer = () => {
       navigate('/signin')
     }
   },[isAuthenticated,navigate]);
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Dealer is Created");
+  }
   return (
     <>
     <div className={Styles.container}>
     <Navigation/>
+    <ToastContainer
+          position="top-right"
+          autoClose={1500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
     <div className={Styles.rightcontainer}>
     <StatBox name="Dealer"/>
     <DealerTable modalHandler={modalHandler}/>
@@ -37,7 +53,7 @@ const Dealer = () => {
           initial={{ opacity: 0, scale:0 }}
           animate={{ opacity: 1, scale:1 }}
           exit={{ scale:0 }}>
-            <DealerCreateForm modalHandler={modalHandler}/>
+            <DealerCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate}/>
           </motion.div>
         </AnimatePresence>
       </Modal>: null

@@ -8,6 +8,7 @@ import PMCTable from '../../Tables/PMC/PMCTable'
 import Styles from './PMC.module.css'
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify'
 const PMC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
@@ -21,11 +22,25 @@ const PMC = () => {
   const modalHandler = () => {
     setIsOpen(!isOpen);
   }
-
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("PMC is Created");
+  }
   return (
     <>
     <div className={Styles.container}>
     <Navigation/>
+    <ToastContainer
+          position="top-right"
+          autoClose={1500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
     <div className={Styles.rightcontainer}>
     <StatBox name="PMC"/>
     <PMCTable modalHandler={modalHandler}/>
@@ -36,7 +51,7 @@ const PMC = () => {
           initial={{ opacity: 0, scale:0 }}
           animate={{ opacity: 1, scale:1 }}
           exit={{ scale:0 }}>
-            <PMCCreateForm modalHandler={modalHandler}/>
+            <PMCCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate}/>
           </motion.div>
         </AnimatePresence>
         </Modal>: null

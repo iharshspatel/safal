@@ -4,7 +4,7 @@ import axios from "axios"
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { toast, ToastContainer } from 'react-toastify'
 
-const PMCCreateForm = ({modalHandler}) => {
+const PMCCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
     let initialState = {
         name:"",
         email:"",
@@ -54,7 +54,9 @@ const PMCCreateForm = ({modalHandler}) => {
         try{
             const response = await axios.post("/api/v1/pmc/create", data, {headers:{"Content-Type" : "application/json"}});
             console.log(response);
-            toast.success("PMC is Created")
+            // toast.success("PMC is Created")
+            parentCallback(true);
+            setIsOpen(false);
             }
             catch(e){
              toast.error(e.response.data.message);

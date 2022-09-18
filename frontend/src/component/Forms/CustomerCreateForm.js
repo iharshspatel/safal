@@ -5,7 +5,7 @@ import Styles from './CustomerCreateForm.module.css'
 import axios from 'axios'
 import Select from 'react-select'
 
-const CustomerCreateForm = ({modalHandler}) => {
+const CustomerCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
  const [architects, setArchitects] = useState([]);
  const [Mistries, setMistries] = useState([]);
  const [Dealers, setDealers] = useState([]);
@@ -116,8 +116,8 @@ const submitHandler = async(e) => {
     try{
     const response = await axios.post("/api/v1/customer/create", data, {headers:{"Content-Type" : "application/json"}});
     console.log(response);
-    toast.success("customer is Created");
-    
+    parentCallback(true);
+    setIsOpen(false);
     }
     catch(e){
      toast.error(e.response.data.message);
@@ -148,7 +148,7 @@ const PMCFormHandler = (e) => {
 
   return (
     <div className={Styles.container}>
-      <ToastContainer
+      {/* <ToastContainer
 position="top-right"
 autoClose={5000}
 hideProgressBar={false}
@@ -158,7 +158,7 @@ rtl={false}
 pauseOnFocusLoss
 draggable
 pauseOnHover
-/>
+/> */}
       <div className={Styles.closebutton} onClick={modalHandler}>
             <AiFillCloseCircle/>
         </div>

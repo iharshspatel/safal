@@ -8,12 +8,16 @@ import Styles from './Architect.module.css'
 import {AnimatePresence, motion} from 'framer-motion'
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
-
+import { toast, ToastContainer } from 'react-toastify'
 const Architect = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
   let navigate= useNavigate();
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Architect is Created");
+  }
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/signin')
@@ -27,6 +31,17 @@ const Architect = () => {
     <>
     <div className={Styles.container}>
     <Navigation/>
+    <ToastContainer
+          position="top-right"
+          autoClose={1500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
     <div className={Styles.rightcontainer}>
     <StatBox name="Architect"/>
     <ArchitecTable modalHandler={modalHandler} />
@@ -37,7 +52,7 @@ const Architect = () => {
           initial={{ opacity: 0, scale:0 }}
           animate={{ opacity: 1, scale:1 }}
           exit={{ scale:0 }}>
-            <ArchitectCreateForm modalHandler={modalHandler}/>
+            <ArchitectCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate} />
           </motion.div>
         </AnimatePresence>
         </Modal>: null
