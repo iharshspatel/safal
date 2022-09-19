@@ -6,6 +6,7 @@
 
 .itemContainer{
     /* border: 1px solid black; */
+    margin-top: 30%;
     padding: 0px 20px;
     list-style: none;
     display: flex;
@@ -52,5 +53,8 @@
 }
 
 .item p{
+    margin-left: 20px;
+}
+button p{
     margin-left: 20px;
 }

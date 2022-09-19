@@ -31,7 +31,7 @@ const Dealer = () => {
   return (
     <>
     <div className={Styles.container}>
-    <Navigation/>
+    {/* <Navigation/> */}
     <ToastContainer
           position="top-right"
           autoClose={1500}
