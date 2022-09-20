@@ -16,6 +16,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    display: none;
 }
 .heading{
     width: 20%;
@@ -61,14 +62,25 @@
     padding-top: 10px;
     float: right;
     margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
-h2{
+p{
     display: inline-block;
     position: relative;
-    bottom: 8px;
     padding-left: 4px;
+    text-transform: uppercase;
+    font-family: Inter;
+    font-weight: bolder;
 }
 .nav{
     background-color: #005EA1;
     color: whitesmoke;
+    padding: 10px 20px;
+}
+
+.LogoText{
+    display: inline-block;
 }
