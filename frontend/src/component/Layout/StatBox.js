@@ -89,6 +89,18 @@ const StatBox = ({ name, username }) => {
     getStats();
   }, []);
   return (
+    <>
+    <nav className={Styles.nav}>
+        <IconButton className={Styles.IconButton} >
+          <MenuIcon className={Styles.toggle} style={{ color: "whitesmoke" }} fontSize='large' onClick={toggleDrawer(true)} />
+        </IconButton>
+        {/* {name}</h1> */}
+        <div className={Styles.user}>
+          <AccountCircleIcon fontSize='large' />
+          <h2>{username}</h2>
+          {/* {username} */}
+        </div>
+      </nav>
     <div className={Styles.container}>
       <Drawer
         //from which side the drawer slides in
@@ -119,23 +131,15 @@ const StatBox = ({ name, username }) => {
       </Drawer>
 
       {/* <h1 className={Styles.header}> */}
-      <IconButton className={Styles.IconButton} >
-        <MenuIcon className={Styles.toggle} fontSize='large' onClick={toggleDrawer(true)} />
-      </IconButton>
-      {/* {name}</h1> */}
-      <div className={Styles.user}>
-        <AccountCircleIcon fontSize='large' />
-        <h2>{username}</h2>
-        {/* {username} */}
-      </div>
+      {/* //HERE */}
 
       <div className={Styles.BoxContainers}>
-      <div  className={Styles.heading} >
-      <h1>{name}</h1>
-        {/* {name} */}
-      </div>
-       {/* // Architect  */}
-        {name=="Architect"&& <div className={Styles.Box}>
+        <div className={Styles.heading} >
+          <h1>{name}</h1>
+          {/* {name} */}
+        </div>
+        {/* // Architect  */}
+        {name == "Architect" && <div className={Styles.Box}>
           <div className={Styles.subBox}>
             <p>Total Architect</p>
             <h1>{totalarchitect}</h1>
@@ -148,7 +152,7 @@ const StatBox = ({ name, username }) => {
 
         {/* //Mistry} */}
 
-        {name=="Mistry"&& <div className={Styles.Box}>
+        {name == "Mistry" && <div className={Styles.Box}>
           <div className={Styles.subBox}>
             <p>Total Mistry</p>
             <h1 className={Styles.numbers}>{totalmistry}</h1>
@@ -162,7 +166,7 @@ const StatBox = ({ name, username }) => {
 
         {/* Cutomer */}
 
-        {name=="Customer"&&<div className={Styles.Box}>
+        {name == "Customer" && <div className={Styles.Box}>
           <div className={Styles.subBox}>
             <p>Total Customers</p>
             <h1>{totalcustomers}</h1>
@@ -173,7 +177,7 @@ const StatBox = ({ name, username }) => {
           </div>
         </div>}
 
-        <div className={Styles.Box}>
+        {/* <div className={Styles.Box}>
           <div className={Styles.subBox}>
             <p>Total Health</p>
             <h1>{totalHealth}</h1>
@@ -182,9 +186,9 @@ const StatBox = ({ name, username }) => {
           <div className={Styles.imgContainer}>
             <img src={HealthStat} alt="Architect" />
           </div>
-        </div>
+        </div> */}
       </div>
-    </div>
+    </div></>
   )
 }
 
