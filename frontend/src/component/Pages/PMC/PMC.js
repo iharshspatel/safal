@@ -42,7 +42,7 @@ const PMC = () => {
           pauseOnHover
         />
     <div className={Styles.rightcontainer}>
-    <StatBox name="PMC"/>
+    <StatBox name="PMC" username={user.name}/>
     <PMCTable modalHandler={modalHandler}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>

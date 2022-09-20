@@ -44,7 +44,7 @@ const Dealer = () => {
           pauseOnHover
         />
     <div className={Styles.rightcontainer}>
-    <StatBox name="Dealer"/>
+    <StatBox name="Dealer" username={user.name}/>
     <DealerTable modalHandler={modalHandler}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>

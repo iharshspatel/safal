@@ -17,7 +17,16 @@
     display: flex;
     justify-content: space-between;
 }
-
+.heading{
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #f0f0f0;
+    border: 1px solid #EBEBEB;
+    border-radius: 8px;
+    padding:15px 5px;
+}
 
 .Box{
     /* border: 1px solid brown; */
@@ -42,3 +51,18 @@
    margin: 5px 0px;
 }
 
+/* 
+.IconButton{
+    background-color: red;
+} */
+.user{
+    display: inline-block;
+    padding-top: 10px;
+    float: right;
+}
+h2{
+    display: inline-block;
+    position: relative;
+    bottom: 8px;
+    padding-left: 4px;
+}
