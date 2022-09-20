@@ -29,7 +29,7 @@ const Mistry = () => {
   return (
     <>
     <div className={Styles.container}>
-    <Navigation/>
+    {/* <Navigation/> */}
     <ToastContainer
           position="top-right"
           autoClose={1500}
@@ -42,7 +42,7 @@ const Mistry = () => {
           pauseOnHover
         />
     <div className={Styles.rightcontainer}>
-    <StatBox name="Mistry"/>
+    <StatBox name="Mistry" username={user.name}/>
     <MistryTable modalHandler={modalHandler}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>

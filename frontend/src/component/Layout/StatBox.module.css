@@ -2,7 +2,7 @@
     /* border: 1px solid red; */
     /* height: 20vh; */
     background-color: #F0F0F0;
-    padding: 10px;
+    padding: 0 10px 10px 10px;
     
 }
 .header{
@@ -16,8 +16,18 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    display: none;
 }
-
+.heading{
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #f0f0f0;
+    border: 1px solid #EBEBEB;
+    border-radius: 8px;
+    padding:15px 5px;
+}
 
 .Box{
     /* border: 1px solid brown; */
@@ -29,6 +39,7 @@
     border: 1px solid #EBEBEB;
     border-radius: 8px;
     padding:15px 5px;
+    margin-top: 10px;
 }
 
 .subBox > p {
@@ -42,3 +53,34 @@
    margin: 5px 0px;
 }
 
+/* 
+.IconButton{
+    background-color: red;
+} */
+.user{
+    /* display: inline-block; */
+    padding-top: 10px;
+    float: right;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+p{
+    display: inline-block;
+    position: relative;
+    padding-left: 4px;
+    text-transform: uppercase;
+    font-family: Inter;
+    font-weight: bolder;
+}
+.nav{
+    background-color: #005EA1;
+    color: whitesmoke;
+    padding: 10px 20px;
+}
+
+.LogoText{
+    display: inline-block;
+}

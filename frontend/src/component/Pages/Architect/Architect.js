@@ -30,7 +30,7 @@ const Architect = () => {
   return (
     <>
     <div className={Styles.container}>
-    <Navigation/>
+    {/* <Navigation/> */}
     <ToastContainer
           position="top-right"
           autoClose={1500}
@@ -43,7 +43,7 @@ const Architect = () => {
           pauseOnHover
         />
     <div className={Styles.rightcontainer}>
-    <StatBox name="Architect"/>
+    <StatBox name="Architect" username={user.name}/>
     <ArchitecTable modalHandler={modalHandler} />
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>

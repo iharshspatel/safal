@@ -19,7 +19,7 @@ const Customer = () => {
       navigate('/signin')
     }
  
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated]);
 
   const modalHandler = () => {
     setIsOpen(!isOpen);
@@ -31,7 +31,7 @@ const Customer = () => {
   return (
     <>
       <div className={Styles.container}>
-        <Navigation />
+        {/* <Navigation /> */}
         <ToastContainer
           position="top-right"
           autoClose={1500}
@@ -44,7 +44,7 @@ const Customer = () => {
           pauseOnHover
         />
         <div className={Styles.rightcontainer}>
-          <StatBox name="Customer" />
+          <StatBox name="Customer" username={user.name}/>
           <CustomerTable modalHandler={modalHandler} />
           {
             isOpen ? <Modal setIsOpen={setIsOpen}>

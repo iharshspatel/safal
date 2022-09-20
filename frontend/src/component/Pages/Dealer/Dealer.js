@@ -31,7 +31,7 @@ const Dealer = () => {
   return (
     <>
     <div className={Styles.container}>
-    <Navigation/>
+    {/* <Navigation/> */}
     <ToastContainer
           position="top-right"
           autoClose={1500}
@@ -44,7 +44,7 @@ const Dealer = () => {
           pauseOnHover
         />
     <div className={Styles.rightcontainer}>
-    <StatBox name="Dealer"/>
+    <StatBox name="Dealer" username={user.name}/>
     <DealerTable modalHandler={modalHandler}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
