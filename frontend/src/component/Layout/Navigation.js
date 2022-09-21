@@ -102,6 +102,7 @@ const Navigation = () => {
                 <MultipleStopIcon/>
                <p>Dealer</p> 
             </Link>
+
             <button className={Styles.button} onClick={handleclick}  >
             <LogoutIcon/>
             <p>Logout</p>

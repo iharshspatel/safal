@@ -95,9 +95,14 @@ const StatBox = ({ name, username }) => {
           <MenuIcon className={Styles.toggle} style={{ color: "whitesmoke" }} fontSize='large' onClick={toggleDrawer(true)} />
         </IconButton>
         {/* {name}</h1> */}
+        <h4 className={Styles.LogoText}>Safal Marketing</h4>
         <div className={Styles.user}>
           <AccountCircleIcon fontSize='large' />
-          <h2>{username}</h2>
+         { name === "Architect"  && <p>Total Architect : {totalarchitect}</p>}
+         { name === "Mistry"  && <p>Total Mistry : {totalmistry}</p>}
+         { name === "PMC"  && <p>Total Architect : {totalarchitect}</p>}
+         { name === "Customer"  && <p>Total Customer : {totalcustomers}</p>}
+         { name === "Dealer"  && <p>Total Customer : {totalcustomers}</p>}
           {/* {username} */}
         </div>
       </nav>
