@@ -13,7 +13,7 @@ const Customer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/signin')
