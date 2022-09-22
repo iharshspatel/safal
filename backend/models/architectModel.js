@@ -23,7 +23,10 @@ const architectSchema = new mongoose.Schema({
     branchname:String,
     adharcard:Number,
     pancard:String,
-    salesMan:String
+    salesMan:String,
+    branches:[
+        {branchname:String}
+    ]
 });
 
 

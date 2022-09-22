@@ -49,6 +49,9 @@ const customerSchema = new mongoose.Schema({
     },
     pmcName:String,
     pmcNumber:Number,
+    branches:[
+        {branchname:String}
+    ]
 });
 
 

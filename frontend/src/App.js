@@ -28,6 +28,7 @@ function App() {
     <>
     <Routes>
       <Route exact path='/' element={ (!loading && isAuthenticated )? <Customer />:<SignIn/> } />
+      <Route exact path='/customer' element={(loading==false && isAuthenticated) ?<Customer/>:<SignIn/>}/>
       <Route exact path='/architect' element={(loading === false && isAuthenticated === true) ? <Architect />:<SignIn/>} />
       <Route exact path='/dealer' element={(loading === false && isAuthenticated === true) ? <Dealer />:<SignIn/>} />
       <Route exact path='/mistry' element={(loading === false && isAuthenticated === true) ? <Mistry />:<SignIn/>} />

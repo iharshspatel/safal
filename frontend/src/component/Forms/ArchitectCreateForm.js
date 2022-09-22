@@ -1,8 +1,11 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import Styles from './ArchitectCreateForm.module.css'
 import {AiFillCloseCircle} from 'react-icons/ai'
 import axios from "axios"
 import {ToastContainer, toast} from 'react-toastify'
+import Select from 'react-select'
+import { default as ReactSelect } from "react-select";
+import Option from '../DropDown/Options'
 
 const ArchitectCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
     let initialState = {
@@ -19,16 +22,34 @@ const ArchitectCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
         adharcard:"",
         pancard:"",
         date:"",
-        salesMan:""
+        salesMan:"",
+    branches:[],
+
     }
     const [formData, setFormData] = useState(initialState)
     const [isDisabled, setIsDisabled] = useState(false);
-
+    const [Branches, setBranches] = useState([]);
+    const [selectedBranch, setselectedBranch] = useState([]);
     const formHandler = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
-
+    const getAllbranches = async () => {
+        const { data } = await axios.get("/api/v1/branch/getall");
+    
+        const branches = data.branches.map((branch) => (
+          {
+            branchname: branch.branchname,
+            value: branch.branchname,
+            label:branch.branchname
+          }
+        ))
+        setBranches(branches);
+      }
+      
+  useEffect(() => {
+    getAllbranches();
+  }, []);
     const submitHandler = async(e) => {
         e.preventDefault();
         setIsDisabled(true);
@@ -47,13 +68,15 @@ const ArchitectCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
         pancard:formData.pancard,
         date:formData.date,
         IFSCcode:formData.IFSCcode,
-        salesMan:formData.salesMan
+        salesMan:formData.salesMan,
+      branches:selectedBranch
+
         }
         console.log(data)
         try{
         const response = await axios.post("/api/v1/architect/create", data, {headers:{"Content-Type" : "application/json"}});
         console.log(response);
-        // toast.success("Architech is Created");
+        
         parentCallback(true);
         setIsOpen(false);
         
@@ -65,21 +88,14 @@ const ArchitectCreateForm = ({modalHandler,setIsOpen,parentCallback}) => {
         }
         
     }
+    const Branchchangehandler = (selected) => {
+
+        setselectedBranch(selected);
+        console.log(selected);
+        setFormData({...formData,selectedBranch})
+      };
   return (
     <div className={Styles.container}>
-{/* <ToastContainer
-position="top-right"
-autoClose={2000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-/> */}
-{/* Same as */}
-<ToastContainer />
         <div className={Styles.closebutton} onClick={modalHandler}>
             <AiFillCloseCircle/>
         </div>
@@ -120,6 +136,19 @@ pauseOnHover
 
         <label htmlFor='salesMan'>Sales Man </label>
         <input className={Styles.inputTag} onChange={(e)=>{formHandler(e)}} value={formData.salesMan} name="salesMan" placeholder='Company Name'/>
+        <label>Branches</label>
+          <ReactSelect lassName={Styles.inputTag}
+            options={Branches}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false}
+            components={{
+              Option
+            }}
+            onChange={Branchchangehandler}
+            allowSelectAll={true}
+            value={selectedBranch}
+          />
         </div>
         </div>
 

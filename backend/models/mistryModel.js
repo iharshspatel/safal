@@ -24,6 +24,9 @@ const mistrySchema = new mongoose.Schema({
     adharcard:Number,
     pancard:String, 
     salesMan:String, 
+    branches:[
+        {branchname:String}
+    ]
 });
 
 
