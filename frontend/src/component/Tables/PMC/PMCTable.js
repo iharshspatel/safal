@@ -7,7 +7,8 @@ import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
-import MistryEditForm from '../../Forms/MistryEditForm';
+// import MistryEditForm from '../../Forms/MistryEditForm';
+import PMCEditForm from '../../Forms/PMCEditForm'
 import { toast, ToastContainer } from 'react-toastify'
 
 const PMCTable = ({modalHandler}) => {
@@ -147,7 +148,7 @@ const PMCTable = ({modalHandler}) => {
     </div>
 
     {
-      editModal ? <Modal><MistryEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
+      editModal ? <Modal><PMCEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
 
     <div className={Styles.filter}>
 

@@ -50,7 +50,7 @@ exports.updateMistry = catchAsyncErrors(async(req, res, next)=>{
         useFindAndModify:false
  
     });
-    await architect.save();
+    await mistry.save();
 
     res.status(200).json({
         mistry,
