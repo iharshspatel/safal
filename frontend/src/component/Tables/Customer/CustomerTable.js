@@ -168,7 +168,7 @@ const CustomerTable = ({ modalHandler }) => {
         {/* = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); */}
         <div className={Styles.Yellow}>
         <div className={Styles.DateRangeContainer}>
-            <label>Branche</label>
+            {/* <label>Branche</label> */}
             <Select selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
           <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
           <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />

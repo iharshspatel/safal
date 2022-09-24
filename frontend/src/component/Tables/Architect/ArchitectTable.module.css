@@ -79,6 +79,6 @@
 }
 .Yellow{
     display: flex;
-    justify-content: space-between;
-    float: left;
+    justify-content: center;
+
 }

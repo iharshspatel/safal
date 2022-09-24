@@ -127,7 +127,7 @@ const ArchitecTable = ({ modalHandler }) => {
         <div className={Styles.Yellow}>
 
           <div className={Styles.DateRangeContainer}>
-            <label>Branch</label>
+            {/* <label>Branch</label> */}
             <Select onChange={(e) => handlebranch(e)} options={branches} />
             <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
             <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />
