@@ -18,7 +18,7 @@ const ArchitecTable = ({ modalHandler }) => {
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch=[];
+  let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
@@ -87,7 +87,7 @@ const ArchitecTable = ({ modalHandler }) => {
     const response = await axios.post("/api/v1/branch/architects", selectedBranch, { headers: { "Content-Type": "application/json" } });
     // const { data } = await axios.get("/api/v1/branch/architects");
     console.log(response);
-    const newarchitects=response.data.architects;
+    const newarchitects = response.data.architects;
     // setArchitects(newarchitects);
     setTableData(newarchitects);
     setIsLoading(false);
@@ -95,7 +95,7 @@ const ArchitecTable = ({ modalHandler }) => {
   const handlebranch = (selected) => {
     console.log(selected);
     // setselectedBranch(selected);
-    selectedBranch=selected;
+    selectedBranch = selected;
     fetchArchitectsofBranch();
   }
 
@@ -113,28 +113,30 @@ const ArchitecTable = ({ modalHandler }) => {
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
-        <div className={Styles.header}>
-          <h3>All Architect</h3>
+          <div className={Styles.header}>
+            <h3>All Architect</h3>
 
-          <div className={Styles.buttonContainer}>
-            <img className={Styles.addImg} src={Add} alt="add" />
-            <p className={Styles.buttonText} onClick={modalHandler}>
-              Add Architect
-            </p>
-        
+            <div className={Styles.buttonContainer}>
+              <img className={Styles.addImg} src={Add} alt="add" />
+              <p className={Styles.buttonText} onClick={modalHandler}>
+                Add Architect
+              </p>
+
+            </div>
+          </div>
+        <div className={Styles.Yellow}>
+
+          <div className={Styles.DateRangeContainer}>
+            <label>Branch</label>
+            <Select onChange={(e) => handlebranch(e)} options={branches} />
+            <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
+            <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />
+            <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>
 
-        <div className={Styles.DateRangeContainer}>
-            <label>Branch</label>
-            <Select  onChange={(e) => handlebranch(e)} options={branches} />
-          <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
-          <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />
-          <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
-        </div>
-
         {architects && <MaterialTable
-        isLoading={isLoading}
+          isLoading={isLoading}
           className={Styles.Table}
           columns={[
             { title: 'Date', field: 'date', type: "date", dateSetting: { locale: "en-GB" }, },

@@ -77,3 +77,8 @@
     border: none;
     border-radius: 8px;
 }
+.Yellow{
+    display: flex;
+    justify-content: space-between;
+    float: left;
+}

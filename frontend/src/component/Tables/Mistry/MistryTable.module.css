@@ -21,6 +21,11 @@
     margin:10px;
     
 }
+.Yellow{
+    display: flex;
+    justify-content: space-between;
+    float: left;
+}
 
 .filter{
     border: 1px solid blue;

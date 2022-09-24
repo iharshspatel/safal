@@ -166,12 +166,14 @@ const CustomerTable = ({ modalHandler }) => {
           </div>
         </div>
         {/* = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); */}
+        <div className={Styles.Yellow}>
         <div className={Styles.DateRangeContainer}>
             <label>Branche</label>
             <Select selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
           <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
           <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />
           <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
+        </div>
         </div>
 
         {customers && <MaterialTable

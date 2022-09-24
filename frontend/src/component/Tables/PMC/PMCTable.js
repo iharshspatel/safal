@@ -123,6 +123,7 @@ const PMCTable = ({modalHandler}) => {
      </div>
      </div>
 
+     <div className={Styles.Yellow}>
      <div className={Styles.DateRangeContainer}>
      <label>Branch</label>
             <Select  onChange={(e) => handlebranch(e)} options={branches} />
@@ -130,6 +131,7 @@ const PMCTable = ({modalHandler}) => {
   <input className={Styles.InputDate}  onChange={(e)=>endDateHandler(e)} type="date"/>
   <button className={Styles.SubmitButton} onClick={(e)=>submitDateRangeHandler(e)} type="submit"> Submit </button>
   </div>
+     </div>
 
     {PMC && <MaterialTable
     isLoading={isLoading}
