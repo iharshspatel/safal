@@ -1,6 +1,11 @@
 const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncError");
-const Branch = require("../models/branchModel")
+const Branch = require("../models/branchModel");
+const Customer=require("../models/customerModel");
+const Architect=require("../models/architectModel");
+const Dealer=require("../models/dealerModel")
+const Mistry=require("../models/mistryModel")
+const PMC=require("../models/pmcModel")
 
 
 exports.createbranch= catchAsyncErrors(async(req, res, next)=>{
@@ -74,4 +79,66 @@ exports.getAllBranches = catchAsyncErrors(async(req, res, next)=>{
         branches,
         success:true
        })
+})
+
+exports.getCustomerofBranch=catchAsyncErrors(async(req,res,next)=>{
+    const branchname=req.body.branchname;
+    if(!branchname){
+        return next(new ErrorHander("Please Provide branchname",400))
+        // res.status(400).json({ })
+    }
+    const customers=await Customer.find({"branches.branchname":branchname})
+    res.status(200).json({
+        customers,
+        success:true
+    })
+})
+
+exports.getArchitectsofBranch=catchAsyncErrors(async(req,res,next)=>{
+    const branchname=req.body.branchname;
+    if(!branchname){
+        return next(new ErrorHander("Please Provide branchname",400))
+        // res.status(400).json({ })
+    }
+    const architects=await Architect.find({"branches.branchname":branchname})
+    res.status(200).json({
+        architects,
+        success:true
+    })
+})
+exports.getDealersofBranch=catchAsyncErrors(async(req,res,next)=>{
+    const branchname=req.body.branchname;
+    if(!branchname){
+        return next(new ErrorHander("Please Provide branchname",400))
+        // res.status(400).json({ })
+    }
+    const dealer=await Dealer.find({"branches.branchname":branchname})
+    res.status(200).json({
+        dealer,
+        success:true
+    })
+})
+exports.getMistryofBranch=catchAsyncErrors(async(req,res,next)=>{
+    const branchname=req.body.branchname;
+    if(!branchname){
+        return next(new ErrorHander("Please Provide branchname",400))
+        // res.status(400).json({ })
+    }
+    const mistry=await Mistry.find({"branches.branchname":branchname})
+    res.status(200).json({
+        mistry,
+        success:true
+    })
+})
+exports.getPMCofBranch=catchAsyncErrors(async(req,res,next)=>{
+    const branchname=req.body.branchname;
+    if(!branchname){
+        return next(new ErrorHander("Please Provide branchname",400))
+        // res.status(400).json({ })
+    }
+    const pmc=await PMC.find({"branches.branchname":branchname})
+    res.status(200).json({
+        pmc,
+        success:true
+    })
 })

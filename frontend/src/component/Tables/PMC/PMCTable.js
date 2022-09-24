@@ -7,8 +7,10 @@ import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
-import MistryEditForm from '../../Forms/MistryEditForm';
+// import MistryEditForm from '../../Forms/MistryEditForm';
+import PMCEditForm from '../../Forms/PMCEditForm'
 import { toast, ToastContainer } from 'react-toastify'
+import Select from 'react-select'
 
 const PMCTable = ({modalHandler}) => {
   const [PMC, setPMC] = useState([]);
@@ -17,7 +19,9 @@ const PMCTable = ({modalHandler}) => {
   const [tabledata, setTableData] = useState([])
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
-
+  const [branches, setBranches] = useState([]);
+  let selectedBranch=[];
+  const [isLoading, setIsLoading] = useState(false)
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
   }
@@ -57,10 +61,49 @@ const PMCTable = ({modalHandler}) => {
   const fetchPMC = async() =>{
     const {data} = await axios.get("/api/v1/pmc/getall");
     setPMC(data.pmcs);
-    setPMC(data.pmcs);
+    setTableData(data.pmcs);
   }
+  
+  const fetchBranches = async () => {
+    const { data } = await axios.get("/api/v1/branch/getall");
+    // console.log(data.branches);
+    const branches = data.branches.map((branch) => (
+      {
+        branchname: branch.branchname,
+        value: branch.branchname,
+        label: branch.branchname
+
+      }
+    ))
+    setBranches(branches);
+  }
+  const sleep = time => {
+    return new Promise(resolve => setTimeout(resolve, time));
+  };
+
+  const fetchPMCsofBranch = async () => {
+    setIsLoading(true);
+    sleep(500);
+    // let data=selectedBranch;
+    console.log(selectedBranch);
+    const response = await axios.post("/api/v1/branch/pmc", selectedBranch, { headers: { "Content-Type": "application/json" } });
+    // const { data } = await axios.get("/api/v1/branch/architects");
+    console.log(response);
+    const newarchitects=response.data.pmc;
+    // setArchitects(newarchitects);
+    setTableData(newarchitects);
+    setIsLoading(false);
+  }
+  const handlebranch = (selected) => {
+    console.log(selected);
+    // setselectedBranch(selected);
+    selectedBranch=selected;
+    fetchPMCsofBranch();
+  }
+
   useEffect(() => {
     fetchPMC();
+    fetchBranches();
   }, []);
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
@@ -80,13 +123,18 @@ const PMCTable = ({modalHandler}) => {
      </div>
      </div>
 
+     <div className={Styles.Yellow}>
      <div className={Styles.DateRangeContainer}>
+     {/* <label>Branch</label> */}
+            <Select  onChange={(e) => handlebranch(e)} options={branches} />
   <input  className={Styles.InputDate} onChange={(e)=>startDateHandler(e)} type="date"/>
   <input className={Styles.InputDate}  onChange={(e)=>endDateHandler(e)} type="date"/>
   <button className={Styles.SubmitButton} onClick={(e)=>submitDateRangeHandler(e)} type="submit"> Submit </button>
   </div>
+     </div>
 
     {PMC && <MaterialTable
+    isLoading={isLoading}
      className={Styles.Table}
       columns={[
         { title: 'Date', field: 'date', type:"date", dateSetting: { locale: "en-GB" },},
@@ -103,7 +151,7 @@ const PMCTable = ({modalHandler}) => {
         { title: 'Adhar Card', field: 'adharcard',hidden:'true' },
         { title: 'Pan Card', field: 'pancard',hidden:'true' },
       ]}
-      data={PMC}        
+      data={tabledata}        
       options={{
         sorting: true,
         headerStyle: {
@@ -147,7 +195,7 @@ const PMCTable = ({modalHandler}) => {
     </div>
 
     {
-      editModal ? <Modal><MistryEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
+      editModal ? <Modal><PMCEditForm modalHandler={()=>{setEditModal(false)}} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate}/></Modal> : null   }
 
     <div className={Styles.filter}>
 

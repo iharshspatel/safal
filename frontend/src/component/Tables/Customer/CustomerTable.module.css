@@ -10,7 +10,11 @@
     background-color: #F0F0F0;
     display: flex;
 }
+.Yellow{
+    display: flex;
+    justify-content: center;
 
+}
 
 .table{
     /* border: 1px solid yellowgreen; */
@@ -55,6 +59,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    float: left;
 }
 
 .DateRangeContainer{

@@ -38,7 +38,7 @@ const ForgotPassword = () => {
         }
     });
     function handleBack() {
-        navigate(-1);
+        navigate('/signin');
     }
     return (
         <>
