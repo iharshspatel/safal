@@ -12,6 +12,7 @@ import Mistry from './component/Pages/Mistry/Mistry';
 import PMC from './component/Pages/PMC/PMC';
 import store from './store';
 import SignIn from './component/Auth/Signin/signin';
+import Branch from './component/Pages/Branch/Branch'
 import ForgotPassword from './component/Auth/Forgot Password/ForgotPassword';
 import ResetPassword from './component/Auth/Forgot Password/ResetPassword';
 // import SignUp from './component/Auth/Signup/signup'
@@ -33,6 +34,7 @@ function App() {
       <Route exact path='/dealer' element={(loading === false && isAuthenticated === true) ? <Dealer />:<SignIn/>} />
       <Route exact path='/mistry' element={(loading === false && isAuthenticated === true) ? <Mistry />:<SignIn/>} />
       <Route exact path='/pmc' element={(loading === false && isAuthenticated === true) ? <PMC />:<SignIn/>} />
+      <Route exact path='/branch' element={(loading === false && isAuthenticated === true) ? <Branch />:<SignIn/>} />
       <Route exact path='/signin' element={<SignIn />} />
       <Route exact path="/password/forgot" element=<ForgotPassword/> />
       <Route exact path="/password/reset/:token" element=<ResetPassword/> />

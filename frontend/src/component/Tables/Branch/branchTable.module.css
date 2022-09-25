@@ -1,0 +1,85 @@
+.container{
+    /* border: 2px solid green; */
+    height: 80vh;
+    background-color: #F0F0F0;
+}
+
+.container{
+    /* border: 2px solid green; */
+    height: 82vh;
+    background-color: #F0F0F0;
+    display: flex;
+}
+.Yellow{
+    display: flex;
+    justify-content: center;
+
+}
+
+.table{
+    /* border: 1px solid yellowgreen; */
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #EBEBEB;
+    border-radius: 8px;
+    margin:10px;
+    
+}
+
+.filter{
+    border: 1px solid blue;
+    width: 25%;
+    background-color: #FFFFFF;
+    border: 1px solid #EBEBEB;
+    border-radius: 8px;
+    margin: 10px;
+    display: none;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 20px;
+}
+.addImg{
+    margin: 0px 10px;
+}
+
+.buttonText{
+    color: #646363;
+    font-weight: 700;
+
+}
+
+.header:hover{
+    cursor: pointer;
+}
+
+.buttonContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+}
+
+.DateRangeContainer{
+    /* border: 2px solid red; */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.InputDate{
+    border: 1px solid grey;
+    padding: 5px 20px ;
+    margin-left: 10px;
+}
+
+.SubmitButton{
+    padding: 5px 20px;
+    margin: 10px 20px;
+    background-color: #005EA1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}

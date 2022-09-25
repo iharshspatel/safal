@@ -10,6 +10,7 @@ import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import MistryEditForm from '../../Forms/MistryEditForm';
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
+import TextField from '@mui/material/TextField';
 
 const MistryTable = ({ modalHandler }) => {
   const [mistry, setMistry] = useState([]);
@@ -124,8 +125,30 @@ const MistryTable = ({ modalHandler }) => {
           <div className={Styles.DateRangeContainer}>
             {/* <label>Branch</label> */}
             <Select onChange={(e) => handlebranch(e)} options={branches} />
-            <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
-            <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="Start Date"
+              type="date"
+              // defaultValue="2017-05-24"
+              onChange={(e) => startDateHandler(e)}
+              sx={{ width: 180 ,margin:1}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="End Date"
+              type="date"
+              onChange={(e) => endDateHandler(e)}
+              // defaultValue="2017-05-24"
+              sx={{ width: 180 ,margin:1}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
 
