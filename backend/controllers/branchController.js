@@ -162,3 +162,14 @@ exports.getPMCofBranch = catchAsyncErrors(async (req, res, next) => {
         success: true
     })
 })
+exports.deleteBranch = catchAsyncErrors(async (req, res, next) => {
+
+    let t = req.params.branchname;
+
+    const branch= await Branch.findOneAndDelete({branchname:t});
+
+    res.status(200).json({
+        branch,
+        success: true
+    })
+})

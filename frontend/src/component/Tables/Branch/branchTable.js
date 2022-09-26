@@ -15,6 +15,7 @@ const BranchTable = ({ modalHandler }) => {
     const [branches, setBranches] = useState([]);
     const deleteHandler = async (id) => {
         const data = await axios.delete(`/api/v1/branch/delete/${id}`);
+        console.log(id)
         fetchBranches();
     }
     const fetchBranches = async () => {
@@ -89,7 +90,7 @@ const BranchTable = ({ modalHandler }) => {
                             tooltip: 'Delete',
                             onClick: (event, rowData) => {
 
-                                deleteHandler(rowData._id);
+                                deleteHandler(rowData.branchname);
                                 console.log(`delete `, rowData)
                             }
                         }
