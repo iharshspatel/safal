@@ -110,6 +110,34 @@ const DealerTable = ({ modalHandler }) => {
     toast.success("Dealer edited");
   }
 
+  const customStyles = {
+    control: base => ({
+        ...base,
+        minHeight: 55
+    }),
+    dropdownIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    clearIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    multiValue: base => ({
+        ...base,
+        // backgroundColor: variables.colorPrimaryLighter
+    }),
+    valueContainer: base => ({
+        ...base,
+        padding: '0px 6px'
+    }),
+    input: base => ({
+        ...base,
+        margin: 0,
+        padding: 0
+    })
+};
+
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -127,7 +155,7 @@ const DealerTable = ({ modalHandler }) => {
         <div className={Styles.Yellow}>
         <div className={Styles.DateRangeContainer}>
           {/* <label>Branch</label> */}
-          <Select onChange={(e) => handlebranch(e)} options={branches} />
+          <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
           <TextField
               className={Styles.InputDate}
               id="date"

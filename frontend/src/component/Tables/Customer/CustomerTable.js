@@ -152,6 +152,34 @@ const CustomerTable = ({ modalHandler }) => {
     toast.success("Customer edited");
   }
 
+  const customStyles = {
+    control: base => ({
+        ...base,
+        minHeight: 55
+    }),
+    dropdownIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    clearIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    multiValue: base => ({
+        ...base,
+        // backgroundColor: variables.colorPrimaryLighter
+    }),
+    valueContainer: base => ({
+        ...base,
+        padding: '0px 6px'
+    }),
+    input: base => ({
+        ...base,
+        margin: 0,
+        padding: 0
+    })
+};
+
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -169,7 +197,7 @@ const CustomerTable = ({ modalHandler }) => {
         <div className={Styles.Yellow}>
           <div className={Styles.DateRangeContainer}>
             {/* <label>Branche</label> */}
-            <Select selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
+            <Select styles={customStyles} selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
             <TextField
               className={Styles.InputDate}
               id="date"
