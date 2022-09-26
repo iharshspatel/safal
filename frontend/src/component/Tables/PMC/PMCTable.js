@@ -11,6 +11,7 @@ import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import PMCEditForm from '../../Forms/PMCEditForm'
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
+import TextField from '@mui/material/TextField';
 
 const PMCTable = ({modalHandler}) => {
   const [PMC, setPMC] = useState([]);
@@ -109,6 +110,33 @@ const PMCTable = ({modalHandler}) => {
     // console.log("Parent Invoked!!")
     toast.success("PMC edited");
   }
+  const customStyles = {
+    control: base => ({
+        ...base,
+        minHeight: 55
+    }),
+    dropdownIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    clearIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    multiValue: base => ({
+        ...base,
+        // backgroundColor: variables.colorPrimaryLighter
+    }),
+    valueContainer: base => ({
+        ...base,
+        padding: '0px 6px'
+    }),
+    input: base => ({
+        ...base,
+        margin: 0,
+        padding: 0
+    })
+};
   return (
     <div className={Styles.container}>
     <div className={Styles.table}>
@@ -126,9 +154,31 @@ const PMCTable = ({modalHandler}) => {
      <div className={Styles.Yellow}>
      <div className={Styles.DateRangeContainer}>
      {/* <label>Branch</label> */}
-            <Select  onChange={(e) => handlebranch(e)} options={branches} />
-  <input  className={Styles.InputDate} onChange={(e)=>startDateHandler(e)} type="date"/>
-  <input className={Styles.InputDate}  onChange={(e)=>endDateHandler(e)} type="date"/>
+            <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="Start Date"
+              type="date"
+              // defaultValue="2017-05-24"
+              onChange={(e) => startDateHandler(e)}
+              sx={{ width: 180 ,margin:1}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="End Date"
+              type="date"
+              onChange={(e) => endDateHandler(e)}
+              // defaultValue="2017-05-24"
+              sx={{ width: 180 ,margin:1}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
   <button className={Styles.SubmitButton} onClick={(e)=>submitDateRangeHandler(e)} type="submit"> Submit </button>
   </div>
      </div>

@@ -9,7 +9,7 @@ import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import { toast, ToastContainer } from 'react-toastify';
 import Select from 'react-select'
-
+import TextField from '@mui/material/TextField';
 const ArchitecTable = ({ modalHandler }) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
@@ -106,6 +106,34 @@ const ArchitecTable = ({ modalHandler }) => {
     fetchArchitect();
 
   }, []);
+
+  const customStyles = {
+    control: base => ({
+        ...base,
+        minHeight: 55
+    }),
+    dropdownIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    clearIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    multiValue: base => ({
+        ...base,
+        //backgroundColor: variables.colorPrimaryLighter
+    }),
+    valueContainer: base => ({
+        ...base,
+        padding: '0px 6px'
+    }),
+    input: base => ({
+        ...base,
+        margin: 0,
+        padding: 0
+    })
+};
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Architect edited");
@@ -113,24 +141,45 @@ const ArchitecTable = ({ modalHandler }) => {
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
-          <div className={Styles.header}>
-            <h3>All Architect</h3>
+        <div className={Styles.header}>
+          <h3>All Architect</h3>
 
-            <div className={Styles.buttonContainer}>
-              <img className={Styles.addImg} src={Add} alt="add" />
-              <p className={Styles.buttonText} onClick={modalHandler}>
-                Add Architect
-              </p>
+          <div className={Styles.buttonContainer}>
+            <img className={Styles.addImg} src={Add} alt="add" />
+            <p className={Styles.buttonText} onClick={modalHandler}>
+              Add Architect
+            </p>
 
-            </div>
           </div>
+        </div>
         <div className={Styles.Yellow}>
 
           <div className={Styles.DateRangeContainer}>
-            {/* <label>Branch</label> */}
-            <Select onChange={(e) => handlebranch(e)} options={branches} />
-            <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
-            <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />
+            <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="Start Date"
+              type="date"
+              // defaultValue="2017-05-24"
+              onChange={(e) => startDateHandler(e)}
+              sx={{ width: 180 ,margin:1}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="End Date"
+              type="date"
+              onChange={(e) => endDateHandler(e)}
+              // defaultValue="2017-05-24"
+              sx={{ width: 180 ,margin:1}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>

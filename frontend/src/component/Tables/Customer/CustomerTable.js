@@ -10,7 +10,7 @@ import CustomerEditForm from '../../Forms/CustomerEditForm';
 import DummyEditForm from '../../Forms/DummyEditForm';
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
-
+import TextField from '@mui/material/TextField';
 const CustomerTable = ({ modalHandler }) => {
 
   const [customers, setCustomers] = useState([]);
@@ -20,7 +20,7 @@ const CustomerTable = ({ modalHandler }) => {
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch=[];
+  let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
 
   const modifyData = (data) => {
@@ -103,7 +103,7 @@ const CustomerTable = ({ modalHandler }) => {
     setCustomers(modifyData(data.customers));
     setTableData(modifyData(data.customers));
   }
-   
+
   const fetchBranches = async () => {
     const { data } = await axios.get("/api/v1/branch/getall");
     // console.log(data.branches);
@@ -129,7 +129,7 @@ const CustomerTable = ({ modalHandler }) => {
     const response = await axios.post("/api/v1/branch/customers", selectedBranch, { headers: { "Content-Type": "application/json" } });
     // const { data } = await axios.get("/api/v1/branch/architects");
     console.log(response);
-    const newcust=response.data.customers;
+    const newcust = response.data.customers;
     // setCustomers(newcust);
     setTableData(newcust);
     setIsLoading(false);
@@ -137,11 +137,11 @@ const CustomerTable = ({ modalHandler }) => {
   const handlebranch = (selected) => {
     console.log(selected);
     // setselectedBranch(selected);
-    selectedBranch=selected;
+    selectedBranch = selected;
     fetchCustomersofBranch();
   }
 
-  
+
   useEffect(() => {
     fetchCustomers();
     fetchBranches();
@@ -151,6 +151,34 @@ const CustomerTable = ({ modalHandler }) => {
     // console.log("Parent Invoked!!")
     toast.success("Customer edited");
   }
+
+  const customStyles = {
+    control: base => ({
+        ...base,
+        minHeight: 55
+    }),
+    dropdownIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    clearIndicator: base => ({
+        ...base,
+        padding: 4
+    }),
+    multiValue: base => ({
+        ...base,
+        // backgroundColor: variables.colorPrimaryLighter
+    }),
+    valueContainer: base => ({
+        ...base,
+        padding: '0px 6px'
+    }),
+    input: base => ({
+        ...base,
+        margin: 0,
+        padding: 0
+    })
+};
 
   return (
     <div className={Styles.container}>
@@ -167,17 +195,39 @@ const CustomerTable = ({ modalHandler }) => {
         </div>
         {/* = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); */}
         <div className={Styles.Yellow}>
-        <div className={Styles.DateRangeContainer}>
+          <div className={Styles.DateRangeContainer}>
             {/* <label>Branche</label> */}
-            <Select selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
-          <input className={Styles.InputDate} onChange={(e) => startDateHandler(e)} type="date" />
-          <input className={Styles.InputDate} onChange={(e) => endDateHandler(e)} type="date" />
-          <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
-        </div>
+            <Select styles={customStyles} selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="Start Date"
+              type="date"
+              // defaultValue="2017-05-24"
+              onChange={(e) => startDateHandler(e)}
+              sx={{ width: 180, margin: 1 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              className={Styles.InputDate}
+              id="date"
+              label="End Date"
+              type="date"
+              onChange={(e) => endDateHandler(e)}
+              // defaultValue="2017-05-24"
+              sx={{ width: 180, margin: 1 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
+          </div>
         </div>
 
         {customers && <MaterialTable
-        isLoading={isLoading}
+          isLoading={isLoading}
           className={Styles.Table}
           columns={[
             { title: 'Date', field: 'date', type: "date", dateSetting: { locale: "en-GB" }, },

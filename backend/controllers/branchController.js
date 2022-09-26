@@ -1,144 +1,175 @@
 const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncError");
 const Branch = require("../models/branchModel");
-const Customer=require("../models/customerModel");
-const Architect=require("../models/architectModel");
-const Dealer=require("../models/dealerModel")
-const Mistry=require("../models/mistryModel")
-const PMC=require("../models/pmcModel")
+const Customer = require("../models/customerModel");
+const Architect = require("../models/architectModel");
+const Dealer = require("../models/dealerModel")
+const Mistry = require("../models/mistryModel")
+const PMC = require("../models/pmcModel")
 
 
-exports.createbranch= catchAsyncErrors(async(req, res, next)=>{
+exports.createbranch = catchAsyncErrors(async (req, res, next) => {
     const t = req.body;
     console.log(req.body);
 
     const branch = await Branch.create(t)
 
-   res.status(200).json({
-    branch,
-    success:true
-   })
+    res.status(200).json({
+        branch,
+        success: true
+    })
 })
-exports.totalbranch = catchAsyncErrors(async(req, res, next)=>{
-   
+exports.totalbranch = catchAsyncErrors(async (req, res, next) => {
+
     const branches = await Branch.find();
 
     res.status(200).json({
-        branchsize:branches.length,
-        success:true
-       })
+        branchsize: branches.length,
+        success: true
+    })
 })
-exports.getBranch = catchAsyncErrors(async(req, res, next)=>{
-    
+exports.getBranch = catchAsyncErrors(async (req, res, next) => {
+
     let t = req.params.id;
 
     const branch = await Branch.findById(t)
 
     res.status(200).json({
         branch,
-        success:true
-       })
+        success: true
+    })
 })
 
-exports.updateBranch = catchAsyncErrors(async(req, res, next)=>{
-    
+exports.updateBranch = catchAsyncErrors(async (req, res, next) => {
+
     let t = req.params.id;
     let body = req.body
 
-    const branch = await Branch.findByIdAndUpdate(t,body,{
-        new:true,
-        runValidators:true,
-        useFindAndModify:false
- 
+    const branch = await Branch.findByIdAndUpdate(t, body, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false
+
     });
     await branch.save();
 
     res.status(200).json({
         branch,
-        success:true
-       })
+        success: true
+    })
 })
 
-exports.deleteBranch = catchAsyncErrors(async(req, res, next)=>{
-    
+exports.deleteBranch = catchAsyncErrors(async (req, res, next) => {
+
     let t = req.params.id;
 
     const branch = await Branch.findByIdAndDelete(t);
 
     res.status(200).json({
         branch,
-        success:true
-       })
+        success: true
+    })
 })
 
-exports.getAllBranches = catchAsyncErrors(async(req, res, next)=>{
+exports.getAllBranches = catchAsyncErrors(async (req, res, next) => {
 
-    const branches = await Branch.find();
-
+    let branches = await Branch.find();
+    const lengths = await getarc(branches);
     res.status(200).json({
         branches,
-        success:true
-       })
+        lengths,
+        success: true
+    })
 })
-
-exports.getCustomerofBranch=catchAsyncErrors(async(req,res,next)=>{
-    const branchname=req.body.branchname;
-    if(!branchname){
-        return next(new ErrorHander("Please Provide branchname",400))
-        // res.status(400).json({ })
+async function getarc(br) {
+    let branhes = [];
+    for (let i = 0; i < br.length; i++) {
+        const architects = await Architect.find({ "branches.branchname": br[i].branchname })
+        const customers = await Customer.find({ "branches.branchname": br[i].branchname })
+        const pmc = await PMC.find({ "branches.branchname": br[i].branchname })
+        const mistry = await Mistry.find({ "branches.branchname": br[i].branchname })
+        const dealer = await Dealer.find({ "branches.branchname": br[i].branchname })
+        const n = {
+            ...br[i],
+            arclen: architects.length,
+            custlen: customers.length,
+            deallen: dealer.length,
+            mistlen: mistry.length,
+            pmclen: pmc.length
+        }
+        branhes.push(n)
     }
-    const customers=await Customer.find({"branches.branchname":branchname})
+    return branhes;
+}
+exports.getCustomerofBranch = catchAsyncErrors(async (req, res, next) => {
+    const branchname = req.body.branchname;
+    if (!branchname) {
+        return next(new ErrorHander("Please Provide branchname", 400))
+
+    }
+    const customers = await Customer.find({ "branches.branchname": branchname })
     res.status(200).json({
         customers,
-        success:true
+        success: true
     })
 })
 
-exports.getArchitectsofBranch=catchAsyncErrors(async(req,res,next)=>{
-    const branchname=req.body.branchname;
-    if(!branchname){
-        return next(new ErrorHander("Please Provide branchname",400))
-        // res.status(400).json({ })
+exports.getArchitectsofBranch = catchAsyncErrors(async (req, res, next) => {
+    const branchname = req.body.branchname;
+    if (!branchname) {
+        return next(new ErrorHander("Please Provide branchname", 400))
+
     }
-    const architects=await Architect.find({"branches.branchname":branchname})
+    const architects = await Architect.find({ "branches.branchname": branchname })
     res.status(200).json({
         architects,
-        success:true
+        success: true
     })
 })
-exports.getDealersofBranch=catchAsyncErrors(async(req,res,next)=>{
-    const branchname=req.body.branchname;
-    if(!branchname){
-        return next(new ErrorHander("Please Provide branchname",400))
-        // res.status(400).json({ })
+exports.getDealersofBranch = catchAsyncErrors(async (req, res, next) => {
+    const branchname = req.body.branchname;
+    if (!branchname) {
+        return next(new ErrorHander("Please Provide branchname", 400))
+
     }
-    const dealer=await Dealer.find({"branches.branchname":branchname})
+    const dealer = await Dealer.find({ "branches.branchname": branchname })
     res.status(200).json({
         dealer,
-        success:true
+        success: true
     })
 })
-exports.getMistryofBranch=catchAsyncErrors(async(req,res,next)=>{
-    const branchname=req.body.branchname;
-    if(!branchname){
-        return next(new ErrorHander("Please Provide branchname",400))
-        // res.status(400).json({ })
+exports.getMistryofBranch = catchAsyncErrors(async (req, res, next) => {
+    const branchname = req.body.branchname;
+    if (!branchname) {
+        return next(new ErrorHander("Please Provide branchname", 400))
+
     }
-    const mistry=await Mistry.find({"branches.branchname":branchname})
+    const mistry = await Mistry.find({ "branches.branchname": branchname })
     res.status(200).json({
         mistry,
-        success:true
+        success: true
     })
 })
-exports.getPMCofBranch=catchAsyncErrors(async(req,res,next)=>{
-    const branchname=req.body.branchname;
-    if(!branchname){
-        return next(new ErrorHander("Please Provide branchname",400))
-        // res.status(400).json({ })
+exports.getPMCofBranch = catchAsyncErrors(async (req, res, next) => {
+    const branchname = req.body.branchname;
+    if (!branchname) {
+        return next(new ErrorHander("Please Provide branchname", 400))
+
     }
-    const pmc=await PMC.find({"branches.branchname":branchname})
+    const pmc = await PMC.find({ "branches.branchname": branchname })
     res.status(200).json({
         pmc,
-        success:true
+        success: true
+    })
+})
+exports.deleteBranch = catchAsyncErrors(async (req, res, next) => {
+
+    let t = req.params.branchname;
+
+    const branch= await Branch.findOneAndDelete({branchname:t});
+
+    res.status(200).json({
+        branch,
+        success: true
     })
 })

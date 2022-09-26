@@ -14,7 +14,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import pmcSelected from '../../Assets/Menu/PMCmenu-selected.svg'
 import dealer from '../../Assets/Menu/VectorDealerMenu.svg'
 import dealerSelected from '../../Assets/Menu/VectorDealerMenu-selected.svg'
-
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import Man4Icon from '@mui/icons-material/Man4'; //customer
 import ArchitectureIcon from '@mui/icons-material/Architecture'; //architect
 import EngineeringIcon from '@mui/icons-material/Engineering'; //mistry
@@ -32,6 +32,7 @@ const Navigation = () => {
     const [mistrypath, setMistrypath] = useState(false);
     const [dealerpath, setDealerpath] = useState(false);
     const [pmcpath, setPMCpath] = useState(false);
+    const [branchpath, setBranchpath] = useState(false);
     useEffect(() => {
         if(location.pathname==="/"){
             setHomepath(true)
@@ -43,12 +44,14 @@ const Navigation = () => {
         else if(location.pathname==="/mistry"){
             setHomepath(false);
             setArchitectpath(false);
+            setBranchpath(false);
             setMistrypath(true);
         }
         else if(location.pathname==="/dealer"){
             setHomepath(false);
             setArchitectpath(false);
             setMistrypath(false);
+            setBranchpath(false);
             setDealerpath(true);
         }
         else if(location.pathname==="/pmc"){
@@ -56,7 +59,16 @@ const Navigation = () => {
             setArchitectpath(false);
             setMistrypath(false);
             setDealerpath(false);
+            setBranchpath(false);
             setPMCpath(true)
+        }
+        else if(location.pathname==="/branch"){
+            setHomepath(false);
+            setArchitectpath(false);
+            setMistrypath(false);
+            setDealerpath(false);
+            setPMCpath(false);
+            setBranchpath(true);
         }
         else{
             setHomepath(false);
@@ -101,6 +113,12 @@ const Navigation = () => {
                 {/* <img src={dealerpath ? dealerSelected : dealer} alt="customer"/> */}
                 <MultipleStopIcon/>
                <p>Dealer</p> 
+            </Link>
+
+            <Link to="/branch" className={branchpath? ` ${Styles.item} ${Styles.selected}` : ` ${Styles.item}`}>
+                {/* <img src={dealerpath ? dealerSelected : dealer} alt="customer"/> */}
+                <AddLocationAltIcon/>
+               <p>Branch</p> 
             </Link>
 
             <button className={Styles.button} onClick={handleclick}  >
