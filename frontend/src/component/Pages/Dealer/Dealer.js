@@ -24,9 +24,12 @@ const Dealer = () => {
       navigate('/signin')
     }
   },[isAuthenticated,navigate]);
+  const [refresh, doRefresh] = useState(true);
+
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Dealer is Created");
+    doRefresh(!refresh);
   }
   return (
     <>
@@ -45,7 +48,7 @@ const Dealer = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="Dealer" username={user.name}/>
-    <DealerTable modalHandler={modalHandler}/>
+    <DealerTable modalHandler={modalHandler} refresh={refresh}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

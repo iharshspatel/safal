@@ -11,7 +11,7 @@ import DummyEditForm from '../../Forms/DummyEditForm';
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
-const CustomerTable = ({ modalHandler }) => {
+const CustomerTable = ({ modalHandler ,refresh}) => {
 
   const [customers, setCustomers] = useState([]);
   const [tabledata, setTableData] = useState([])
@@ -145,11 +145,12 @@ const CustomerTable = ({ modalHandler }) => {
   useEffect(() => {
     fetchCustomers();
     fetchBranches();
-    console.log(`editModal`, editModal)
-  }, [editModal]);
+    // console.log(`editModal`, editModal)
+  }, [refresh]);
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Customer edited");
+    fetchCustomers();
   }
 
   const customStyles = {
@@ -269,6 +270,11 @@ const CustomerTable = ({ modalHandler }) => {
               icon: 'edit',
               tooltip: 'Edit',
               onClick: (event, rowData) => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
                 setEditModalData(rowData);
                 setEditModal(!editModal);
                 console.log(`Edit `, rowData)
@@ -278,6 +284,11 @@ const CustomerTable = ({ modalHandler }) => {
               icon: 'delete',
               tooltip: 'Delete',
               onClick: (event, rowData) => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
                 // Do save operation
                 delteHandler(rowData._id);
                 console.log(`delete `, rowData)

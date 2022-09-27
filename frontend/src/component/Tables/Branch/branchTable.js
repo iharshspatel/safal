@@ -10,7 +10,7 @@ import Modal from '../../Layout/Modal/Modal';
 import { toast, ToastContainer } from 'react-toastify';
 import Select from 'react-select'
 
-const BranchTable = ({ modalHandler }) => {
+const BranchTable = ({ modalHandler,refresh }) => {
     const [tabledata, setTableData] = useState([])
     const [branches, setBranches] = useState([]);
     const deleteHandler = async (id) => {
@@ -24,20 +24,27 @@ const BranchTable = ({ modalHandler }) => {
             return {
                 branchname: branch._doc.branchname,
                 arch: branch.arclen,
-                cust:branch.custlen,
-                deal:branch.deallen,
-                mist:branch.mistlen,
-                pmc:branch.pmclen
+                cust: branch.custlen,
+                deal: branch.deallen,
+                mist: branch.mistlen,
+                pmc: branch.pmclen
             }
         });
-        
+
         setBranches(branches);
         setTableData(branches);
-        
+
     }
     useEffect(() => {
         fetchBranches();
-    }, []);
+    }, [refresh]);
+    
+    
+    
+    
+    
+
+    
     return (
         <div className={Styles.container}>
             <div className={Styles.table}>
@@ -54,7 +61,7 @@ const BranchTable = ({ modalHandler }) => {
                 </div>
                 {branches && <MaterialTable
 
-                    
+
                     className={Styles.Table}
                     columns={[
                         { title: 'Branch', field: 'branchname' },
@@ -83,13 +90,17 @@ const BranchTable = ({ modalHandler }) => {
                             }} />
                     }}
 
-                    actions={[                    
-                        
+                    actions={[
+
                         {
                             icon: 'delete',
                             tooltip: 'Delete',
                             onClick: (event, rowData) => {
-
+                                window.scrollTo({
+                                    top: 0,
+                                    left: 0,
+                                    behavior: "smooth"
+                                });
                                 deleteHandler(rowData.branchname);
                                 console.log(`delete `, rowData)
                             }
