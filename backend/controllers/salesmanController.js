@@ -1,6 +1,6 @@
 const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncError");
-const Salesman = require("../models/SalesmanModel")
+const Salesman = require("../models/salesmanModel")
 
 exports.createSalesman = catchAsyncErrors(async (req, res, next) => {
     const t = req.body;
