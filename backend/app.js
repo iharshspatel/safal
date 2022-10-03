@@ -16,7 +16,7 @@ const mistry = require("./routes/mistryRoute")
 const dealer = require("./routes/dealerRoute")
 const pmc = require("./routes/pmcRoute")
 const customer = require("./routes/customerRoute")
-
+const salesman =require("./routes/salesmanRoute")
 app.use("/api/v1", test)
 app.use("/api/v1", user)
 app.use("/api/v1/architect", architect)
@@ -25,6 +25,7 @@ app.use("/api/v1/mistry", mistry)
 app.use("/api/v1/dealer", dealer)
 app.use("/api/v1/pmc", pmc)
 app.use("/api/v1/customer", customer)
+app.use("/api/v1/salesman", salesman)
 
 
 app.use(express.static(path.join(__dirname, "../frontend/build")))

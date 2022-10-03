@@ -22,14 +22,17 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     adharcard: "",
     pancard: "",
     date: "",
-    salesMan: "",
+    // salesMan: "",
     branches: [],
+    salesmen: []
 
   }
   const [formData, setFormData] = useState(initialState)
   const [isDisabled, setIsDisabled] = useState(false);
   const [Branches, setBranches] = useState([]);
+  const [Salesmen, setSalesmen] = useState([]);
   const [selectedBranch, setselectedBranch] = useState([]);
+  const [selectedSalesmen, setselectedSalesmen] = useState([]);
   const formHandler = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -46,9 +49,22 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     ))
     setBranches(branches);
   }
+  const getAllsalesmen = async () => {
+    const { data } = await axios.get("/api/v1/salesman/getall");
+    console.log(data.Salesmans);
+    const salesmen = data.Salesmans.map((salesman) => (
+      {
+        salesman: salesman.name,
+        value: salesman.name,
+        label: salesman.name
+      }
+    ))
+    setSalesmen(salesmen);
+  }
 
   useEffect(() => {
     getAllbranches();
+    getAllsalesmen();
   }, []);
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -68,8 +84,9 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       pancard: formData.pancard,
       date: formData.date,
       IFSCcode: formData.IFSCcode,
-      salesMan: formData.salesMan,
-      branches: selectedBranch
+      // salesMan: formData.salesMan,
+      branches: selectedBranch,
+      salesmen: selectedSalesmen
 
     }
     console.log(data)
@@ -93,6 +110,12 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     setselectedBranch(selected);
     console.log(selected);
     setFormData({ ...formData, selectedBranch })
+  };
+  const Salesmenchangehandler = (selecteds) => {
+
+    setselectedSalesmen(selecteds);
+    console.log(selecteds);
+    setFormData({ ...formData, selectedSalesmen })
   };
   return (
     <div className={Styles.container}>
@@ -134,10 +157,10 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <label htmlFor='companyName'>Company Name</label>
           <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.companyName} name="companyName" placeholder='Company Name' />
 
-          <label htmlFor='salesMan'>Sales Man </label>
-          <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Company Name' />
+          {/* <label htmlFor='salesMan'>Sales Man </label> */}
+          {/* <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Company Name' /> */}
           <label>Branches</label>
-          <ReactSelect lassName={Styles.inputTag}
+          <ReactSelect className={Styles.inputTag}
             options={Branches}
             isMulti
             closeMenuOnSelect={false}
@@ -148,6 +171,19 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             onChange={Branchchangehandler}
             allowSelectAll={true}
             value={selectedBranch}
+          />
+          <label>Salesmen</label>
+          <ReactSelect className={Styles.inputTag}
+            options={Salesmen}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false}
+            components={{
+              Option
+            }}
+            onChange={Salesmenchangehandler}
+            allowSelectAll={true}
+            value={selectedSalesmen}
           />
         </div>
       </div>

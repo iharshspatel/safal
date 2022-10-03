@@ -29,7 +29,7 @@ const Architect = () => {
   },[isAuthenticated,navigate]);
   const modalHandler = () =>{
 
-    // setIsOpen(!isOpen);
+    setIsOpen(!isOpen);
     window.scrollTo({
       top: 0,
       left: 0,

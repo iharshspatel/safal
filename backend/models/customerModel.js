@@ -21,10 +21,6 @@ const customerSchema = new mongoose.Schema({
     remarks:String,
     orderValue:Number,
     salesPerson:String,
-    // mistryTag:String,
-    // architectTag:String,
-    // dealerTag:String,
-    // pmcTag:String
     mistryTag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"mistry"
