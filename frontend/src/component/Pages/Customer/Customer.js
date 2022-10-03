@@ -23,10 +23,15 @@ const Customer = () => {
 
   const modalHandler = () => {
     setIsOpen(!isOpen);
+    
   }
+  const [refresh, doRefresh] = useState(true);
+
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("customer is Created");
+    doRefresh(!refresh);
+
   }
   return (
     <>
@@ -45,7 +50,7 @@ const Customer = () => {
         />
         <div className={Styles.rightcontainer}>
           <StatBox name="Customer" username={user.name}/>
-          <CustomerTable modalHandler={modalHandler} />
+          <CustomerTable modalHandler={modalHandler} refresh={refresh}/>
           {
             isOpen ? <Modal setIsOpen={setIsOpen}>
               <AnimatePresence>

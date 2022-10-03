@@ -14,7 +14,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   const [Branches, setBranches] = useState([]);
   const [selectedBranch, setselectedBranch] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
-  
+  const [Salesmen, setSalesmen] = useState([]);
+  const [selectedSalesmen, setselectedSalesmen] = useState([]);
   let initialState = {
     name: "",
     email: "",
@@ -40,6 +41,7 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     pmcNumber: "",
     date: "",
     branches:[],
+    salesmen:[]
   }
   const [formData, setFormData] = useState(initialState)
 
@@ -59,6 +61,18 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       }
     ))
     setBranches(branches);
+  }
+  const getAllsalesmen = async () => {
+    const { data } = await axios.get("/api/v1/salesman/getall");
+    console.log(data.Salesmans);
+    const salesmen = data.Salesmans.map((salesman) => (
+      {
+        name: salesman.name,
+        value: salesman.name,
+        label: salesman.name
+      }
+    ))
+    setSalesmen(salesmen);
   }
   const getAllArchitects = async () => {
 
@@ -100,6 +114,7 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     getAllMistry();
     getAllPMC();
     getAllbranches();
+    getAllsalesmen();
   }, []);
 
   const submitHandler = async (e) => {
@@ -129,7 +144,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       pmcTag: formData.pmcTag,
       pmcName: formData.pmcName,
       pmcNumber: formData.pmcNumber,
-      branches:selectedBranch
+      branches:selectedBranch,
+      salesmen:selectedSalesmen
     }
     try {
       const response = await axios.post("/api/v1/customer/create", data, { headers: { "Content-Type": "application/json" } });
@@ -171,7 +187,12 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     console.log(e.value);
     setFormData({ ...formData, pmcTag: e.value, pmcName: e.label.split('-')[0], pmcNumber: e.label.split('-')[1] })
   }
+  const Salesmenchangehandler = (selecteds) => {
 
+    setselectedSalesmen(selecteds);
+    console.log(selecteds);
+    setFormData({ ...formData, selectedSalesmen })
+  };
 
   return (
     <div className={Styles.container}>
@@ -230,6 +251,19 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             onChange={Branchchangehandler}
             allowSelectAll={true}
             value={selectedBranch}
+          />
+          <label>Salesmen</label>
+          <ReactSelect className={Styles.inputTag}
+            options={Salesmen}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false}
+            components={{
+              Option
+            }}
+            onChange={Salesmenchangehandler}
+            allowSelectAll={true}
+            value={selectedSalesmen}
           />
         </div>
       </div>

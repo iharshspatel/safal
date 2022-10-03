@@ -12,6 +12,7 @@ import { toast, ToastContainer } from 'react-toastify'
 const Branch = () => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const [refresh, doRefresh] = useState(true);
 
   const modalHandler = () => {
     setIsOpen(!isOpen);
@@ -25,8 +26,9 @@ const Branch = () => {
     }
   },[isAuthenticated,navigate]);
   const handleCallbackCreate = (childData) => {
-    // console.log("Parent Invoked!!")
+    
     toast.success("Branch is Created");
+    doRefresh(!refresh);
   }
   return (
     <>
@@ -45,7 +47,7 @@ const Branch = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="Branch" username={user.name}/>
-    <BranchTable modalHandler={modalHandler}/>
+    <BranchTable modalHandler={modalHandler} refresh={refresh}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

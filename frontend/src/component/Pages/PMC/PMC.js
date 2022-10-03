@@ -22,9 +22,13 @@ const PMC = () => {
   const modalHandler = () => {
     setIsOpen(!isOpen);
   }
+  const [refresh, doRefresh] = useState(true);
+
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("PMC is Created");
+    doRefresh(!refresh);
+
   }
   return (
     <>
@@ -43,7 +47,7 @@ const PMC = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="PMC" username={user.name}/>
-    <PMCTable modalHandler={modalHandler}/>
+    <PMCTable modalHandler={modalHandler} refresh={refresh}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

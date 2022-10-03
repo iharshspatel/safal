@@ -10,7 +10,7 @@ import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import { toast, ToastContainer } from 'react-toastify';
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
-const ArchitecTable = ({ modalHandler }) => {
+const ArchitecTable = ({ modalHandler, refresh }) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -64,7 +64,7 @@ const ArchitecTable = ({ modalHandler }) => {
 
   const fetchBranches = async () => {
     const { data } = await axios.get("/api/v1/branch/getall");
-    // console.log(data.branches);
+
     const branches = data.branches.map((branch) => (
       {
         branchname: branch.branchname,
@@ -82,19 +82,19 @@ const ArchitecTable = ({ modalHandler }) => {
   const fetchArchitectsofBranch = async () => {
     setIsLoading(true);
     sleep(500);
-    // let data=selectedBranch;
+
     console.log(selectedBranch);
     const response = await axios.post("/api/v1/branch/architects", selectedBranch, { headers: { "Content-Type": "application/json" } });
-    // const { data } = await axios.get("/api/v1/branch/architects");
+
     console.log(response);
     const newarchitects = response.data.architects;
-    // setArchitects(newarchitects);
+
     setTableData(newarchitects);
     setIsLoading(false);
   }
   const handlebranch = (selected) => {
     console.log(selected);
-    // setselectedBranch(selected);
+
     selectedBranch = selected;
     fetchArchitectsofBranch();
   }
@@ -105,38 +105,40 @@ const ArchitecTable = ({ modalHandler }) => {
 
     fetchArchitect();
 
-  }, []);
+  }, [refresh]);
 
   const customStyles = {
     control: base => ({
-        ...base,
-        minHeight: 55
+      ...base,
+      minHeight: 55
     }),
     dropdownIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     clearIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     multiValue: base => ({
-        ...base,
-        //backgroundColor: variables.colorPrimaryLighter
+      ...base,
+
     }),
     valueContainer: base => ({
-        ...base,
-        padding: '0px 6px'
+      ...base,
+      padding: '0px 6px'
     }),
     input: base => ({
-        ...base,
-        margin: 0,
-        padding: 0
+      ...base,
+      margin: 0,
+      padding: 0
     })
-};
+  };
   const handleCallbackCreate = (childData) => {
-    // console.log("Parent Invoked!!")
+
     toast.success("Architect edited");
+    fetchArchitect();
+    window.scrollTo(0, 0)
   }
   return (
     <div className={Styles.container}>
@@ -161,9 +163,9 @@ const ArchitecTable = ({ modalHandler }) => {
               id="date"
               label="Start Date"
               type="date"
-              // defaultValue="2017-05-24"
+
               onChange={(e) => startDateHandler(e)}
-              sx={{ width: 180 ,margin:1}}
+              sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -174,8 +176,8 @@ const ArchitecTable = ({ modalHandler }) => {
               label="End Date"
               type="date"
               onChange={(e) => endDateHandler(e)}
-              // defaultValue="2017-05-24"
-              sx={{ width: 180 ,margin:1}}
+
+              sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -185,6 +187,7 @@ const ArchitecTable = ({ modalHandler }) => {
         </div>
 
         {architects && <MaterialTable
+
           isLoading={isLoading}
           className={Styles.Table}
           columns={[
@@ -226,6 +229,11 @@ const ArchitecTable = ({ modalHandler }) => {
               icon: 'edit',
               tooltip: 'Edit',
               onClick: (event, rowData) => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
                 setEditModalData(rowData);
                 setEditModal(true);
                 console.log(`Edit `, rowData)
@@ -235,7 +243,11 @@ const ArchitecTable = ({ modalHandler }) => {
               icon: 'delete',
               tooltip: 'Delete',
               onClick: (event, rowData) => {
-                // Do save operation
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
                 delteHandler(rowData._id);
                 console.log(`delete `, rowData)
               }

@@ -12,7 +12,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
 
-const MistryTable = ({ modalHandler }) => {
+const MistryTable = ({ modalHandler,refresh }) => {
   const [mistry, setMistry] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -102,10 +102,11 @@ const MistryTable = ({ modalHandler }) => {
   useEffect(() => {
     fetchBranches();
     fetchMistry();
-  }, []);
+  }, [refresh]);
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Mistry edited");
+    fetchMistry();
   }
 
   const customStyles = {
@@ -223,6 +224,11 @@ const MistryTable = ({ modalHandler }) => {
               icon: 'edit',
               tooltip: 'Edit',
               onClick: (event, rowData) => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
                 setEditModalData(rowData);
                 setEditModal(true);
                 console.log(`Edit `, rowData)
@@ -232,6 +238,11 @@ const MistryTable = ({ modalHandler }) => {
               icon: 'delete',
               tooltip: 'Delete',
               onClick: (event, rowData) => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
                 // Do save operation
                 delteHandler(rowData._id);
                 console.log(`delete `, rowData)

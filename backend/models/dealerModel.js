@@ -24,10 +24,12 @@ const dealerSchema = new mongoose.Schema({
     branchname:String,
     adharcard:Number,
     pancard:String,  
-    salesMan:String,
+    // salesMan:String,
     branches:[
         {branchname:String}
-    ]
+    ],
+    salesmen:[{name:String}]
+
 });
 
 

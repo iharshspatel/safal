@@ -23,8 +23,9 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         adharcard: "",
         pancard: "",
         date: "",
-        salesMan: "",
+        // salesMan: "",
         branches: [],
+        salesmen:[]
     }
     const getAllbranches = async () => {
         const { data } = await axios.get("/api/v1/branch/getall");
@@ -41,11 +42,26 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
     useEffect(() => {
         getAllbranches();
+        getAllsalesmen()
     }, []);
     const [formData, setFormData] = useState(initialState)
     const [isDisabled, setIsDisabled] = useState(false);
     const [Branches, setBranches] = useState([]);
     const [selectedBranch, setselectedBranch] = useState([]);
+    const [Salesmen, setSalesmen] = useState([]);
+    const [selectedSalesmen, setselectedSalesmen] = useState([]);
+    const getAllsalesmen = async () => {
+        const { data } = await axios.get("/api/v1/salesman/getall");
+        console.log(data.Salesmans);
+        const salesmen = data.Salesmans.map((salesman) => (
+            {
+                name: salesman.name,
+                value: salesman.name,
+                label: salesman.name
+            }
+        ))
+        setSalesmen(salesmen);
+    }
     const formHandler = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -69,8 +85,9 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             pancard: formData.pancard,
             date: formData.date,
             IFSCcode: formData.IFSCcode,
-            salesMan: formData.salesMan,
-            branches: selectedBranch
+            // salesMan: formData.salesMan,
+            branches: selectedBranch,
+            salesmen:selectedSalesmen
 
         }
         try {
@@ -92,6 +109,12 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         setselectedBranch(selected);
         console.log(selected);
         setFormData({ ...formData, selectedBranch })
+    };
+    const Salesmenchangehandler = (selecteds) => {
+
+        setselectedSalesmen(selecteds);
+        console.log(selecteds);
+        setFormData({ ...formData, selectedSalesmen })
     };
     return (
         <div className={Styles.container}>
@@ -174,6 +197,19 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                         onChange={Branchchangehandler}
                         allowSelectAll={true}
                         value={selectedBranch}
+                    />
+                    <label>Salesmen</label>
+                    <ReactSelect className={Styles.inputTag}
+                        options={Salesmen}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        components={{
+                            Option
+                        }}
+                        onChange={Salesmenchangehandler}
+                        allowSelectAll={true}
+                        value={selectedSalesmen}
                     />
                 </div>
 

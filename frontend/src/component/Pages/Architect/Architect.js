@@ -14,18 +14,30 @@ const Architect = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
   let navigate= useNavigate();
+  const [refresh, doRefresh] = useState(true); 
   const handleCallbackCreate = (childData) => {
-    // console.log("Parent Invoked!!")
     toast.success("Architect is Created");
+    doRefresh(!refresh);
+    // console.log(refresh);    
   }
+
+
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/signin')
     }
   },[isAuthenticated,navigate]);
   const modalHandler = () =>{
+
     setIsOpen(!isOpen);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
+    // window.scrollTo(0, 0);
   }
+    // window.reload()
 
   return (
     <>
@@ -44,7 +56,7 @@ const Architect = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="Architect" username={user.name}/>
-    <ArchitecTable modalHandler={modalHandler} />
+    <ArchitecTable modalHandler={modalHandler} refresh={refresh}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

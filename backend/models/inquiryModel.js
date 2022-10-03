@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 
-const customerSchema = new mongoose.Schema({
+const inquirySchema = new mongoose.Schema({
     name:{
         type:String,
         required: [true, "Please Enter Your Name"],
         maxlength:[30, "Can not exceeed 30 characters"]
-    },
-    email:{
-        type:String,
     },
     mobileno:{
         type:Number,
@@ -15,12 +12,8 @@ const customerSchema = new mongoose.Schema({
         required:[true, "Please Enter Mobile Number"]
     },
     address:String,
-    birthdate:String,
-    marriagedate:String,
     date:Date,
-    remarks:String,
-    orderValue:Number,
-    // salesPerson:String,
+    followupDate:Date,
     mistryTag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"mistry"
@@ -32,13 +25,7 @@ const customerSchema = new mongoose.Schema({
         ref:"architect"
     },
     architectName:String,
-    architectNumber:Number,
-    dealerTag:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"dealer"
-    },
-    dealerName:String,
-    dealerNumber:Number,
+    architectNumber:Number,    
     pmcTag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"pmc"
@@ -54,5 +41,5 @@ const customerSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model("Customer", customerSchema)
+module.exports = mongoose.model("Inquiry", inquirySchema)
 
