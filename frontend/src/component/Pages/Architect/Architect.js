@@ -14,7 +14,7 @@ const Architect = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
   let navigate= useNavigate();
-  const [refresh, doRefresh] = useState(true);
+  const [refresh, doRefresh] = useState(true); 
   const handleCallbackCreate = (childData) => {
     toast.success("Architect is Created");
     doRefresh(!refresh);

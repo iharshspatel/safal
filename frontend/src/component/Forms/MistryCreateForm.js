@@ -23,8 +23,10 @@ const MistryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         adharcard: "",
         pancard: "",
         date: "",
-        salesMan: "",
+        // salesMan: "",
         branches: [],
+        salesmen:[]
+
 
     }
     const getAllbranches = async () => {
@@ -42,6 +44,7 @@ const MistryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
     useEffect(() => {
         getAllbranches();
+        getAllsalesmen();
     }, []);
     const [formData, setFormData] = useState(initialState)
     const [isDisabled, setIsDisabled] = useState(false);
@@ -51,7 +54,26 @@ const MistryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
+    const [Salesmen, setSalesmen] = useState([]);
+    const [selectedSalesmen, setselectedSalesmen] = useState([]);
+    const getAllsalesmen = async () => {
+        const { data } = await axios.get("/api/v1/salesman/getall");
+        console.log(data.Salesmans);
+        const salesmen = data.Salesmans.map((salesman) => (
+            {
+                name: salesman.name,
+                value: salesman.name,
+                label: salesman.name
+            }
+        ))
+        setSalesmen(salesmen);
+    }
+    const Salesmenchangehandler = (selecteds) => {
 
+        setselectedSalesmen(selecteds);
+        console.log(selecteds);
+        setFormData({ ...formData, selectedSalesmen })
+    };
     const submitHandler = async (e) => {
         e.preventDefault();
         setIsDisabled(true);
@@ -70,14 +92,15 @@ const MistryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             pancard: formData.pancard,
             date: formData.date,
             IFSCcode: formData.IFSCcode,
-            salesMan: formData.salesMan,
-            branches: selectedBranch
+            // salesMan: formData.salesMan,
+            branches: selectedBranch,
+            salesmen:selectedSalesmen
 
         }
         try {
             const response = await axios.post("/api/v1/mistry/create", data, { headers: { "Content-Type": "application/json" } });
             console.log(response);
-            
+
             parentCallback(true);
             setIsOpen(false);
         }
@@ -158,6 +181,20 @@ pauseOnHover
                         onChange={Branchchangehandler}
                         allowSelectAll={true}
                         value={selectedBranch}
+                    />
+                    <label>Salesmen</label>
+
+                    <ReactSelect className={Styles.inputTag}
+                        options={Salesmen}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        components={{
+                            Option
+                        }}
+                        onChange={Salesmenchangehandler}
+                        allowSelectAll={true}
+                        value={selectedSalesmen}
                     />
                 </div>
             </div>

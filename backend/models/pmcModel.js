@@ -27,7 +27,9 @@ const pmcSchema = new mongoose.Schema({
     salesMan:String,
     branches:[
         {branchname:String}
-    ]
+    ],
+    salesmen:[{name:String}]
+
 });
 
 

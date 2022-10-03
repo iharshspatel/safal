@@ -13,7 +13,7 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         mobileno: "",
         address: "",
         branchname: "",
-        salesMan: "",
+        // salesMan: "",
         IFSCcode: "",
         companyName: "",
         birthdate: "",
@@ -24,7 +24,7 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         pancard: "",
         date: "",
         branches: [],
-
+        salesmen: []
 
 
     }
@@ -43,11 +43,32 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
     useEffect(() => {
         getAllbranches();
+        getAllsalesmen();
     }, []);
     const [formData, setFormData] = useState(initialState)
     const [isDisabled, setIsDisabled] = useState(false);
     const [Branches, setBranches] = useState([]);
     const [selectedBranch, setselectedBranch] = useState([]);
+    const [Salesmen, setSalesmen] = useState([]);
+    const [selectedSalesmen, setselectedSalesmen] = useState([]);
+    const getAllsalesmen = async () => {
+        const { data } = await axios.get("/api/v1/salesman/getall");
+        console.log(data.Salesmans);
+        const salesmen = data.Salesmans.map((salesman) => (
+            {
+                name: salesman.name,
+                value: salesman.name,
+                label: salesman.name
+            }
+        ))
+        setSalesmen(salesmen);
+    }
+    const Salesmenchangehandler = (selecteds) => {
+
+        setselectedSalesmen(selecteds);
+        console.log(selecteds);
+        setFormData({ ...formData, selectedSalesmen })
+    };
     const formHandler = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -72,14 +93,15 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             pancard: formData.pancard,
             date: formData.date,
             IFSCcode: formData.IFSCcode,
-            branches: selectedBranch
+            branches: selectedBranch,
+            salesmen:selectedSalesmen 
 
         }
 
         try {
             const response = await axios.post("/api/v1/pmc/create", data, { headers: { "Content-Type": "application/json" } });
             console.log(response);
-            
+
             parentCallback(true);
             setIsOpen(false);
         }
@@ -161,6 +183,20 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                         onChange={Branchchangehandler}
                         allowSelectAll={true}
                         value={selectedBranch}
+                    />
+                    <label>Salesmen</label>
+
+                    <ReactSelect className={Styles.inputTag}
+                        options={Salesmen}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        components={{
+                            Option
+                        }}
+                        onChange={Salesmenchangehandler}
+                        allowSelectAll={true}
+                        value={selectedSalesmen}
                     />
                 </div>
             </div>

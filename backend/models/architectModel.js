@@ -27,7 +27,7 @@ const architectSchema = new mongoose.Schema({
     branches:[
         {branchname:String}
     ],
-    salesmen:[{salesman:String}]
+    salesmen:[{name:String}]
 });
 
 

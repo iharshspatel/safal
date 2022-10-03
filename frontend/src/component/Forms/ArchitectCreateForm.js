@@ -30,9 +30,21 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   const [formData, setFormData] = useState(initialState)
   const [isDisabled, setIsDisabled] = useState(false);
   const [Branches, setBranches] = useState([]);
-  const [Salesmen, setSalesmen] = useState([]);
   const [selectedBranch, setselectedBranch] = useState([]);
+  const [Salesmen, setSalesmen] = useState([]);
   const [selectedSalesmen, setselectedSalesmen] = useState([]);
+  const getAllsalesmen = async () => {
+    const { data } = await axios.get("/api/v1/salesman/getall");
+    console.log(data.Salesmans);
+    const salesmen = data.Salesmans.map((salesman) => (
+      {
+        name: salesman.name,
+        value: salesman.name,
+        label: salesman.name
+      }
+    ))
+    setSalesmen(salesmen);
+  }
   const formHandler = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -48,18 +60,6 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       }
     ))
     setBranches(branches);
-  }
-  const getAllsalesmen = async () => {
-    const { data } = await axios.get("/api/v1/salesman/getall");
-    console.log(data.Salesmans);
-    const salesmen = data.Salesmans.map((salesman) => (
-      {
-        salesman: salesman.name,
-        value: salesman.name,
-        label: salesman.name
-      }
-    ))
-    setSalesmen(salesmen);
   }
 
   useEffect(() => {

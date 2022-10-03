@@ -20,7 +20,7 @@ const customerSchema = new mongoose.Schema({
     date:Date,
     remarks:String,
     orderValue:Number,
-    salesPerson:String,
+    // salesPerson:String,
     mistryTag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"mistry"
@@ -47,7 +47,9 @@ const customerSchema = new mongoose.Schema({
     pmcNumber:Number,
     branches:[
         {branchname:String}
-    ]
+    ],
+    salesmen:[{name:String}]
+
 });
 
 
