@@ -25,7 +25,7 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         date: "",
         // salesMan: "",
         branches: [],
-        salesmen:[]
+        salesmen: []
     }
     const getAllbranches = async () => {
         const { data } = await axios.get("/api/v1/branch/getall");
@@ -52,8 +52,8 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     const [selectedSalesmen, setselectedSalesmen] = useState([]);
     const getAllsalesmen = async () => {
         const { data } = await axios.get("/api/v1/salesman/getall");
-        console.log(data.Salesmans);
-        const salesmen = data.Salesmans.map((salesman) => (
+        console.log(data.salesmans);
+        const salesmen = data.salesmans.map((salesman) => (
             {
                 name: salesman.name,
                 value: salesman.name,
@@ -87,7 +87,7 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             IFSCcode: formData.IFSCcode,
             // salesMan: formData.salesMan,
             branches: selectedBranch,
-            salesmen:selectedSalesmen
+            salesmen: selectedSalesmen
 
         }
         try {
@@ -167,9 +167,35 @@ const DealerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
                     <label htmlFor='companyName'>Company Name</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.companyName} name="companyName" placeholder='Company Name' />
-
+                    {/* 
                     <label htmlFor='salesMan'>Sales Man </label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Company Name' />
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Company Name' /> */}
+                    <label>Branches</label>
+                    <ReactSelect lassName={Styles.inputTag}
+                        options={Branches}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        components={{
+                            Option
+                        }}
+                        onChange={Branchchangehandler}
+                        allowSelectAll={true}
+                        value={selectedBranch}
+                    />
+                    <label>Salesmen</label>
+                    <ReactSelect className={Styles.inputTag}
+                        options={Salesmen}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        components={{
+                            Option
+                        }}
+                        onChange={Salesmenchangehandler}
+                        allowSelectAll={true}
+                        value={selectedSalesmen}
+                    />
                 </div>
             </div>
 

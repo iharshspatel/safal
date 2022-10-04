@@ -4,29 +4,28 @@ import axios from "axios"
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
-import Option from '../DropDown/Options'
 import { default as ReactSelect } from "react-select";
-const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
+import Option from '../DropDown/Options'
+
+const SalesmanCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     let initialState = {
         name: "",
         email: "",
         mobileno: "",
         address: "",
-        branchname: "",
-        // salesMan: "",
-        IFSCcode: "",
         companyName: "",
         birthdate: "",
         marriagedate: "",
         remarks: "",
         bankname: "",
+        branchname: "",
+        IFSCcode: "",
         adharcard: "",
         pancard: "",
         date: "",
+        // salesMan: "",
         branches: [],
-        salesmen: []
-
-
+        // salesmen:[]
     }
     const getAllbranches = async () => {
         const { data } = await axios.get("/api/v1/branch/getall");
@@ -43,7 +42,7 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
     useEffect(() => {
         getAllbranches();
-        getAllsalesmen();
+        getAllsalesmen()
     }, []);
     const [formData, setFormData] = useState(initialState)
     const [isDisabled, setIsDisabled] = useState(false);
@@ -53,7 +52,7 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     const [selectedSalesmen, setselectedSalesmen] = useState([]);
     const getAllsalesmen = async () => {
         const { data } = await axios.get("/api/v1/salesman/getall");
-        console.log(data.Salesmans);
+        console.log(data.salesmans);
         const salesmen = data.salesmans.map((salesman) => (
             {
                 name: salesman.name,
@@ -63,12 +62,6 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         ))
         setSalesmen(salesmen);
     }
-    const Salesmenchangehandler = (selecteds) => {
-
-        setselectedSalesmen(selecteds);
-        console.log(selecteds);
-        setFormData({ ...formData, selectedSalesmen })
-    };
     const formHandler = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -88,35 +81,40 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             remarks: formData.remarks,
             bankname: formData.bankname,
             branchname: formData.branchname,
-            salesMan: formData.salesMan,
             adharcard: formData.adharcard,
             pancard: formData.pancard,
             date: formData.date,
             IFSCcode: formData.IFSCcode,
+            // salesMan: formData.salesMan,
             branches: selectedBranch,
-            salesmen:selectedSalesmen 
+            // salesmen:selectedSalesmen
 
         }
-
         try {
-            const response = await axios.post("/api/v1/pmc/create", data, { headers: { "Content-Type": "application/json" } });
-            console.log(response);
+            const response = await axios.post("/api/v1/salesman/create", data, { headers: { "Content-Type": "application/json" } });
 
+            console.log(response);
             parentCallback(true);
             setIsOpen(false);
+
         }
         catch (e) {
             toast.error(e.response.data.message);
             console.log(e.response.data.message)
             setIsDisabled(false);
         }
-
     }
     const Branchchangehandler = (selected) => {
 
         setselectedBranch(selected);
         console.log(selected);
         setFormData({ ...formData, selectedBranch })
+    };
+    const Salesmenchangehandler = (selecteds) => {
+
+        setselectedSalesmen(selecteds);
+        console.log(selecteds);
+        setFormData({ ...formData, selectedSalesmen })
     };
     return (
         <div className={Styles.container}>
@@ -131,16 +129,17 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                 draggable
                 pauseOnHover
             />
+
             <div className={Styles.closebutton} onClick={modalHandler}>
                 <AiFillCloseCircle />
             </div>
-            <h1 className={Styles.heading}>PMC Details</h1>
+            <h1 className={Styles.heading}>Dealer Details</h1>
             <div className={Styles.personalDetails}>
 
                 <div className={Styles.personalDetails1}>
 
                     <label htmlFor='name'>Name</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.name} name="name" placeholder='PMC Name' />
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.name} name="name" placeholder='Dealer Name' />
 
                     <label htmlFor='mobileno'>Mobile Number</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.mobileno} name="mobileno" placeholder='Mobile Number' />
@@ -168,9 +167,6 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
                     <label htmlFor='companyName'>Company Name</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.companyName} name="companyName" placeholder='Company Name' />
-
-                    <label htmlFor='salesMan'>Sales Man </label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Sales Man' />
                     <label>Branches</label>
                     <ReactSelect lassName={Styles.inputTag}
                         options={Branches}
@@ -184,20 +180,8 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                         allowSelectAll={true}
                         value={selectedBranch}
                     />
-                    <label>Salesmen</label>
-
-                    <ReactSelect className={Styles.inputTag}
-                        options={Salesmen}
-                        isMulti
-                        closeMenuOnSelect={false}
-                        hideSelectedOptions={false}
-                        components={{
-                            Option
-                        }}
-                        onChange={Salesmenchangehandler}
-                        allowSelectAll={true}
-                        value={selectedSalesmen}
-                    />
+                    {/* <label htmlFor='salesMan'>Sales Man </label> */}
+                    {/* <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Company Name' /> */}
                 </div>
             </div>
 
@@ -213,6 +197,20 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
                     <label htmlFor='IFSCCode'>IFSC Code</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.IFSCcode} name="IFSCcode" placeholder='IFSC Code' />
+                    
+                    {/* <label>Salesmen</label>
+                    <ReactSelect className={Styles.inputTag}
+                        options={Salesmen}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        components={{
+                            Option
+                        }}
+                        onChange={Salesmenchangehandler}
+                        allowSelectAll={true}
+                        value={selectedSalesmen}
+                    /> */}
                 </div>
 
                 <div className={Styles.bankDetails2}>
@@ -221,6 +219,7 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
                     <label htmlFor='pancard'>Pan Card</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.pancard} name="pancard" placeholder='Pan Card' />
+
                 </div>
             </div>
 
@@ -229,4 +228,4 @@ const PMCCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     )
 }
 
-export default PMCCreateForm
+export default SalesmanCreateForm

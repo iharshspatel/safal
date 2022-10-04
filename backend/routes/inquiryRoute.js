@@ -8,6 +8,6 @@ router.route("/getall").get(isAuthenticatedUser, getAllInquiry);
 router.route("/get/:id").get(isAuthenticatedUser, getInquiry);
 router.route("/update/:id").put(isAuthenticatedUser, updateInquiry);
 router.route("/delete/:id").delete(isAuthenticatedUser, deleteInquiry);
-router.route("/totalinquiry").get(isAuthenticatedUser, totalInquiry);
+// router.route("/totalinquiry").get(isAuthenticatedUser, totalInquiry);
 
 module.exports = router
