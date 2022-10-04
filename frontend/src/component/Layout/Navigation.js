@@ -20,6 +20,8 @@ import ArchitectureIcon from '@mui/icons-material/Architecture'; //architect
 import EngineeringIcon from '@mui/icons-material/Engineering'; //mistry
 import MultipleStopIcon from '@mui/icons-material/MultipleStop'; //dealer
 import ApartmentIcon from '@mui/icons-material/Apartment'; //PMC
+import PsychologyIcon from '@mui/icons-material/Psychology'; //Inquiry
+import ReceiptIcon from '@mui/icons-material/Receipt'; //salesman
 const Navigation = () => {
     const dispatch = useDispatch();
     function handleclick(){
@@ -33,6 +35,8 @@ const Navigation = () => {
     const [dealerpath, setDealerpath] = useState(false);
     const [pmcpath, setPMCpath] = useState(false);
     const [branchpath, setBranchpath] = useState(false);
+    const [inquirypath, setInquirypath] = useState(false);
+    const [salesmanpath, setSalesmanpath] = useState(false);
     useEffect(() => {
         if(location.pathname==="/"){
             setHomepath(true)
@@ -69,6 +73,25 @@ const Navigation = () => {
             setDealerpath(false);
             setPMCpath(false);
             setBranchpath(true);
+        }
+        else if(location.pathname==="/inquiry"){
+            setHomepath(false);
+            setArchitectpath(false);
+            setMistrypath(false);
+            setDealerpath(false);
+            setPMCpath(false);
+            setBranchpath(false);
+            setInquirypath(true);
+        }
+        else if(location.pathname==="/inquiry"){
+            setHomepath(false);
+            setArchitectpath(false);
+            setMistrypath(false);
+            setDealerpath(false);
+            setPMCpath(false);
+            setBranchpath(false);
+            setInquirypath(false);
+            setSalesmanpath(true)
         }
         else{
             setHomepath(false);
@@ -119,6 +142,16 @@ const Navigation = () => {
                 {/* <img src={dealerpath ? dealerSelected : dealer} alt="customer"/> */}
                 <AddLocationAltIcon/>
                <p>Branch</p> 
+            </Link>
+            <Link to="/inquiry" className={inquirypath? ` ${Styles.item} ${Styles.selected}` : ` ${Styles.item}`}>
+                {/* <img src={dealerpath ? dealerSelected : dealer} alt="customer"/> */}
+                <PsychologyIcon/>
+               <p>Inquiry</p> 
+            </Link>
+            <Link to="/salesman" className={salesmanpath ? ` ${Styles.item} ${Styles.selected}` : ` ${Styles.item}`}>
+                {/* <img src={dealerpath ? dealerSelected : dealer} alt="customer"/> */}
+                <ReceiptIcon/>
+               <p>Salesman</p> 
             </Link>
 
             <button className={Styles.button} onClick={handleclick}  >

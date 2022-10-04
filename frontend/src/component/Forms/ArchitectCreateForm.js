@@ -36,7 +36,7 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   const getAllsalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
     console.log(data.Salesmans);
-    const salesmen = data.Salesmans.map((salesman) => (
+    const salesmen = data.salesmans.map((salesman) => (
       {
         name: salesman.name,
         value: salesman.name,
