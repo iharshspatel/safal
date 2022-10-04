@@ -86,7 +86,7 @@ const SalesmanTable = ({ modalHandler ,refresh}) => {
     sleep(500);
     // let data=selectedBranch;
     console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/salesman", selectedBranch, { headers: { "Content-Type": "application/json" } });
+    const response = await axios.post("/api/v1/branch/salesmen", selectedBranch, { headers: { "Content-Type": "application/json" } });
     // const { data } = await axios.get("/api/v1/branch/architects");
     console.log(response);
     const newarchitects = response.data.salesmen;

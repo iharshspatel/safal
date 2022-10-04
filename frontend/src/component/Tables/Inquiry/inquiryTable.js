@@ -163,7 +163,7 @@ const InquiryTable = ({ modalHandler ,refresh}) => {
     const response = await axios.post("/api/v1/branch/inquiry", selectedBranch, { headers: { "Content-Type": "application/json" } });
     // const { data } = await axios.get("/api/v1/branch/architects");
     console.log(response);
-    const newcust = response.data.customers;
+    const newcust = response.data.inquiries;
     // setCustomers(newcust);
     setTableData(newcust);
     setIsLoading(false);
@@ -236,8 +236,8 @@ const InquiryTable = ({ modalHandler ,refresh}) => {
             <label>Salesman Filter</label>
             <Select styles={customStyles} onChange={(e) => handlesalesman(e)} options={salesman} />
             <label>Branch Filter</label>
-            <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
-            {/* <Select styles={customStyles} selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} /> */}
+            {/* <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} /> */}
+            <Select styles={customStyles} selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
             <TextField
               className={Styles.InputDate}
               id="date"
