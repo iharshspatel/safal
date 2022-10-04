@@ -94,9 +94,43 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
   }
   const handlebranch = (selected) => {
     console.log(selected);
-
+    
     selectedBranch = selected;
     fetchArchitectsofBranch();
+  }
+  const [salesman, setSalesman] = useState([]);
+  let selectedSalesman = [];
+  const fetchSalesmen = async () => {
+    const { data } = await axios.get("/api/v1/salesman/getall");
+
+    const salesmen = data.salesmans.map((branch) => (
+      {
+        name: branch.name,
+        value: branch.name,
+        label: branch.name
+
+      }
+    ))
+    setSalesman(salesmen);
+  }
+  const fetchArchitectsofSalesman = async () => {
+    setIsLoading(true);
+    sleep(500);
+
+    // console.log(selectedSalesman);
+    const response = await axios.post("/api/v1/salesman/architects", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+
+    // console.log(response);
+    const newarchitects = response.data.architects;
+
+    setTableData(newarchitects);
+    setIsLoading(false);
+  }
+  const handlesalesman = (selected) => {
+    console.log(selected);
+
+    selectedSalesman = selected;
+    fetchArchitectsofSalesman();
   }
 
   useEffect(() => {
@@ -104,7 +138,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     fetchBranches();
 
     fetchArchitect();
-
+    fetchSalesmen();
   }, [refresh]);
 
   const customStyles = {
@@ -157,6 +191,9 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
         <div className={Styles.Yellow}>
 
           <div className={Styles.DateRangeContainer}>
+            <label>Salesman Filter</label>
+            <Select styles={customStyles} onChange={(e) => handlesalesman(e)} options={salesman} />
+            <label>Branch Filter</label>
             <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
             <TextField
               className={Styles.InputDate}
