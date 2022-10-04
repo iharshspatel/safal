@@ -11,7 +11,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
 
-const DealerTable = ({ modalHandler ,refresh}) => {
+const DealerTable = ({ modalHandler, refresh }) => {
   const [dealers, setDealers] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -21,6 +21,40 @@ const DealerTable = ({ modalHandler ,refresh}) => {
   const [tabledata, setTableData] = useState([])
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
+  const [salesman, setSalesman] = useState([]);
+  let selectedSalesman = [];
+  const fetchSalesmen = async () => {
+    const { data } = await axios.get("/api/v1/salesman/getall");
+
+    const salesmen = data.salesmans.map((branch) => (
+      {
+        name: branch.name,
+        value: branch.name,
+        label: branch.name
+
+      }
+    ))
+    setSalesman(salesmen);
+  }
+  const fetchArchitectsofSalesman = async () => {
+    setIsLoading(true);
+    sleep(500);
+
+    // console.log(selectedSalesman);
+    const response = await axios.post("/api/v1/salesman/dealer", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+
+    // console.log(response);
+    const newarchitects = response.data.dealers;
+
+    setTableData(newarchitects);
+    setIsLoading(false);
+  }
+  const handlesalesman = (selected) => {
+    console.log(selected);
+
+    selectedSalesman = selected;
+    fetchArchitectsofSalesman();
+  }
 
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
@@ -102,7 +136,7 @@ const DealerTable = ({ modalHandler ,refresh}) => {
 
   useEffect(() => {
     fetchBranches();
-
+    fetchSalesmen();
     fetchDealer();
   }, [refresh]);
   const handleCallbackCreate = (childData) => {
@@ -113,31 +147,31 @@ const DealerTable = ({ modalHandler ,refresh}) => {
 
   const customStyles = {
     control: base => ({
-        ...base,
-        minHeight: 55
+      ...base,
+      minHeight: 55
     }),
     dropdownIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     clearIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     multiValue: base => ({
-        ...base,
-        // backgroundColor: variables.colorPrimaryLighter
+      ...base,
+      // backgroundColor: variables.colorPrimaryLighter
     }),
     valueContainer: base => ({
-        ...base,
-        padding: '0px 6px'
+      ...base,
+      padding: '0px 6px'
     }),
     input: base => ({
-        ...base,
-        margin: 0,
-        padding: 0
+      ...base,
+      margin: 0,
+      padding: 0
     })
-};
+  };
 
   return (
     <div className={Styles.container}>
@@ -154,17 +188,21 @@ const DealerTable = ({ modalHandler ,refresh}) => {
         </div>
 
         <div className={Styles.Yellow}>
-        <div className={Styles.DateRangeContainer}>
-          {/* <label>Branch</label> */}
-          <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
-          <TextField
+          <div className={Styles.DateRangeContainer}>
+            {/* <label>Branch</label> */}
+            <label>Salesman Filter</label>
+            <Select styles={customStyles} onChange={(e) => handlesalesman(e)} options={salesman} />
+            <label>Branch Filter</label>
+            <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
+            {/* <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} /> */}
+            <TextField
               className={Styles.InputDate}
               id="date"
               label="Start Date"
               type="date"
               // defaultValue="2017-05-24"
               onChange={(e) => startDateHandler(e)}
-              sx={{ width: 180 ,margin:1}}
+              sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -176,13 +214,13 @@ const DealerTable = ({ modalHandler ,refresh}) => {
               type="date"
               onChange={(e) => endDateHandler(e)}
               // defaultValue="2017-05-24"
-              sx={{ width: 180 ,margin:1}}
+              sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
                 shrink: true,
               }}
             />
-          <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
-        </div>
+            <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
+          </div>
         </div>
 
         {dealers && <MaterialTable

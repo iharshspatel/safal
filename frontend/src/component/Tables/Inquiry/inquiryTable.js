@@ -22,6 +22,40 @@ const InquiryTable = ({ modalHandler ,refresh}) => {
   const [branches, setBranches] = useState([]);
   let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
+  const [salesman, setSalesman] = useState([]);
+  let selectedSalesman = [];
+  const fetchSalesmen = async () => {
+    const { data } = await axios.get("/api/v1/salesman/getall");
+
+    const salesmen = data.salesmans.map((branch) => (
+      {
+        name: branch.name,
+        value: branch.name,
+        label: branch.name
+
+      }
+    ))
+    setSalesman(salesmen);
+  }
+  const fetchArchitectsofSalesman = async () => {
+    setIsLoading(true);
+    sleep(500);
+
+    // console.log(selectedSalesman);
+    const response = await axios.post("/api/v1/salesman/inquiry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+
+    // console.log(response);
+    const newarchitects = response.data.inquiries;
+
+    setTableData(newarchitects);
+    setIsLoading(false);
+  }
+  const handlesalesman = (selected) => {
+    console.log(selected);
+
+    selectedSalesman = selected;
+    fetchArchitectsofSalesman();
+  }
 
   const modifyData = (data) => {
 
@@ -145,6 +179,7 @@ const InquiryTable = ({ modalHandler ,refresh}) => {
   useEffect(() => {
     fetchInquiry();
     fetchBranches();
+    fetchSalesmen();
     // console.log(`editModal`, editModal)
   }, [refresh]);
   const handleCallbackCreate = (childData) => {
@@ -198,7 +233,11 @@ const InquiryTable = ({ modalHandler ,refresh}) => {
         <div className={Styles.Yellow}>
           <div className={Styles.DateRangeContainer}>
             {/* <label>Branche</label> */}
-            <Select styles={customStyles} selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
+            <label>Salesman Filter</label>
+            <Select styles={customStyles} onChange={(e) => handlesalesman(e)} options={salesman} />
+            <label>Branch Filter</label>
+            <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
+            {/* <Select styles={customStyles} selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} /> */}
             <TextField
               className={Styles.InputDate}
               id="date"

@@ -5,6 +5,12 @@ const { createSalesman,
     updateSalesman,
     deleteSalesman,
     getAllSalesman,
+    getArchitectsofSalesman,
+    getCustomerofSalesman,
+    getDealersofSalesman,
+    getInquiriesofSalesman,
+    getMistryofSalesman,
+    getPMCofSalesman
      } = require("../controllers/SalesmanController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -13,7 +19,14 @@ router.route("/getall").get(isAuthenticatedUser, getAllSalesman);
 router.route("/get/:id").get(isAuthenticatedUser, getSalesman);
 router.route("/update/:id").put(isAuthenticatedUser, updateSalesman);
 router.route("/delete/:id").delete(isAuthenticatedUser, deleteSalesman);
-// router.route("/totalsalesmans").get(isAuthenticatedUser, totalSalesman);
-// router.route("/totalorder").get(isAuthenticatedUser, totalOrderValue);
+
+
+router.route("/customers").post(isAuthenticatedUser,getCustomerofSalesman);
+router.route("/architects").post(isAuthenticatedUser,getArchitectsofSalesman);
+router.route("/inquiry").post(isAuthenticatedUser,getInquiriesofSalesman);
+router.route("/dealer").post(isAuthenticatedUser,getDealersofSalesman);
+router.route("/mistry").post(isAuthenticatedUser,getMistryofSalesman);
+router.route("/pmc").post(isAuthenticatedUser,getPMCofSalesman);
+
 
 module.exports = router
