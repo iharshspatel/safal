@@ -133,7 +133,7 @@ const SalesmanCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
             <div className={Styles.closebutton} onClick={modalHandler}>
                 <AiFillCloseCircle />
             </div>
-            <h1 className={Styles.heading}>Dealer Details</h1>
+            <h1 className={Styles.heading}>SalesMan Details</h1>
             <div className={Styles.personalDetails}>
 
                 <div className={Styles.personalDetails1}>

@@ -45,9 +45,9 @@ const salesmanSchema = new mongoose.Schema({
     // },
     // pmcName:String,
     // pmcNumber:Number,
-    // branches:[
-    //     {branchname:String}
-    // ]
+    branches:[
+        {branchname:String}
+    ]
 });
 
 
