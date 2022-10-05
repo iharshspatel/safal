@@ -10,8 +10,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify'
 import InquiryCreateForm from '../../Forms/inquiryCreateform'
+import InquiryFilterForm from '../../Filter/inquiryfilterform'
 const Inquiry= () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -24,6 +26,10 @@ const Inquiry= () => {
 
   const modalHandler = () => {
     setIsOpen(!isOpen);
+    
+  }
+  const modalHandler2 = () => {
+    setIsOpen2(!isOpen2);
     
   }
   const [refresh, doRefresh] = useState(true);
@@ -51,7 +57,7 @@ const Inquiry= () => {
         />
         <div className={Styles.rightcontainer}>
           <StatBox name="Inquiry" username={user.name}/>
-          <InquiryTable modalHandler={modalHandler} refresh={refresh}/>
+          <InquiryTable modalHandler={modalHandler} modalHandler2={modalHandler2} refresh={refresh}/>
           {
             isOpen ? <Modal setIsOpen={setIsOpen}>
               <AnimatePresence>
@@ -61,6 +67,20 @@ const Inquiry= () => {
                   exit={{ scale: 0 }}>
                   {/* <CustomerCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate} /> */}
                   <InquiryCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate} />
+                </motion.div>
+              </AnimatePresence>
+            </Modal>
+              : null
+          }
+          {
+            isOpen2 ? <Modal setIsOpen={setIsOpen2}>
+              <AnimatePresence>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ scale: 0 }}>
+                  {/* <CustomerCreateForm modalHandler={modalHandler} setIsOpen={setIsOpen} parentCallback={handleCallbackCreate} /> */}
+                  <InquiryFilterForm modalHandler2={modalHandler2} setIsOpen2={setIsOpen2}  />
                 </motion.div>
               </AnimatePresence>
             </Modal>
