@@ -79,3 +79,18 @@ exports.getAllInquiry = catchAsyncErrors(async (req, res, next) => {
         success: true
     })
 })
+
+exports.getFilteredInquiry = catchAsyncErrors(async (req, res, next) => {
+
+    // let body = req.body;
+    const salesman = req.params.salesman;
+    const branch = req.params.branch;
+    const startdate = req.params.startdate;
+    const endDate = req.params.enddate;
+
+    const inquiries = await Inquiry.find({ "date": { "$gte": startdate, "$lt": endDate }, "salesmen.name": salesman, "branches.branchname": branch })
+    res.status(200).json({
+        inquiries,
+        success: true
+    })
+})

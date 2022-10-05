@@ -11,6 +11,7 @@ import DummyEditForm from '../../Forms/DummyEditForm';
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
+import InquiryEditForm from '../../Forms/InquiryEditForm';
 const InquiryTable = ({ modalHandler ,refresh}) => {
 
   const [inquiries, setInquiries] = useState([]);
@@ -305,20 +306,20 @@ const InquiryTable = ({ modalHandler ,refresh}) => {
 
 
           actions={[
-            // {
-            //   icon: 'edit',
-            //   tooltip: 'Edit',
-            //   onClick: (event, rowData) => {
-            //     window.scrollTo({
-            //       top: 0,
-            //       left: 0,
-            //       behavior: "smooth"
-            //     });
-            //     setEditModalData(rowData);
-            //     setEditModal(!editModal);
-            //     console.log(`Edit `, rowData)
-            //   }
-            // },
+            {
+              icon: 'edit',
+              tooltip: 'Edit',
+              onClick: (event, rowData) => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
+                setEditModalData(rowData);
+                setEditModal(!editModal);
+                console.log(`Edit `, rowData)
+              }
+            },
             {
               icon: 'delete',
               tooltip: 'Delete',
@@ -338,9 +339,9 @@ const InquiryTable = ({ modalHandler ,refresh}) => {
         />}
       </div>
 
-      {/* {
-        editModal ? <Modal><CustomerEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null
-      } */}
+      {
+        editModal ? <Modal><InquiryEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null
+      }
 
       <div className={Styles.filter}>
 
