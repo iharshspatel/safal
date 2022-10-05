@@ -13,7 +13,7 @@ const inquirySchema = new mongoose.Schema({
     },
     address: String,
     date: Date,
-    followupDate: Date,
+    followupdate: Date,
     requirement: {
         type: String,
         // enum: ["Plywood", "Veneer","Laminate",""]

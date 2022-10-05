@@ -10,6 +10,7 @@ import DealerEditForm from '../../Forms/DealerEditForm';
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
+import SalesmanEditForm from '../../Forms/SalesmanEditForm';
 
 const SalesmanTable = ({ modalHandler ,refresh}) => {
   const [Salesman,setSalesman] = useState([]);
@@ -224,20 +225,20 @@ const SalesmanTable = ({ modalHandler ,refresh}) => {
           }}
 
           actions={[
-            // {
-            //   icon: 'edit',
-            //   tooltip: 'Edit',
-            //   onClick: (event, rowData) => {
-            //     window.scrollTo({
-            //       top: 0,
-            //       left: 0,
-            //       behavior: "smooth"
-            //     });
-            //     setEditModalData(rowData);
-            //     setEditModal(true);
-            //     console.log(`Edit `, rowData)
-            //   }
-            // },
+            {
+              icon: 'edit',
+              tooltip: 'Edit',
+              onClick: (event, rowData) => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth"
+                });
+                setEditModalData(rowData);
+                setEditModal(true);
+                console.log(`Edit `, rowData)
+              }
+            },
             {
               icon: 'delete',
               tooltip: 'Delete',
@@ -257,8 +258,8 @@ const SalesmanTable = ({ modalHandler ,refresh}) => {
 
       </div>
 
-      {/* {
-        editModal ? <Modal><DealerEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null} */}
+      {
+        editModal ? <Modal><SalesmanEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null}
 
       <div className={Styles.filter}>
 
