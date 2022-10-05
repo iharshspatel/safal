@@ -83,6 +83,23 @@ exports.getAllInquiry = catchAsyncErrors(async (req, res, next) => {
 exports.getFilteredInquiry = catchAsyncErrors(async (req, res, next) => {
 
     // let body = req.body;
+    // const salesman = req.query.salesman;
+    // const branch = req.query.branch;
+    // let startDate = req.query.startdate;
+    // let endDate = req.query.enddate;
+    // let s=new Date(startDate);
+    // // s=startDate.toISOString();
+    // let e=new Date(endDate);
+    // e=endDate.toISOString();
+
+    // console.log(req.query.enddate)
+    // let s=new Date(startDate);
+    // let e=new Date(endDate);
+
+// s=
+    // s=startDate.parse()
+    // startDate=new Date(startDate);
+    // endDate=new Date(endDate);
     const salesman = req.params.salesman;
     const branch = req.params.branch;
     const startdate = req.params.startdate;

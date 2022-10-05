@@ -9,6 +9,7 @@ router.route("/get/:id").get(isAuthenticatedUser, getInquiry);
 router.route("/update/:id").put(isAuthenticatedUser, updateInquiry);
 router.route("/delete/:id").delete(isAuthenticatedUser, deleteInquiry);
 router.route("/get/:salesman/:branch/:startdate/:enddate").get(isAuthenticatedUser,getFilteredInquiry);
+// router.route("/get").get(isAuthenticatedUser,getFilteredInquiry);
 // router.route("/totalinquiry").get(isAuthenticatedUser, totalInquiry);
 
 module.exports = router
