@@ -15,6 +15,9 @@ import SignIn from './component/Auth/Signin/signin';
 import Branch from './component/Pages/Branch/Branch'
 import ForgotPassword from './component/Auth/Forgot Password/ForgotPassword';
 import ResetPassword from './component/Auth/Forgot Password/ResetPassword';
+import Inquiry from './component/Pages/Inquiry/inquiry';
+import Salesman from './component/Pages/SalesMan/salesman';
+import InquiryFilter from './component/Filter/inquiryFilter';
 // import SignUp from './component/Auth/Signup/signup'
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +37,9 @@ function App() {
       <Route exact path='/dealer' element={(loading === false && isAuthenticated === true) ? <Dealer />:<SignIn/>} />
       <Route exact path='/mistry' element={(loading === false && isAuthenticated === true) ? <Mistry />:<SignIn/>} />
       <Route exact path='/pmc' element={(loading === false && isAuthenticated === true) ? <PMC />:<SignIn/>} />
+      <Route exact path='/inquiry' element={(loading === false && isAuthenticated === true) ? <Inquiry />:<SignIn/>} />
+      <Route exact path='/inquiry/:salesman/:branch/:startdate/:enddate' element={(loading === false && isAuthenticated === true) ? <InquiryFilter />:<SignIn/>} />
+      <Route exact path='/salesman' element={(loading === false && isAuthenticated === true) ? <Salesman />:<SignIn/>} />
       <Route exact path='/branch' element={(loading === false && isAuthenticated === true) ? <Branch />:<SignIn/>} />
       <Route exact path='/signin' element={<SignIn />} />
       <Route exact path="/password/forgot" element=<ForgotPassword/> />

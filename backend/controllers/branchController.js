@@ -7,7 +7,8 @@ const Dealer = require("../models/dealerModel")
 const Mistry = require("../models/mistryModel")
 const PMC = require("../models/pmcModel")
 
-
+const Inquiry=require("../models/inquiryModel")
+const Salesman=require("../models/salesmanModel")
 exports.createbranch = catchAsyncErrors(async (req, res, next) => {
     const t = req.body;
     console.log(req.body);
@@ -110,6 +111,30 @@ exports.getCustomerofBranch = catchAsyncErrors(async (req, res, next) => {
     const customers = await Customer.find({ "branches.branchname": branchname })
     res.status(200).json({
         customers,
+        success: true
+    })
+})
+exports.getInquiriesofBranch = catchAsyncErrors(async (req, res, next) => {
+    const branchname = req.body.branchname;
+    if (!branchname) {
+        return next(new ErrorHander("Please Provide branchname", 400))
+
+    }
+    const inquiries = await Inquiry.find({ "branches.branchname": branchname })
+    res.status(200).json({
+        inquiries,
+        success: true
+    })
+})
+exports.getSalesmenofBranch = catchAsyncErrors(async (req, res, next) => {
+    const branchname = req.body.branchname;
+    if (!branchname) {
+        return next(new ErrorHander("Please Provide branchname", 400))
+
+    }
+    const salesmen = await Salesman.find({ "branches.branchname": branchname })
+    res.status(200).json({
+        salesmen,
         success: true
     })
 })

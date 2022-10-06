@@ -58,8 +58,8 @@ const MistryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     const [selectedSalesmen, setselectedSalesmen] = useState([]);
     const getAllsalesmen = async () => {
         const { data } = await axios.get("/api/v1/salesman/getall");
-        console.log(data.Salesmans);
-        const salesmen = data.Salesmans.map((salesman) => (
+        console.log(data.salesmans);
+        const salesmen = data.salesmans.map((salesman) => (
             {
                 name: salesman.name,
                 value: salesman.name,

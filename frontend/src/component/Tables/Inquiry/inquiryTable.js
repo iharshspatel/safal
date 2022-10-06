@@ -1,103 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Styles from './ArchitectTable.module.css'
-import axios from 'axios'
+import Styles from './inquiryTable.module.css'
 import Add from '../../../Assets/Add.svg'
 import MaterialTable from 'material-table';
-import { Paper } from '@material-ui/core';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Modal from '../../Layout/Modal/Modal';
-import ArchitectEditForm from '../../Forms/ArchitectEditForm';
-import { toast, ToastContainer } from 'react-toastify';
+import { Paper } from '@material-ui/core';
+import axios from 'axios';
+import CustomerEditForm from '../../Forms/CustomerEditForm';
+import DummyEditForm from '../../Forms/DummyEditForm';
+import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
-const ArchitecTable = ({ modalHandler, refresh }) => {
-  const [architects, setArchitects] = useState([]);
+import InquiryEditForm from '../../Forms/InquiryEditForm';
+const InquiryTable = ({ modalHandler ,modalHandler2,refresh}) => {
+
+  const [inquiries, setInquiries] = useState([]);
+  const [tabledata, setTableData] = useState([])
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
-  const [tabledata, setTableData] = useState([])
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
   let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
-  const startDateHandler = (e) => {
-    setStartDate(new Date(e.target.value));
-  }
-
-  const endDateHandler = (e) => {
-    setEndDate(new Date(e.target.value));
-  }
-
-  const dateformater = (date) => {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-    return `${year}-${month}-${day}`
-  }
-
-  const submitDateRangeHandler = (e) => {
-    console.log(startDate, endDate);
-    let data = architects.filter((item) => {
-      let date = item.date;
-      date = new Date(date);
-      if (date < endDate && date > startDate) {
-        return true
-      }
-      else {
-        return false
-      }
-    })
-    setTableData(data)
-  }
-
-  const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/architect/delete/${id}`);
-    fetchArchitect();
-  }
-
-  const fetchArchitect = async () => {
-    const { data } = await axios.get("/api/v1/architect/getall");
-    setArchitects(data.architects);
-    setTableData(data.architects);
-  }
-
-
-  const fetchBranches = async () => {
-    const { data } = await axios.get("/api/v1/branch/getall");
-
-    const branches = data.branches.map((branch) => (
-      {
-        branchname: branch.branchname,
-        value: branch.branchname,
-        label: branch.branchname
-
-      }
-    ))
-    setBranches(branches);
-  }
-  const sleep = time => {
-    return new Promise(resolve => setTimeout(resolve, time));
-  };
-
-  const fetchArchitectsofBranch = async () => {
-    setIsLoading(true);
-    sleep(500);
-
-    console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/architects", selectedBranch, { headers: { "Content-Type": "application/json" } });
-
-    console.log(response);
-    const newarchitects = response.data.architects;
-
-    setTableData(newarchitects);
-    setIsLoading(false);
-  }
-  const handlebranch = (selected) => {
-    console.log(selected);
-    
-    selectedBranch = selected;
-    fetchArchitectsofBranch();
-  }
   const [salesman, setSalesman] = useState([]);
   let selectedSalesman = [];
   const fetchSalesmen = async () => {
@@ -117,11 +43,11 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     setIsLoading(true);
     sleep(500);
 
-    // console.log(selectedSalesman);
-    const response = await axios.post("/api/v1/salesman/architects", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+    
+    const response = await axios.post("/api/v1/salesman/inquiry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
 
-    // console.log(response);
-    const newarchitects = response.data.architects;
+    
+    const newarchitects = response.data.inquiries;
 
     setTableData(newarchitects);
     setIsLoading(false);
@@ -133,74 +59,196 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     fetchArchitectsofSalesman();
   }
 
+  const modifyData = (data) => {
+
+
+    let datass1 = data.map((d) => {
+      if (d.architectTag) {
+        return {
+          ...d,
+          tag: d.architectName + '(A)'
+        }
+      }
+      if (d.mistryTag) {
+        return {
+          ...d,
+          tag: d.mistryName + '(M)'
+        }
+      }
+      if (d.pmcTag) {
+        return {
+          ...d,
+          tag: d.pmcName + '(P)'
+        }
+      }
+      if (d.dealerTag) {
+        return {
+          ...d,
+          tag: d.dealerName + '(D)'
+        }
+      }
+      return d
+    })
+    console.log(datass1)
+    return datass1
+
+  }
+
+  const delteHandler = async (id) => {
+    const data = await axios.delete(`/api/v1/inquiry/delete/${id}`);
+    fetchInquiry();
+  }
+
+
+
+  const startDateHandler = (e) => {
+    setStartDate(new Date(e.target.value));
+  }
+
+  const endDateHandler = (e) => {
+    setEndDate(new Date(e.target.value));
+  }
+
+  const dateformater = (date) => {
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
+    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
+    return `${year}-${month}-${day}`
+  }
+
+  const submitDateRangeHandler = (e) => {
+    console.log(startDate, endDate);
+    let data = inquiries.filter((item) => {
+      let date = item.date;
+      date = new Date(date);
+      if (date < endDate && date > startDate) {
+        return true
+      }
+      else {
+        return false
+      }
+    })
+    console.log(data)
+    setTableData(data)
+    
+  }
+  
+  const fetchInquiry = async () => {
+    const { data } = await axios.get("/api/v1/inquiry/getall");
+    console.log(data)
+    setInquiries(modifyData(data.inquiries));
+    setTableData(modifyData(data.inquiries));
+  }
+
+  const fetchBranches = async () => {
+    const { data } = await axios.get("/api/v1/branch/getall");
+    
+    const branches = data.branches.map((branch) => (
+      {
+        branchname: branch.branchname,
+        value: branch.branchname,
+        label: branch.branchname
+
+      }
+    ))
+    setBranches(branches);
+  }
+  const sleep = time => {
+    return new Promise(resolve => setTimeout(resolve, time));
+  };
+
+  const fetchInquiriesofBranch = async () => {
+    setIsLoading(true);
+    sleep(500);
+    
+    console.log(selectedBranch);
+    const response = await axios.post("/api/v1/branch/inquiry", selectedBranch, { headers: { "Content-Type": "application/json" } });
+    
+    console.log(response);
+    const newcust = response.data.inquiries;
+    
+    setTableData(newcust);
+    setIsLoading(false);
+  }
+  const handlebranch = (selected) => {
+    console.log(selected);
+    
+    selectedBranch = selected;
+    fetchInquiriesofBranch();
+  }
+
+
   useEffect(() => {
-
+    fetchInquiry();
     fetchBranches();
-
-    fetchArchitect();
     fetchSalesmen();
+    
   }, [refresh]);
+  const handleCallbackCreate = (childData) => {
+    
+    toast.success("Inquiry edited");
+    fetchInquiry();
+  }
 
   const customStyles = {
     control: base => ({
-      ...base,
-      minHeight: 55
+        ...base,
+        minHeight: 55
     }),
     dropdownIndicator: base => ({
-      ...base,
-      padding: 4
+        ...base,
+        padding: 4
     }),
     clearIndicator: base => ({
-      ...base,
-      padding: 4
+        ...base,
+        padding: 4
     }),
     multiValue: base => ({
-      ...base,
-
+        ...base,
+        
     }),
     valueContainer: base => ({
-      ...base,
-      padding: '0px 6px'
+        ...base,
+        padding: '0px 6px'
     }),
     input: base => ({
-      ...base,
-      margin: 0,
-      padding: 0
+        ...base,
+        margin: 0,
+        padding: 0
     })
-  };
-  const handleCallbackCreate = (childData) => {
+};
 
-    toast.success("Architect edited");
-    fetchArchitect();
-    window.scrollTo(0, 0)
-  }
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
         <div className={Styles.header}>
-          <h3>All Architect</h3>
+          <h3>All Inquiries</h3>
 
           <div className={Styles.buttonContainer}>
             <img className={Styles.addImg} src={Add} alt="add" />
             <p className={Styles.buttonText} onClick={modalHandler}>
-              Add Architect
+              Add Inquiry
             </p>
-
+            <FilterAltIcon/>
+            <p className={Styles.buttonText} onClick={modalHandler2}>
+            Filter</p>
           </div>
         </div>
+        {/* = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(); */}
         <div className={Styles.Yellow}>
-
           <div className={Styles.DateRangeContainer}>
+            {/* <label>Branche</label> */}
             <label>Salesman Filter</label>
             <Select styles={customStyles} onChange={(e) => handlesalesman(e)} options={salesman} />
             <label>Branch Filter</label>
-            <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
+            {/* <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} /> */}
+            <Select styles={customStyles} selectedValue={branches} onChange={(e) => handlebranch(e)} options={branches} />
             <TextField
               className={Styles.InputDate}
               id="date"
               label="Start Date"
               type="date"
-
+              
               onChange={(e) => startDateHandler(e)}
               sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
@@ -213,7 +261,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
               label="End Date"
               type="date"
               onChange={(e) => endDateHandler(e)}
-
+              
               sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
                 shrink: true,
@@ -223,8 +271,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
           </div>
         </div>
 
-        {architects && <MaterialTable
-
+        {inquiries && <MaterialTable
           isLoading={isLoading}
           className={Styles.Table}
           columns={[
@@ -232,15 +279,14 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
             { title: 'Name', field: 'name' },
             { title: 'Email', field: 'Email', hidden: 'true' },
             { title: 'Address', field: 'address' },
-            { title: 'Company Name', field: 'companyName', hidden: 'true' },
             { title: 'Birth Date', field: 'birthdate', hidden: 'true' },
             { title: 'Marriage Date', field: 'marriagedate', hidden: 'true' },
             { title: 'Remarks', field: 'remarks', hidden: 'true' },
-            { title: 'Bank Name', field: 'bankname', hidden: 'true' },
-            { title: 'IFS Code', field: 'IFSCcode', hidden: 'true' },
-            { title: 'Branch Name', field: 'branchname', hidden: 'true' },
-            { title: 'Adhar Card', field: 'adharcard', hidden: 'true' },
-            { title: 'Pan Card', field: 'pancard', hidden: 'true' },
+            { title: 'Order Value', field: 'orderValue', hidden: 'true' },
+            { title: 'Sales Person', field: 'salesPerson', hidden: 'true' },
+            { title: 'Tag', field: 'tag' },
+
+
           ]}
           data={tabledata}
           options={{
@@ -250,7 +296,8 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
             },
             showTitle: false,
             actionsColumnIndex: -1,
-            filtering: true
+            filtering: true,
+
           }}
           components={{
             Container: props => <Paper {...props}
@@ -260,6 +307,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
                 width: "100%",
               }} />
           }}
+
 
           actions={[
             {
@@ -272,7 +320,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
                   behavior: "smooth"
                 });
                 setEditModalData(rowData);
-                setEditModal(true);
+                setEditModal(!editModal);
                 console.log(`Edit `, rowData)
               }
             },
@@ -285,23 +333,26 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
                   left: 0,
                   behavior: "smooth"
                 });
+                
                 delteHandler(rowData._id);
                 console.log(`delete `, rowData)
               }
             }
           ]}
-        />}
 
+        />}
       </div>
 
       {
-        editModal ? <Modal><ArchitectEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null}
+        editModal ? <Modal><InquiryEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null
+      }
 
       <div className={Styles.filter}>
 
       </div>
     </div>
+
   )
 }
 
-export default ArchitecTable
+export default InquiryTable

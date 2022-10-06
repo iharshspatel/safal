@@ -1,41 +1,40 @@
 const mongoose = require("mongoose");
 
 const inquirySchema = new mongoose.Schema({
-    name:{
-        type:String,
+    name: {
+        type: String,
         required: [true, "Please Enter Your Name"],
-        maxlength:[30, "Can not exceeed 30 characters"]
+        maxlength: [30, "Can not exceeed 30 characters"]
     },
-    mobileno:{
-        type:Number,
-        unique:true,
-        required:[true, "Please Enter Mobile Number"]
+    mobileno: {
+        type: Number,
+        unique: true,
+        required: [true, "Please Enter Mobile Number"]
     },
-    address:String,
-    date:Date,
-    followupDate:Date,
-    mistryTag:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"mistry"
+    address: String,
+    date: Date,
+    followupdate: Date,
+    requirement: {
+        type: String,
+        // enum: ["Plywood", "Veneer","Laminate",""]
     },
-    mistryName:String,
-    mistryNumber:Number,
-    architectTag:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"architect"
+    stage:String,
+    architectTag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "architect"
     },
-    architectName:String,
-    architectNumber:Number,    
-    pmcTag:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"pmc"
+    architectName: String,
+    architectNumber: Number,
+    pmcTag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "pmc"
     },
-    pmcName:String,
-    pmcNumber:Number,
-    branches:[
-        {branchname:String}
+    pmcName: String,
+    pmcNumber: Number,
+    branches: [
+        { branchname: String }
     ],
-    salesmen:[{name:String}]
+    salesmen: [{ name: String }]
 
 });
 

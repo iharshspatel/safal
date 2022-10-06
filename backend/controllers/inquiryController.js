@@ -3,37 +3,26 @@ const catchAsyncErrors = require("../middleware/catchAsyncError");
 const Inquiry = require("../models/inquiryModel")
 
 
-exports.totalInquiry = catchAsyncErrors(async (req, res, next) => {
+// exports.totalInquiry = catchAsyncErrors(async (req, res, next) => {
 
-    const Inquiries = await Inquiry.find();
+//     const Inquiries = await Inquiry.find();
 
-    res.status(200).json({
-        custlength: Inquiries.length,
-        success: true
-    })
-})
+//     res.status(200).json({
+//         custlength: Inquiries.length,
+//         success: true
+//     })
+// })
 
-exports.totalOrderValue = catchAsyncErrors(async (req, res, next) => {
-    const Inquiries = await Inquiry.find();
-    var total = 0
-    Inquiries.map((item) => {
-        total = total + item.orderValue
-    })
-    total = total / 1000;
-    res.status(200).json({
-        orderValue: total,
-        success: true
-    })
-})
+
 
 exports.createInquiry = catchAsyncErrors(async (req, res, next) => {
     const t = req.body;
     // console.log(req.body);
 
-    const cust = await Inquiry.create(t);
-    console.log(cust);
+    const inquiry = await Inquiry.create(t);
+    // console.log(cust);/
     res.status(200).json({
-        cust,
+        inquiry,
         success: true
     })
 })
@@ -42,10 +31,10 @@ exports.getInquiry = catchAsyncErrors(async (req, res, next) => {
 
     let t = req.params.id;
 
-    const Inquiry = await Inquiry.findById(t)
+    const inquiry = await Inquiry.findById(t)
 
     res.status(200).json({
-        Inquiry,
+        inquiry,
         success: true
     })
 })
@@ -55,16 +44,16 @@ exports.updateInquiry = catchAsyncErrors(async (req, res, next) => {
     let t = req.params.id;
     let body = req.body
     console.log(t)
-    const Inquiry = await Inquiry.findByIdAndUpdate(t, body, {
+    const inquiry = await Inquiry.findByIdAndUpdate(t, body, {
         new: true,
         runValidators: true,
         useFindAndModify: false
 
     });
-    await Inquiry.save();
+    await inquiry.save();
 
     res.status(200).json({
-        Inquiry,
+        inquiry,
         success: true
     })
 })
@@ -73,20 +62,52 @@ exports.deleteInquiry = catchAsyncErrors(async (req, res, next) => {
 
     let t = req.params.id;
 
-    const Inquiry = await Inquiry.findByIdAndDelete(t);
+    const inquiry = await Inquiry.findByIdAndDelete(t);
 
     res.status(200).json({
-        Inquiry,
+        inquiry,
         success: true
     })
 })
 
 exports.getAllInquiry = catchAsyncErrors(async (req, res, next) => {
 
-    const Inquiries = await Inquiry.find()
+    const inquiries = await Inquiry.find()
 
     res.status(200).json({
-        Inquiries,
+        inquiries,
+        success: true
+    })
+})
+
+exports.getFilteredInquiry = catchAsyncErrors(async (req, res, next) => {
+
+    // let body = req.body;
+    // const salesman = req.query.salesman;
+    // const branch = req.query.branch;
+    // let startDate = req.query.startdate;
+    // let endDate = req.query.enddate;
+    // let s=new Date(startDate);
+    // // s=startDate.toISOString();
+    // let e=new Date(endDate);
+    // e=endDate.toISOString();
+
+    // console.log(req.query.enddate)
+    // let s=new Date(startDate);
+    // let e=new Date(endDate);
+
+// s=
+    // s=startDate.parse()
+    // startDate=new Date(startDate);
+    // endDate=new Date(endDate);
+    const salesman = req.params.salesman;
+    const branch = req.params.branch;
+    const startdate = req.params.startdate;
+    const endDate = req.params.enddate;
+
+    const inquiries = await Inquiry.find({ "date": { "$gte": startdate, "$lt": endDate }, "salesmen.name": salesman, "branches.branchname": branch })
+    res.status(200).json({
+        inquiries,
         success: true
     })
 })

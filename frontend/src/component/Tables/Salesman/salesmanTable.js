@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Styles from './ArchitectTable.module.css'
+import Styles from '../Dealer/DealerTable.module.css'
 import axios from 'axios'
 import Add from '../../../Assets/Add.svg'
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
-import ArchitectEditForm from '../../Forms/ArchitectEditForm';
-import { toast, ToastContainer } from 'react-toastify';
+import DealerEditForm from '../../Forms/DealerEditForm';
+import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
-const ArchitecTable = ({ modalHandler, refresh }) => {
-  const [architects, setArchitects] = useState([]);
+import SalesmanEditForm from '../../Forms/SalesmanEditForm';
+
+const SalesmanTable = ({ modalHandler ,refresh}) => {
+  const [Salesman,setSalesman] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
+  const [branches, setBranches] = useState([]);
+  let selectedBranch = [];
+  const [isLoading, setIsLoading] = useState(false)
   const [tabledata, setTableData] = useState([])
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
-  const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
-  const [isLoading, setIsLoading] = useState(false);
+
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
   }
@@ -37,7 +40,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
 
   const submitDateRangeHandler = (e) => {
     console.log(startDate, endDate);
-    let data = architects.filter((item) => {
+    let data = Salesman.filter((item) => {
       let date = item.date;
       date = new Date(date);
       if (date < endDate && date > startDate) {
@@ -51,20 +54,20 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
   }
 
   const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/architect/delete/${id}`);
-    fetchArchitect();
+    const data = await axios.delete(`/api/v1/salesman/delete/${id}`);
+    fetchSalesman();
   }
 
-  const fetchArchitect = async () => {
-    const { data } = await axios.get("/api/v1/architect/getall");
-    setArchitects(data.architects);
-    setTableData(data.architects);
+  const fetchSalesman = async () => {
+    const { data } = await axios.get("/api/v1/salesman/getall");
+    console.log(data);
+    setSalesman(data.salesmans);
+    setTableData(data.salesmans);
   }
-
 
   const fetchBranches = async () => {
     const { data } = await axios.get("/api/v1/branch/getall");
-
+    // console.log(data.branches);
     const branches = data.branches.map((branch) => (
       {
         branchname: branch.branchname,
@@ -79,130 +82,91 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     return new Promise(resolve => setTimeout(resolve, time));
   };
 
-  const fetchArchitectsofBranch = async () => {
+  const fetchSalesmanofbranch = async () => {
     setIsLoading(true);
     sleep(500);
-
+    // let data=selectedBranch;
     console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/architects", selectedBranch, { headers: { "Content-Type": "application/json" } });
-
+    const response = await axios.post("/api/v1/branch/salesmen", selectedBranch, { headers: { "Content-Type": "application/json" } });
+    // const { data } = await axios.get("/api/v1/branch/architects");
     console.log(response);
-    const newarchitects = response.data.architects;
-
+    const newarchitects = response.data.salesmen;
+    // setArchitects(newarchitects);
     setTableData(newarchitects);
     setIsLoading(false);
   }
   const handlebranch = (selected) => {
     console.log(selected);
-    
+    // setselectedBranch(selected);
     selectedBranch = selected;
-    fetchArchitectsofBranch();
-  }
-  const [salesman, setSalesman] = useState([]);
-  let selectedSalesman = [];
-  const fetchSalesmen = async () => {
-    const { data } = await axios.get("/api/v1/salesman/getall");
-
-    const salesmen = data.salesmans.map((branch) => (
-      {
-        name: branch.name,
-        value: branch.name,
-        label: branch.name
-
-      }
-    ))
-    setSalesman(salesmen);
-  }
-  const fetchArchitectsofSalesman = async () => {
-    setIsLoading(true);
-    sleep(500);
-
-    // console.log(selectedSalesman);
-    const response = await axios.post("/api/v1/salesman/architects", selectedSalesman, { headers: { "Content-Type": "application/json" } });
-
-    // console.log(response);
-    const newarchitects = response.data.architects;
-
-    setTableData(newarchitects);
-    setIsLoading(false);
-  }
-  const handlesalesman = (selected) => {
-    console.log(selected);
-
-    selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+    fetchSalesmanofbranch();
   }
 
   useEffect(() => {
-
     fetchBranches();
 
-    fetchArchitect();
-    fetchSalesmen();
+    fetchSalesman();
   }, [refresh]);
+  const handleCallbackCreate = (childData) => {
+    // console.log("Parent Invoked!!")
+    toast.success("Salesman edited");
+    fetchSalesman();
+  }
 
   const customStyles = {
     control: base => ({
-      ...base,
-      minHeight: 55
+        ...base,
+        minHeight: 55
     }),
     dropdownIndicator: base => ({
-      ...base,
-      padding: 4
+        ...base,
+        padding: 4
     }),
     clearIndicator: base => ({
-      ...base,
-      padding: 4
+        ...base,
+        padding: 4
     }),
     multiValue: base => ({
-      ...base,
-
+        ...base,
+        // backgroundColor: variables.colorPrimaryLighter
     }),
     valueContainer: base => ({
-      ...base,
-      padding: '0px 6px'
+        ...base,
+        padding: '0px 6px'
     }),
     input: base => ({
-      ...base,
-      margin: 0,
-      padding: 0
+        ...base,
+        margin: 0,
+        padding: 0
     })
-  };
-  const handleCallbackCreate = (childData) => {
+};
 
-    toast.success("Architect edited");
-    fetchArchitect();
-    window.scrollTo(0, 0)
-  }
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
         <div className={Styles.header}>
-          <h3>All Architect</h3>
+          <h3>All Salesman</h3>
 
           <div className={Styles.buttonContainer}>
             <img className={Styles.addImg} src={Add} alt="add" />
             <p className={Styles.buttonText} onClick={modalHandler}>
-              Add Architect
+              Add SalesMan
             </p>
-
           </div>
         </div>
-        <div className={Styles.Yellow}>
 
-          <div className={Styles.DateRangeContainer}>
-            <label>Salesman Filter</label>
-            <Select styles={customStyles} onChange={(e) => handlesalesman(e)} options={salesman} />
-            <label>Branch Filter</label>
-            <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
-            <TextField
+        <div className={Styles.Yellow}>
+        <div className={Styles.DateRangeContainer}>
+          {/* <label>Branch</label> */}
+          <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
+          <TextField
               className={Styles.InputDate}
               id="date"
               label="Start Date"
               type="date"
-
+              // defaultValue="2017-05-24"
               onChange={(e) => startDateHandler(e)}
-              sx={{ width: 180, margin: 1 }}
+              sx={{ width: 180 ,margin:1}}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -213,18 +177,17 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
               label="End Date"
               type="date"
               onChange={(e) => endDateHandler(e)}
-
-              sx={{ width: 180, margin: 1 }}
+              // defaultValue="2017-05-24"
+              sx={{ width: 180 ,margin:1}}
               InputLabelProps={{
                 shrink: true,
               }}
             />
-            <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
-          </div>
+          <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
+        </div>
         </div>
 
-        {architects && <MaterialTable
-
+        {Salesman && <MaterialTable
           isLoading={isLoading}
           className={Styles.Table}
           columns={[
@@ -285,6 +248,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
                   left: 0,
                   behavior: "smooth"
                 });
+                // Do save operation
                 delteHandler(rowData._id);
                 console.log(`delete `, rowData)
               }
@@ -295,7 +259,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
       </div>
 
       {
-        editModal ? <Modal><ArchitectEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null}
+        editModal ? <Modal><SalesmanEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null}
 
       <div className={Styles.filter}>
 
@@ -304,4 +268,4 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
   )
 }
 
-export default ArchitecTable
+export default SalesmanTable

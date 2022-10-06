@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { AiFillCloseCircle } from 'react-icons/ai'
+import { AiFillCloseCircle, AiFillCustomerService } from 'react-icons/ai'
 import { toast, ToastContainer } from 'react-toastify'
 import Styles from './CustomerCreateForm.module.css'
 import axios from 'axios'
 import Select from 'react-select'
 import { default as ReactSelect } from "react-select";
 import Option from '../DropDown/Options'
-const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
+const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   const [architects, setArchitects] = useState([]);
   const [Mistries, setMistries] = useState([]);
   const [Dealers, setDealers] = useState([]);
@@ -21,28 +21,57 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     email: "",
     mobileno: "",
     address: "",
-    companyName: "",
-    birthdate: "",
-    marriagedate: "",
-    remarks: "",
-    orderValue: "",
-    salesPerson: "",
-    mistryTag: null,
-    mistryName: "",
-    mistryNumber: "",
     architectTag: null,
     architectName: "",
     architectNumber: "",
-    dealerTag: null,
-    dealerName: "",
-    dealerNumber: "",
+    requirement:"",
+    stage:"",
     pmcTag: null,
     pmcName: "",
     pmcNumber: "",
     date: "",
-    branches:[],
-    salesmen:[]
+    followupdate: "",
+    branches: [],
+    salesmen: []
   }
+  // ["Plywood", "Laminate","Veneer","Other","Hardware"]
+  const requirement = [
+    {
+      value: "Plywood",
+      label:"Plywood"
+    },
+    {
+      value: "Laminate",
+      label:"Laminate"
+    },
+    {
+      value: "Veneer",
+      label:"Veneer"
+    },
+    {
+      value: "Other",
+      label:"Other"
+    },
+    {
+      value: "Hardware",
+      label:"Hardware"
+    },
+  ]
+  const stage = [
+    {
+      value: "Process",
+      label:"Process"
+    },
+    {
+      value: "Qualified",
+      label:"Qualified"
+    },
+    {
+      value: "Unqualified",
+      label:"Unqualified"
+    },
+
+  ]
   const [formData, setFormData] = useState(initialState)
 
   const formHandler = (e) => {
@@ -57,7 +86,7 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       {
         branchname: branch.branchname,
         value: branch.branchname,
-        label:branch.branchname
+        label: branch.branchname
       }
     ))
     setBranches(branches);
@@ -125,30 +154,21 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       email: formData.email,
       mobileno: formData.mobileno,
       address: formData.address,
-      companyName: formData.companyName,
-      birthdate: formData.birthdate,
-      marriagedate: formData.marriagedate,
-      remarks: formData.remarks,
       date: formData.date,
-      orderValue: formData.orderValue,
-      salesPerson: formData.salesPerson,
-      mistryTag: formData.mistryTag,
-      mistryName: formData.mistryName,
-      mistryNumber: formData.mistryNumber,
+      followupdate: formData.fdate,
       architectTag: formData.architectTag,
       architectNumber: formData.architectNumber,
       architectName: formData.architectName,
-      dealerTag: formData.dealerTag,
-      dealerNumber: formData.dealerNumber,
-      dealerName: formData.dealerName,
       pmcTag: formData.pmcTag,
       pmcName: formData.pmcName,
       pmcNumber: formData.pmcNumber,
-      branches:selectedBranch,
-      salesmen:selectedSalesmen
+      requirement: formData.requirement,
+      stage:formData.stage,
+      branches: selectedBranch,
+      salesmen: selectedSalesmen
     }
     try {
-      const response = await axios.post("/api/v1/customer/create", data, { headers: { "Content-Type": "application/json" } });
+      const response = await axios.post("/api/v1/inquiry/create", data, { headers: { "Content-Type": "application/json" } });
       console.log(response);
       parentCallback(true);
       setIsOpen(false);
@@ -159,18 +179,24 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     }
 
   }
-  
-  
-  
-  
+
+
+
+
   const Branchchangehandler = (selected) => {
 
     setselectedBranch(selected);
     console.log(selected);
-    setFormData({...formData,selectedBranch})
+    setFormData({ ...formData, selectedBranch })
   };
   const ArchitectFormHandler = (e) => {
     setFormData({ ...formData, architectTag: e.value, architectName: e.label.split('-')[0], architectNumber: e.label.split('-')[1] })
+  }
+  const Requirehandler = (e) => {
+    setFormData({ ...formData, requirement: e.value })
+  }
+  const Stagehandler = (e) => {
+    setFormData({ ...formData, stage: e.value })
   }
 
   const MistryFormHandler = (e) => {
@@ -196,7 +222,7 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
   return (
     <div className={Styles.container}>
-      
+
       <div className={Styles.closebutton} onClick={modalHandler}>
         <AiFillCloseCircle />
       </div>
@@ -207,8 +233,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
         <div className={Styles.personalDetails1}>
 
-          <label htmlFor='name'>Customer Name</label>
-          <input className={Styles.inputTag} name="name" value={formData.name} onChange={(e) => formHandler(e)} placeholder='Customer Name' />
+          <label htmlFor='name'>Inquiry Name</label>
+          <input className={Styles.inputTag} name="name" value={formData.name} onChange={(e) => formHandler(e)} placeholder='Inquiry Name' />
 
           <label htmlFor='number'>Mobile Number</label>
           <input className={Styles.inputTag} name="mobileno" value={formData.mobileno} onChange={(e) => formHandler(e)} placeholder='Mobile Number' />
@@ -216,14 +242,14 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <label htmlFor='number'>Email</label>
           <input className={Styles.inputTag} name="email" value={formData.email} onChange={(e) => formHandler(e)} placeholder='Email' />
 
-          <label htmlFor='address'>Address</label>
+          {/* <label htmlFor='address'>Address</label>
           <input className={Styles.inputTag} name="address" value={formData.address} onChange={(e) => formHandler(e)} placeholder='Address' />
 
           <label htmlFor='ordervalue'>Order Value</label>
           <input className={Styles.inputTag} name="orderValue" value={formData.orderValue} onChange={(e) => formHandler(e)} placeholder='Order Value' />
 
           <label htmlFor='name'>Remarks</label>
-          <input className={Styles.inputTag} name="remarks" value={formData.remarks} onChange={(e) => formHandler(e)} placeholder='Remarks' />
+          <input className={Styles.inputTag} name="remarks" value={formData.remarks} onChange={(e) => formHandler(e)} placeholder='Remarks' /> */}
         </div>
 
         <div className={Styles.personalDetails2}>
@@ -231,20 +257,24 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <label htmlFor='name'>Created At</label>
           <input className={Styles.inputTag} type="date" name="date" value={formData.date} onChange={(e) => formHandler(e)} placeholder='Created At' />
 
-          <label htmlFor='name'>Birth Date</label>
-          <input className={Styles.inputTag} type="date" name="birthdate" value={formData.birthdate} onChange={(e) => formHandler(e)} placeholder='Birthdate' />
+          <label htmlFor='name'>Follow up Date</label>
+          <input className={Styles.inputTag} type="date" name="followupdate" value={formData.followupdate} onChange={(e) => formHandler(e)} placeholder='Follow up Date' />
 
-          <label htmlFor='name'>Annivarsary</label>
-          <input className={Styles.inputTag} type="date" name="marriagedate" value={formData.marriagedate} onChange={(e) => formHandler(e)} placeholder='Annivarsary' />
+          {/* <label htmlFor='name'>Annivarsary</label>
+          <input className={Styles.inputTag} type="date" name="marriagedate" value={formData.marriagedate} onChange={(e) => formHandler(e)} placeholder='Annivarsary' /> */}
 
-          <label htmlFor='name'>Sales Person</label>
-          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' />
+          {/* <label htmlFor='name'>Sales Person</label>
+          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
+          <label>Requirements</label>
+          <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} options={ requirement} />
+          <label>Stage</label>
+          <Select selectedValue={formData.stage} onChange={(e) => Stagehandler(e)} options={ stage} />
           <label>Branches</label>
-          <ReactSelect lassName={Styles.inputTag}
+          <ReactSelect className={Styles.inputTag}
             options={Branches}
             isMulti
             closeMenuOnSelect={false}
-            hideSelectedOptions={false}
+            hideSelectedOptions={false} 
             components={{
               Option
             }}
@@ -271,8 +301,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       <div className={Styles.bankDetails}>
         <div className={Styles.bankDetails1}>
 
-          <label htmlFor='name'>Mistry Tag</label>
-          <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} />
+          {/* <label htmlFor='name'>Mistry Tag</label>
+          <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> */}
 
           <label htmlFor='name'>Architect Tag</label>
           <Select selectedValue={formData.architectTag} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
@@ -280,8 +310,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
         <div className={Styles.bankDetails2}>
 
-          <label htmlFor='name'>Dealer Tag</label>
-          <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} />
+          {/* <label htmlFor='name'>Dealer Tag</label>
+          <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} /> */}
 
           <label htmlFor='name'>PMC Tag</label>
           <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
@@ -292,4 +322,4 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   )
 }
 
-export default CustomerCreateForm
+export default InquiryCreateForm
