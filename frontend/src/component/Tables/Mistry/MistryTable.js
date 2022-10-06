@@ -248,7 +248,8 @@ const MistryTable = ({ modalHandler,refresh }) => {
             },
             showTitle: false,
             actionsColumnIndex: -1,
-            filtering: true
+            filtering: true,
+            exportButton:true
           }}
           components={{
             Container: props => <Paper {...props}

@@ -297,6 +297,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh}) => {
             showTitle: false,
             actionsColumnIndex: -1,
             filtering: true,
+            exportButton:true
 
           }}
           components={{
