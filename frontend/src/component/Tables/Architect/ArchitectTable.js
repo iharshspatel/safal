@@ -94,7 +94,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
   }
   const handlebranch = (selected) => {
     console.log(selected);
-    
+
     selectedBranch = selected;
     fetchArchitectsofBranch();
   }
@@ -208,6 +208,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
               }}
             />
             <TextField
+
               className={Styles.InputDate}
               id="date"
               label="End Date"
@@ -224,7 +225,6 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
         </div>
 
         {architects && <MaterialTable
-
           isLoading={isLoading}
           className={Styles.Table}
           columns={[
@@ -250,7 +250,8 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
             },
             showTitle: false,
             actionsColumnIndex: -1,
-            filtering: true
+            filtering: true,
+            exportButton:true
           }}
           components={{
             Container: props => <Paper {...props}

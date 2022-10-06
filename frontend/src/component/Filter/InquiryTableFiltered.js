@@ -300,6 +300,7 @@ const InquiryTableFlitered = ({ modalHandler, refresh }) => {
                         showTitle: false,
                         actionsColumnIndex: -1,
                         filtering: true,
+                        exportButton:true
 
                     }}
                     components={{

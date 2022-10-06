@@ -13,7 +13,7 @@ const ArchitectEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) =>
     const [Salesmen, setSalesmen] = useState([]);
     const [selectedSalesman, setselectedSalesman] = useState(data.salesmen);
     const arr2 = selectedSalesman.map(object => {
-        console.log(object);
+        // console.log(object);
         return { ...object, value: object.name, label: object.name };
     })
     const getAllsalesmen = async () => {
@@ -174,8 +174,8 @@ pauseOnHover
                     <label htmlFor='companyName'>Company Name</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} defaultValue={formData.companyName} name="companyName" placeholder='Company Name' />
 
-                    <label htmlFor='salesMan'>Sales Man </label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} defaultValue={formData.companyName} value={formData.companyName} name="salesMan" placeholder='Company Name' />
+                    {/* <label htmlFor='salesMan'>Sales Man </label>
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} defaultValue={formData.companyName} value={formData.companyName} name="salesMan" placeholder='Company Name' /> */}
                     <label>Branches</label>
                     <ReactSelect lassName={Styles.inputTag}
                         options={Branches}
