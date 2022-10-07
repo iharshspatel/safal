@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from './ArchitectTable.module.css'
 import axios from 'axios'
@@ -10,6 +10,8 @@ import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import { toast, ToastContainer } from 'react-toastify';
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
+import MaterialReactTable from 'material-react-table';
+
 const ArchitecTable = ({ modalHandler, refresh }) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
@@ -174,6 +176,24 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     fetchArchitect();
     window.scrollTo(0, 0)
   }
+  const columns = useMemo(
+    () => [
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+      { header: 'Name', accessorKey: 'name' },
+      { header: 'Address', accessorKey: 'address' },
+      // { title: 'Email', field: 'Email', hidden: 'true' },
+      // { title: 'Company Name', field: 'companyName', hidden: 'true' },
+      // { title: 'Birth Date', field: 'birthdate', hidden: 'true' },
+      // { title: 'Marriage Date', field: 'marriagedate', hidden: 'true' },
+      // { title: 'Remarks', field: 'remarks', hidden: 'true' },
+      // { title: 'Bank Name', field: 'bankname', hidden: 'true' },
+      // { title: 'IFS Code', field: 'IFSCcode', hidden: 'true' },
+      // { title: 'Branch Name', field: 'branchname', hidden: 'true' },
+      // { title: 'Adhar Card', field: 'adharcard', hidden: 'true' },
+      // { title: 'Pan Card', field: 'pancard', hidden: 'true' },
+    ],
+    [],
+  );
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -223,8 +243,20 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>
-
-        {architects && <MaterialTable
+        {architects &&
+          <MaterialReactTable
+            columns={columns}
+            data={tabledata}
+            // enableRowSelection //enable some features
+            enableColumnOrdering
+            // enablePagination
+            muiTablePaginationProps={{
+              rowsPerPageOptions: [5, 10],
+              showFirstLastPageButtons: false,
+            }}
+            enableGlobalFilter={false} //turn off a feature
+          />}
+        {/* {architects && <MaterialTable
           isLoading={isLoading}
           className={Styles.Table}
           columns={[
@@ -291,7 +323,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
               }
             }
           ]}
-        />}
+        />} */}
 
       </div>
 
