@@ -17,6 +17,7 @@
     "axios": "^0.26.1",
     "dayjs": "^1.11.5",
     "export-to-csv": "^0.2.1",
+    "export-to-csv-fix-source-map": "^0.2.1",
     "formik": "^2.2.9",
     "framer-motion": "^6.5.1",
     "http-proxy-middleware": "^2.0.6",

@@ -231,6 +231,9 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     
     csvExporter.generateCsv(tabledata);
   };
+  const handleExportRows = (rows) => {
+    csvExporter.generateCsv(rows.map((row) => row.original));
+  };
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -341,6 +344,15 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
               <Box
                 sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
               >
+                <Button
+            disabled={table.getPrePaginationRowModel().rows.length === 0}
+            //export all rows, including from the next page, (still respects filtering and sorting)
+            onClick={() =>
+              handleExportRows(table.getPrePaginationRowModel().rows)
+            }
+            startIcon={<FileDownloadIcon />}
+            variant="contained"
+          >Export All Rows</Button>
                 <Button
                   color="primary"
                   onClick={handleExportData}
