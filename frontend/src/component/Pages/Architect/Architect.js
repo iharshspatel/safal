@@ -56,7 +56,7 @@ const Architect = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="Architect" username={user.name}/>
-    <ArchitecTable modalHandler={modalHandler} refresh={refresh}/>
+    <ArchitecTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

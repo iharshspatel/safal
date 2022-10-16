@@ -28,7 +28,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-const ArchitecTable = ({ modalHandler, refresh }) => {
+const ArchitecTable = ({ modalHandler, refresh,isOpen }) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -315,7 +315,7 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
             enableEditing
             enableRowNumbers
             rowNumberMode='original'
-            enableTopToolbar={!editModal}
+            enableTopToolbar={!editModal&&!isOpen}
 
             muiTablePaginationProps={{
               rowsPerPageOptions: [5, 10],
