@@ -1,4 +1,4 @@
-.container{
+.container {
     /* border: 2px solid green; */
     height: 82vh;
     background-color: #F0F0F0;
@@ -6,17 +6,36 @@
 }
 
 
-.table{
+.table {
     /* border: 1px solid yellowgreen; */
     width: 100%;
     background: #FFFFFF;
     border: 1px solid #EBEBEB;
     border-radius: 8px;
-    margin:10px;
-    
+    margin: 10px;
+
 }
 
-.filter{
+.MuiToolbar-root {
+    position: absolute;
+    z-index: -1;
+    background-color: #005EA1;
+}
+/* 
+MaterialReactTable {
+    z-index: 0;
+}
+*/
+.zi {
+    position: relative;
+    z-index: 1000;
+}
+/*
+.bu {
+    z-index: -1;
+} */
+
+.filter {
     border: 1px solid blue;
     width: 25%;
     background-color: #FFFFFF;
@@ -26,50 +45,51 @@
     display: none;
 }
 
-.header{
+.header {
     display: flex;
     justify-content: space-between;
     margin: 20px 20px;
 }
-.addImg{
+
+.addImg {
     margin: 0px 10px;
 }
 
-.buttonText{
+.buttonText {
     color: #646363;
     font-weight: 700;
 
 }
 
-.header:hover{
+.header:hover {
     cursor: pointer;
 }
 
-.buttonContainer{
+.buttonContainer {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.Table{
+.Table {
     display: none;
 }
 
 
-.DateRangeContainer{
+.DateRangeContainer {
     /* border: 2px solid red; */
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.InputDate{
+.InputDate {
     border: 1px solid grey;
-    padding: 5px 20px ;
+    padding: 5px 20px;
     margin-left: 10px;
 }
 
-.SubmitButton{
+.SubmitButton {
     padding: 5px 20px;
     margin: 10px 20px;
     background-color: #005EA1;
@@ -77,7 +97,8 @@
     border: none;
     border-radius: 8px;
 }
-.Yellow{
+
+.Yellow {
     display: flex;
     justify-content: center;
 
