@@ -48,7 +48,7 @@ const Dealer = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="Dealer" username={user.name}/>
-    <DealerTable modalHandler={modalHandler} refresh={refresh}/>
+    <DealerTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

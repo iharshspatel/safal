@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from './inquiryTable.module.css'
 import Add from '../../../Assets/Add.svg'
@@ -13,7 +13,24 @@ import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
 import InquiryEditForm from '../../Forms/InquiryEditForm';
-const InquiryTable = ({ modalHandler ,modalHandler2,refresh}) => {
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import MaterialReactTable from 'material-react-table';
+import { ExportToCsv } from 'export-to-csv';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  Stack,
+  // TextField,
+  Tooltip,
+} from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 
   const [inquiries, setInquiries] = useState([]);
   const [tabledata, setTableData] = useState([])
@@ -217,7 +234,48 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh}) => {
         padding: 0
     })
 };
+const columns = useMemo(
+  () => [
+    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+    { header: 'Name', accessorKey: 'name' },
+    { header: 'Address', accessorKey: 'address' },
+    { header: 'Mobile Number', accessorKey: 'mobileno' },
+  ],
+  [],
+);
+const ops = [
+  { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+  { header: 'Name', accessorKey: 'name' },
+  { header: 'Address', accessorKey: 'address' },
+  { header: 'Mobile Number', accessorKey: 'mobileno' },
+  { header: 'Email', accessorKey: 'Email', },
+  { header: 'Company_Name', accessorKey: 'companyName', },
+  { header: 'Birth_Date', accessorKey: 'birthdate', },
+  { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+  { header: 'Remarks', accessorKey: 'remarks', },
+  // { header: 'Bank_Name', accessorKey: 'bankname', },
+  // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+  // { header: 'Branch_Name', accessorKey: 'branchname', },
+  // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+  // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+]
+const csvOptions = {
+  fieldSeparator: ',',
+  quoteStrings: '"',
+  decimalSeparator: '.',
+  showLabels: true,
+  useBom: true,
+  useKeysAsHeaders: false,
+  headers: ops.map((c) => c.header),
+};
+const csvExporter = new ExportToCsv(csvOptions);
+const handleExportData = () => {
 
+  csvExporter.generateCsv(tabledata);
+};
+const handleExportRows = (rows) => {
+  csvExporter.generateCsv(rows.map((row) => row.original));
+};
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -270,7 +328,98 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh}) => {
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>
+        {inquiries &&
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              'mrt-row-actions': {
+                muiTableHeadCellProps: {
+                  align: 'center',
+                },
 
+                size: 120,
+              },
+            }}
+
+            muiTopToolbarProps={
+              ({ }) => ({
+                color: 'green',
+                sx: { display: 'block' },
+                zIndex: '0'
+              })
+            }
+            columns={columns}
+            data={tabledata}
+            enableEditing
+            enableRowNumbers
+            rowNumberMode='original'
+            enableTopToolbar={!editModal && !isOpen}
+
+            muiTablePaginationProps={{
+              rowsPerPageOptions: [5, 10],
+              showFirstLastPageButtons: true,
+            }}
+            enableGlobalFilter={true}
+            positionActionsColumn='last'
+            renderRowActions={({ row, table }) => (
+              <Box sx={{ display: 'flex', gap: '1rem' }}>
+                <Tooltip arrow placement="left" title="Edit">
+                  <IconButton onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+
+                    setEditModalData(row.original)
+                    setEditModal(true);
+                  }}>
+                    <Edit />
+
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow placement="right" title="Delete">
+                  <IconButton color="error" onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+                    delteHandler(row.original._id);
+                    console.log(`delete `, row)
+                  }}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+            renderTopToolbarCustomActions={({ table }) => (
+              <Box
+                sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+              >
+                <Button
+                  disabled={table.getPrePaginationRowModel().rows.length === 0}
+
+                  onClick={() =>
+                    handleExportRows(table.getPrePaginationRowModel().rows)
+                  }
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >Export All Rows</Button>
+                <Button
+                  className={Styles.bu}
+                  color="primary"
+                  onClick={handleExportData}
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >
+                  Export All Data
+                </Button>
+              </Box>)}
+
+          />}
+
+
+{/* 
         {inquiries && <MaterialTable
           isLoading={isLoading}
           className={Styles.Table}
@@ -341,7 +490,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh}) => {
             }
           ]}
 
-        />}
+        />} */}
       </div>
 
       {

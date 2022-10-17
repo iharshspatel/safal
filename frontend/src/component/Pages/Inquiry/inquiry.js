@@ -57,7 +57,7 @@ const Inquiry= () => {
         />
         <div className={Styles.rightcontainer}>
           <StatBox name="Inquiry" username={user.name}/>
-          <InquiryTable modalHandler={modalHandler} modalHandler2={modalHandler2} refresh={refresh}/>
+          <InquiryTable modalHandler={modalHandler} modalHandler2={modalHandler2} isOpen={isOpen} refresh={refresh}/>
           {
             isOpen ? <Modal setIsOpen={setIsOpen}>
               <AnimatePresence>

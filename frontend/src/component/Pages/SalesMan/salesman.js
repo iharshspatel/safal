@@ -51,7 +51,7 @@ const Salesman = () => {
         />
         <div className={Styles.rightcontainer}>
           <StatBox name="Salesman" username={user.name}/>
-          <SalesmanTable modalHandler={modalHandler} refresh={refresh}/>
+          <SalesmanTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen}/>
           {
             isOpen ? <Modal setIsOpen={setIsOpen}>
               <AnimatePresence>

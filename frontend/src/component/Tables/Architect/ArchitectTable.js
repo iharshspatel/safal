@@ -28,7 +28,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-const ArchitecTable = ({ modalHandler, refresh,isOpen }) => {
+const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -294,44 +294,27 @@ const ArchitecTable = ({ modalHandler, refresh,isOpen }) => {
                 size: 120,
               },
             }}
-            // muiTopToolbarProps={{color:'secondary',zIndex:'-1'}}
+
             muiTopToolbarProps={
-              ({})=>({
-                color:'green',
-                sx: { display:  'block'  },
-                zIndex:'0'
+              ({ }) => ({
+                color: 'green',
+                sx: { display: 'block' },
+                zIndex: '0'
               })
             }
-            // muiLinearProgressProps={({ isTopToolbar }) => ({
-            //   color: 'secondary',
-            //   // sx: { display: isTopToolbar ? 'block' : 'none' }, //only show top toolbar progress bar
-            //   // value: fetchProgress, //show precise real progress value if you so desire
-            //   variant: 'determinate',
-            //   zIndex:'0'
-            // })}
-
             columns={columns}
             data={tabledata}
             enableEditing
             enableRowNumbers
             rowNumberMode='original'
-            enableTopToolbar={!editModal&&!isOpen}
+            enableTopToolbar={!editModal && !isOpen}
 
             muiTablePaginationProps={{
               rowsPerPageOptions: [5, 10],
               showFirstLastPageButtons: true,
             }}
             enableGlobalFilter={true}
-            // components={{
-            //   Container: props => <Paper {...props}
-            //     elevation={0}
-            //     style={{
-            //       padding: 20,
-            //       width: "100%",
-            //     }} />
-            // }}
             positionActionsColumn='last'
-            // muiTopToolbarProps={}
             renderRowActions={({ row, table }) => (
               <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Tooltip arrow placement="left" title="Edit">
@@ -344,9 +327,6 @@ const ArchitecTable = ({ modalHandler, refresh,isOpen }) => {
 
                     setEditModalData(row.original)
                     setEditModal(true);
-
-
-                    console.log(`Edit `, row.original)
                   }}>
                     <Edit />
 
@@ -369,11 +349,11 @@ const ArchitecTable = ({ modalHandler, refresh,isOpen }) => {
             )}
             renderTopToolbarCustomActions={({ table }) => (
               <Box
-                sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap', zIndex: '-1' }}
+                sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
               >
                 <Button
                   disabled={table.getPrePaginationRowModel().rows.length === 0}
-                  //export all rows, including from the next page, (still respects filtering and sorting)
+
                   onClick={() =>
                     handleExportRows(table.getPrePaginationRowModel().rows)
                   }
@@ -381,7 +361,7 @@ const ArchitecTable = ({ modalHandler, refresh,isOpen }) => {
                   variant="contained"
                 >Export All Rows</Button>
                 <Button
-                  className={Styles.bu}
+                  // className={Styles.bu}
                   color="primary"
                   onClick={handleExportData}
                   startIcon={<FileDownloadIcon />}

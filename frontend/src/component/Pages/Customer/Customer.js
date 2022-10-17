@@ -50,7 +50,7 @@ const Customer = () => {
         />
         <div className={Styles.rightcontainer}>
           <StatBox name="Customer" username={user.name}/>
-          <CustomerTable modalHandler={modalHandler} refresh={refresh}/>
+          <CustomerTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen}/>
           {
             isOpen ? <Modal setIsOpen={setIsOpen}>
               <AnimatePresence>
