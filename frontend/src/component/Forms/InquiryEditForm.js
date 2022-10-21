@@ -9,12 +9,12 @@ import { default as ReactSelect } from "react-select";
 
 const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const [Branches, setBranches] = useState([]);
-    console.log(data);
+    // console.log(data);
     const [selectedBranch, setselectedBranch] = useState(data.branches);
     const [Salesmen, setSalesmen] = useState([]);
     const [selectedSalesman, setselectedSalesman] = useState(data.salesmen);
     const arr2 = selectedSalesman.map(object => {
-        console.log(object);
+        // console.log(object);
         return { ...object, value: object.name, label: object.name };
     })
     const getAllsalesmen = async () => {
@@ -31,7 +31,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const Salesmenchangehandler = (selected) => {
 
         setselectedSalesman(selected);
-        // console.log(selected);
+        console.log(selected);
         setFormData({ ...formData, selectedSalesman })
     };
     const arr = selectedBranch.map(object => {
@@ -84,6 +84,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         // salesmen: []
 
     }
+    // console.log(initialState);
     const requirement = [
         {
             value: "Plywood",
@@ -158,10 +159,11 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             requirement: formData.requirement,
             stage: formData.stage,
             branches: selectedBranch,
-            salesmen: selectedSalesmen
+            salesmen: selectedSalesman
 
         }
         console.log(data)
+        console.log(selectedSalesman)
         try {
             const response = await axios.put(`/api/v1/inquiry/update/${id}`, data, { headers: { "Content-Type": "application/json" } });
             console.log(response);
@@ -311,9 +313,10 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
                     {/* <label htmlFor='name'>Sales Person</label>
             <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
                     <label>Requirements</label>
-                    <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} options={requirement} />
+                    <Select  defaultValue={{label:initialState.requirement}} onChange={(e) => Requirehandler(e)} options={requirement} />
+                    {/* {console.log(initialState.requirement)} */}
                     <label>Stage</label>
-                    <Select selectedValue={formData.stage} onChange={(e) => Stagehandler(e)} options={stage} />
+                    <Select defaultValue={{label:initialState.stage}} onChange={(e) => Stagehandler(e)} options={stage} />
                     <label>Branches</label>
                     <ReactSelect className={Styles.inputTag}
                         options={Branches}
