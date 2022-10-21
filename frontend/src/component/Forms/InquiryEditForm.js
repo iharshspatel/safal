@@ -349,20 +349,20 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             <div className={Styles.bankDetails}>
                 <div className={Styles.bankDetails1}>
 
-                    <label htmlFor='name'>Mistry Tag</label>
-                    <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} />
+                    {/* <label htmlFor='name'>Mistry Tag</label>
+                    <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> */}
 
                     <label htmlFor='name'>Architect Tag</label>
-                    <Select selectedValue={formData.architectTag} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
+                    <Select defaultValue={{label:initialState.architectTag}} selectedValue={formData.architectTag} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
                 </div>
 
                 <div className={Styles.bankDetails2}>
 
-                    <label htmlFor='name'>Dealer Tag</label>
-                    <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} />
+                    {/* <label htmlFor='name'>Dealer Tag</label>
+                    <Select selectedValue={formData.dealerTag} defaultValue={{label:initialState.dealerTag}} onChange={(e) => DealerFormHandler(e)} options={Dealers} /> */}
 
                     <label htmlFor='name'>PMC Tag</label>
-                    <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
+                    <Select selectedValue={formData.pmcTag} defaultValue={{label:initialState.pmcTag}} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
                 </div>
             </div>
             <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
