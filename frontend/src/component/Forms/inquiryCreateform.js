@@ -13,6 +13,7 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   const [PMCs, setPMCs] = useState([]);
   const [Branches, setBranches] = useState([]);
   const [selectedBranch, setselectedBranch] = useState([]);
+  const [selectedRequirement, setSelectedRequirement] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
   const [Salesmen, setSalesmen] = useState([]);
   const [selectedSalesmen, setselectedSalesmen] = useState([]);
@@ -37,22 +38,27 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   // ["Plywood", "Laminate","Veneer","Other","Hardware"]
   const requirement = [
     {
+      requirement:"Plywood",
       value: "Plywood",
       label:"Plywood"
     },
     {
+      requirement:'Laminate',
       value: "Laminate",
       label:"Laminate"
     },
     {
+      requirement:'Veneer',
       value: "Veneer",
       label:"Veneer"
     },
     {
+      requirement:'Other',
       value: "Other",
       label:"Other"
     },
     {
+      requirement:'Hardware',
       value: "Hardware",
       label:"Hardware"
     },
@@ -155,18 +161,19 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       mobileno: formData.mobileno,
       address: formData.address,
       date: formData.date,
-      followupdate: formData.fdate,
+      followupdate: formData.date,
       architectTag: formData.architectTag,
       architectNumber: formData.architectNumber,
       architectName: formData.architectName,
       pmcTag: formData.pmcTag,
       pmcName: formData.pmcName,
       pmcNumber: formData.pmcNumber,
-      requirement: formData.requirement,
+      requirement: selectedRequirement,
       stage:formData.stage,
       branches: selectedBranch,
       salesmen: selectedSalesmen
     }
+    console.log(data);
     try {
       const response = await axios.post("/api/v1/inquiry/create", data, { headers: { "Content-Type": "application/json" } });
       console.log(response);
@@ -189,6 +196,11 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     console.log(selected);
     setFormData({ ...formData, selectedBranch })
   };
+
+  const RequirementsChangeHandler = (selected) => {
+    setSelectedRequirement(selected);
+    setFormData({...formData, selectedRequirement})
+  }
   const ArchitectFormHandler = (e) => {
     setFormData({ ...formData, architectTag: e.value, architectName: e.label.split('-')[0], architectNumber: e.label.split('-')[1] })
   }
@@ -266,7 +278,21 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           {/* <label htmlFor='name'>Sales Person</label>
           <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
           <label>Requirements</label>
-          <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} options={ requirement} />
+          {/* <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} options={ requirement} /> */}
+          <ReactSelect className={Styles.inputTag}
+            options={requirement}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false} 
+            components={{
+              Option
+            }}
+            onChange={RequirementsChangeHandler}
+            allowSelectAll={true}
+            value={selectedRequirement}
+          />
+
+
           <label>Stage</label>
           <Select selectedValue={formData.stage} onChange={(e) => Stagehandler(e)} options={ stage} />
           <label>Branches</label>

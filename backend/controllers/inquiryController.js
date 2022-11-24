@@ -17,7 +17,6 @@ const Inquiry = require("../models/inquiryModel")
 
 exports.createInquiry = catchAsyncErrors(async (req, res, next) => {
     const t = req.body;
-    // console.log(req.body);
 
     const inquiry = await Inquiry.create(t);
     // console.log(cust);/

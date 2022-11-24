@@ -1,15 +1,10 @@
 import React, { useState, useEffect,useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import Styles from './inquiryTable.module.css'
 import Add from '../../../Assets/Add.svg'
-import MaterialTable from 'material-table';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Modal from '../../Layout/Modal/Modal';
-import { Paper } from '@material-ui/core';
 import axios from 'axios';
-import CustomerEditForm from '../../Forms/CustomerEditForm';
-import DummyEditForm from '../../Forms/DummyEditForm';
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
 import InquiryEditForm from '../../Forms/InquiryEditForm';
@@ -19,59 +14,57 @@ import { ExportToCsv } from 'export-to-csv';
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
-  MenuItem,
-  Stack,
-  // TextField,
   Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 
   const [inquiries, setInquiries] = useState([]);
-  const [tabledata, setTableData] = useState([])
+  const [originalData, setOriginalData] = useState([]);
+  const [tabledata, setTableData] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
   const [salesman, setSalesman] = useState([]);
+
+  let selectedBranch = [];
   let selectedSalesman = [];
+
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
-
-    const salesmen = data.salesmans.map((branch) => (
+    const salesmen = data.salesmans.map((salesman) => (
       {
-        name: branch.name,
-        value: branch.name,
-        label: branch.name
+        name: salesman.name,
+        value: salesman.name,
+        label: salesman.name
 
       }
     ))
     setSalesman(salesmen);
   }
+
   const fetchArchitectsofSalesman = async () => {
     setIsLoading(true);
     sleep(500);
-
-    
-    const response = await axios.post("/api/v1/salesman/inquiry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
-
-    
-    const newarchitects = response.data.inquiries;
-
-    setTableData(newarchitects);
+    const {data} = await axios.post("/api/v1/salesman/inquiry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+    setOriginalData(data.inquiries);
+    let inquires = data.inquiries.map((item)=>{
+      return {
+        date:item.date,
+        name:item.name,
+        followupdate:item.followupdate,
+        mobileno:item.mobileno
+      }
+    })
+    setTableData(inquires);
     setIsLoading(false);
   }
-  const handlesalesman = (selected) => {
-    console.log(selected);
 
+  const handlesalesman = (selected) => {
     selectedSalesman = selected;
     fetchArchitectsofSalesman();
   }
@@ -106,7 +99,6 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
       }
       return d
     })
-    console.log(datass1)
     return datass1
 
   }
@@ -115,8 +107,6 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     const data = await axios.delete(`/api/v1/inquiry/delete/${id}`);
     fetchInquiry();
   }
-
-
 
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
@@ -133,8 +123,14 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     return `${year}-${month}-${day}`
   }
 
+  const getInquiryData = (mobileno) => {
+    let inquiry = originalData.filter((item) => item.mobileno === mobileno);
+    console.log(inquiry)
+    setEditModalData(inquiry[0]);
+    setEditModal(true);
+  }
+
   const submitDateRangeHandler = (e) => {
-    console.log(startDate, endDate);
     let data = inquiries.filter((item) => {
       let date = item.date;
       date = new Date(date);
@@ -145,16 +141,23 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         return false
       }
     })
-    console.log(data)
     setTableData(data)
     
   }
   
   const fetchInquiry = async () => {
     const { data } = await axios.get("/api/v1/inquiry/getall");
-    console.log(data)
-    setInquiries(modifyData(data.inquiries));
-    setTableData(modifyData(data.inquiries));
+    setOriginalData(data.inquiries);
+    let inquires = data.inquiries.map((item)=>{
+      return {
+        date:item.date,
+        name:item.name,
+        followupdate:item.followupdate,
+        mobileno:item.mobileno
+      }
+    })
+    setInquiries(modifyData(inquires));
+    setTableData(modifyData(inquires));
   }
 
   const fetchBranches = async () => {
@@ -177,19 +180,22 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   const fetchInquiriesofBranch = async () => {
     setIsLoading(true);
     sleep(500);
+    const {data} = await axios.post("/api/v1/branch/inquiry", selectedBranch, { headers: { "Content-Type": "application/json" } });
+    setOriginalData(data.inquiries);
+    let inquires = data.inquiries.map((item)=>{
+      return {
+        date:item.date,
+        name:item.name,
+        followupdate:item.followupdate,
+        mobileno:item.mobileno
+      }
+    })
     
-    console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/inquiry", selectedBranch, { headers: { "Content-Type": "application/json" } });
-    
-    console.log(response);
-    const newcust = response.data.inquiries;
-    
-    setTableData(newcust);
+    setTableData(inquires);
     setIsLoading(false);
   }
+
   const handlebranch = (selected) => {
-    console.log(selected);
-    
     selectedBranch = selected;
     fetchInquiriesofBranch();
   }
@@ -238,7 +244,7 @@ const columns = useMemo(
   () => [
     { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
     { header: 'Name', accessorKey: 'name' },
-    { header: 'Address', accessorKey: 'address' },
+    { header: 'Follow Update', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
   ],
   [],
@@ -246,18 +252,8 @@ const columns = useMemo(
 const ops = [
   { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
   { header: 'Name', accessorKey: 'name' },
-  { header: 'Address', accessorKey: 'address' },
+  { header: 'Follow Date', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
   { header: 'Mobile Number', accessorKey: 'mobileno' },
-  { header: 'Email', accessorKey: 'Email', },
-  { header: 'Company_Name', accessorKey: 'companyName', },
-  { header: 'Birth_Date', accessorKey: 'birthdate', },
-  { header: 'Marriage_Date', accessorKey: 'marriagedate', },
-  { header: 'Remarks', accessorKey: 'remarks', },
-  // { header: 'Bank_Name', accessorKey: 'bankname', },
-  // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
-  // { header: 'Branch_Name', accessorKey: 'branchname', },
-  // { header: 'Adhar_Card', accessorKey: 'adharcard', },
-  // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
 ]
 const csvOptions = {
   fieldSeparator: ',',
@@ -369,9 +365,9 @@ const handleExportRows = (rows) => {
                       left: 0,
                       behavior: "smooth"
                     });
-
-                    setEditModalData(row.original)
-                    setEditModal(true);
+                    getInquiryData(row.original.mobileno)
+                    // setEditModalData(row.original)
+                    // setEditModal(true);
                   }}>
                     <Edit />
 
@@ -385,7 +381,6 @@ const handleExportRows = (rows) => {
                       behavior: "smooth"
                     });
                     delteHandler(row.original._id);
-                    console.log(`delete `, row)
                   }}>
                     <Delete />
                   </IconButton>
@@ -418,79 +413,6 @@ const handleExportRows = (rows) => {
 
           />}
 
-
-{/* 
-        {inquiries && <MaterialTable
-          isLoading={isLoading}
-          className={Styles.Table}
-          columns={[
-            { title: 'Date', field: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
-            { title: 'Name', field: 'name' },
-            { title: 'Email', field: 'Email', hidden: 'true' },
-            { title: 'Address', field: 'address' },
-            { title: 'Birth Date', field: 'birthdate', hidden: 'true' },
-            { title: 'Marriage Date', field: 'marriagedate', hidden: 'true' },
-            { title: 'Remarks', field: 'remarks', hidden: 'true' },
-            { title: 'Order Value', field: 'orderValue', hidden: 'true' },
-            { title: 'Sales Person', field: 'salesPerson', hidden: 'true' },
-            { title: 'Tag', field: 'tag' },
-
-
-          ]}
-          data={tabledata}
-          options={{
-            sorting: true,
-            headerStyle: {
-              zIndex: 0
-            },
-            showTitle: false,
-            actionsColumnIndex: -1,
-            filtering: true,
-            exportButton:true
-
-          }}
-          components={{
-            Container: props => <Paper {...props}
-              elevation={0}
-              style={{
-                padding: 20,
-                width: "100%",
-              }} />
-          }}
-
-
-          actions={[
-            {
-              icon: 'edit',
-              tooltip: 'Edit',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                setEditModalData(rowData);
-                setEditModal(!editModal);
-                console.log(`Edit `, rowData)
-              }
-            },
-            {
-              icon: 'delete',
-              tooltip: 'Delete',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                
-                delteHandler(rowData._id);
-                console.log(`delete `, rowData)
-              }
-            }
-          ]}
-
-        />} */}
       </div>
 
       {

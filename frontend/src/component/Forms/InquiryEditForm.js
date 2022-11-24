@@ -11,8 +11,15 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const [Branches, setBranches] = useState([]);
     console.log(data);
     const [selectedBranch, setselectedBranch] = useState(data.branches);
+    const [selectedRequirement, setSelectedRequirement] = useState(data.requirement);
     const [Salesmen, setSalesmen] = useState([]);
     const [selectedSalesman, setselectedSalesman] = useState(data.salesmen);
+
+    const [defalutArchitect, setDefaultArchitect] = useState(() => data.architectTag ? { value: data.architectTag, label: `${data.architectName}-${data.architectNumber}` } : "");
+    const [defaultMistry, setDefaultMistry] = useState(() => data.mistryTag ? { value: data.mistryTag, label: `${data.mistryName}-${data.mistryNumber}` } : "");
+    const [defaultDealer, setDefaultDealer] = useState(() => data.dealerTag ? { value: data.dealerTag, label: `${data.dealerName}-${data.dealerNumber}` } : "");
+    const [deafultPMC, setDefaultPMC] = useState(() => data.pmcTag ? { value: data.pmcTag, label: `${data.pmcName}-${data.pmcNumber}` } : "");
+
     const arr2 = selectedSalesman.map(object => {
         console.log(object);
         return { ...object, value: object.name, label: object.name };
@@ -31,11 +38,15 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const Salesmenchangehandler = (selected) => {
 
         setselectedSalesman(selected);
-        // console.log(selected);
+        console.log(selected);
         setFormData({ ...formData, selectedSalesman })
     };
     const arr = selectedBranch.map(object => {
         return { ...object, value: object.branchname, label: object.branchname };
+    })
+
+    const arr3 = selectedRequirement.map((object)=>{
+        return {...object, value:object.requirement, label:object.requirement}
     })
     const getAllbranches = async () => {
         const { data } = await axios.get("/api/v1/branch/getall");
@@ -86,26 +97,31 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     }
     const requirement = [
         {
-            value: "Plywood",
-            label: "Plywood"
+          requirement:"Plywood",
+          value: "Plywood",
+          label:"Plywood"
         },
         {
-            value: "Laminate",
-            label: "Laminate"
+          requirement:'Laminate',
+          value: "Laminate",
+          label:"Laminate"
         },
         {
-            value: "Veneer",
-            label: "Veneer"
+          requirement:'Veneer',
+          value: "Veneer",
+          label:"Veneer"
         },
         {
-            value: "Other",
-            label: "Other"
+          requirement:'Other',
+          value: "Other",
+          label:"Other"
         },
         {
-            value: "Hardware",
-            label: "Hardware"
+          requirement:'Hardware',
+          value: "Hardware",
+          label:"Hardware"
         },
-    ]
+      ]
     const stage = [
         {
             value: "Process",
@@ -148,17 +164,17 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             mobileno: formData.mobileno,
             address: formData.address,
             date: formData.date,
-            followupdate: formData.fdate,
+            followupdate: formData.followupdate,
             architectTag: formData.architectTag,
             architectNumber: formData.architectNumber,
             architectName: formData.architectName,
             pmcTag: formData.pmcTag,
             pmcName: formData.pmcName,
             pmcNumber: formData.pmcNumber,
-            requirement: formData.requirement,
+            requirement: selectedRequirement,
             stage: formData.stage,
             branches: selectedBranch,
-            salesmen: selectedSalesmen
+            salesmen: selectedSalesman
 
         }
         console.log(data)
@@ -182,6 +198,13 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         setselectedBranch(selected);
         console.log(selected);
         setFormData({ ...formData, selectedBranch })
+    };
+
+    const requirementChangeHandler = (selected) => {
+
+        setSelectedRequirement(selected);
+        console.log(selected);
+        setFormData({ ...formData, selectedRequirement })
     };
     const ArchitectFormHandler = (e) => {
         setFormData({ ...formData, architectTag: e.value, architectName: e.label.split('-')[0], architectNumber: e.label.split('-')[1] })
@@ -231,6 +254,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const [Dealers, setDealers] = useState([]);
     const [PMCs, setPMCs] = useState([]);
     const [selectedSalesmen, setselectedSalesmen] = useState([]);
+    
     const getAllArchitects = async () => {
 
         const { data } = await axios.get("/api/v1/architect/getall");
@@ -311,9 +335,25 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
                     {/* <label htmlFor='name'>Sales Person</label>
             <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
                     <label>Requirements</label>
-                    <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} options={requirement} />
+                    {/* <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} defaultInputValue={initialState.requirement} options={requirement} /> */}
+
+                    <ReactSelect className={Styles.inputTag}
+                        options={requirement}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        hideSelectedOptions={false}
+                        components={{
+                            Option
+                        }}
+                        onChange={requirementChangeHandler}
+                        allowSelectAll={true}
+                        value={arr3}
+                    />
+
+
                     <label>Stage</label>
-                    <Select selectedValue={formData.stage} onChange={(e) => Stagehandler(e)} options={stage} />
+                    <Select selectedValue={formData.stage} onChange={(e) => Stagehandler(e)} options={stage} defaultInputValue={initialState.stage} />
+                    
                     <label>Branches</label>
                     <ReactSelect className={Styles.inputTag}
                         options={Branches}
@@ -350,16 +390,16 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
                     <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} />
 
                     <label htmlFor='name'>Architect Tag</label>
-                    <Select selectedValue={formData.architectTag} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
+                    <Select selectedValue={formData.architectTag} defaultValue={defalutArchitect} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
                 </div>
 
                 <div className={Styles.bankDetails2}>
 
                     <label htmlFor='name'>Dealer Tag</label>
-                    <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} />
+                    <Select defaultValue={defaultDealer} selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} />
 
                     <label htmlFor='name'>PMC Tag</label>
-                    <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
+                    <Select defaultValue={deafultPMC} selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
                 </div>
             </div>
             <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
