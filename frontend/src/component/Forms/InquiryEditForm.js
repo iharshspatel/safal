@@ -9,7 +9,7 @@ import { default as ReactSelect } from "react-select";
 
 const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const [Branches, setBranches] = useState([]);
-    console.log(data);
+    // console.log(data);
     const [selectedBranch, setselectedBranch] = useState(data.branches);
     const [selectedRequirement, setSelectedRequirement] = useState(data.requirement);
     const [Salesmen, setSalesmen] = useState([]);
@@ -21,7 +21,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const [deafultPMC, setDefaultPMC] = useState(() => data.pmcTag ? { value: data.pmcTag, label: `${data.pmcName}-${data.pmcNumber}` } : "");
 
     const arr2 = selectedSalesman.map(object => {
-        console.log(object);
+        // console.log(object);
         return { ...object, value: object.name, label: object.name };
     })
     const getAllsalesmen = async () => {
@@ -95,6 +95,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         // salesmen: []
 
     }
+    // console.log(initialState);
     const requirement = [
         {
           requirement:"Plywood",
@@ -178,6 +179,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
 
         }
         console.log(data)
+        console.log(selectedSalesman)
         try {
             const response = await axios.put(`/api/v1/inquiry/update/${id}`, data, { headers: { "Content-Type": "application/json" } });
             console.log(response);
@@ -386,8 +388,8 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             <div className={Styles.bankDetails}>
                 <div className={Styles.bankDetails1}>
 
-                    <label htmlFor='name'>Mistry Tag</label>
-                    <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} />
+                    {/* <label htmlFor='name'>Mistry Tag</label>
+                    <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> */}
 
                     <label htmlFor='name'>Architect Tag</label>
                     <Select selectedValue={formData.architectTag} defaultValue={defalutArchitect} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
