@@ -17,6 +17,7 @@ const salesmanSchema = new mongoose.Schema({
     remarks:String,
     address:String,
     birthdate:String,
+    date:String,
     // marriagedate:String,
     // date:Date,
     // orderValue:Number,

@@ -11,6 +11,7 @@ import DummyEditForm from '../../Forms/DummyEditForm';
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
+import { dateformater } from '../Utils/util';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MaterialReactTable from 'material-react-table';
 import { ExportToCsv } from 'export-to-csv';
@@ -32,6 +33,7 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
 
   const [customers, setCustomers] = useState([]);
   const [tabledata, setTableData] = useState([])
+  const [originalData, setOriginalData] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
@@ -47,25 +49,25 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
       if (d.architectTag) {
         return {
           ...d,
-          tag: d.architectName + '(A)'
+          tag: d.architectName + '(A)' + d.architectNumber
         }
       }
       if (d.mistryTag) {
         return {
           ...d,
-          tag: d.mistryName + '(M)'
+          tag: d.mistryName + '(M)' + d.mistryNumber
         }
       }
       if (d.pmcTag) {
         return {
           ...d,
-          tag: d.pmcName + '(P)'
+          tag: d.pmcName + '(P)' + d.pmcNumber
         }
       }
       if (d.dealerTag) {
         return {
           ...d,
-          tag: d.dealerName + '(D)'
+          tag: d.dealerName + '(D)' + d.dealerNumber
         }
       }
       return d
@@ -75,8 +77,8 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
 
   }
 
-  const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/customer/delete/${id}`);
+  const delteHandler = async (mobileno) => {
+    const data = await axios.delete(`/api/v1/customer/delete/${mobileno}`);
     fetchCustomers();
   }
 
@@ -89,14 +91,6 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   const endDateHandler = (e) => {
     setEndDate(new Date(e.target.value));
   }
-
-  const dateformater = (date) => {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-    return `${year}-${month}-${day}`
-  }
-
   const submitDateRangeHandler = (e) => {
     console.log(startDate, endDate);
     let data = customers.filter((item) => {
@@ -116,9 +110,21 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   //currently it is sending data
   const fetchCustomers = async () => {
     const { data } = await axios.get("/api/v1/customer/getall");
-    // console.log(data)
-    setCustomers(modifyData(data.customers));
-    setTableData(modifyData(data.customers));
+    let modifiedData = modifyData(data.customers);
+    const newCustomers = modifiedData.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
+
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        tag:item.tag
+      }
+    });
+    setOriginalData(modifiedData);
+    setCustomers(newCustomers);
+    setTableData(newCustomers);
   }
 
   const fetchBranches = async () => {
@@ -143,12 +149,25 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     sleep(500);
     // let data=selectedBranch;
     console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/customers", selectedBranch, { headers: { "Content-Type": "application/json" } });
-    // const { data } = await axios.get("/api/v1/branch/architects");
-    console.log(response);
-    const newcust = response.data.customers;
-    // setCustomers(newcust);
-    setTableData(newcust);
+    const {data} = await axios.post("/api/v1/branch/customers", selectedBranch, { headers: { "Content-Type": "application/json" } });
+
+    let modifiedData = modifyData(data.customers);
+    const newCustomers = modifiedData.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
+
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        tag:item.tag
+      }
+    });
+
+
+    setOriginalData(modifiedData);
+    setTableData(newCustomers);
+
     setIsLoading(false);
   }
   const handlebranch = (selected) => {
@@ -177,12 +196,22 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     sleep(500);
 
     // console.log(selectedSalesman);
-    const response = await axios.post("/api/v1/salesman/customers", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+    const {data} = await axios.post("/api/v1/salesman/customers", selectedSalesman, { headers: { "Content-Type": "application/json" } });
 
-    // console.log(response);
-    const newarchitects = response.data.customers;
+    let modifiedData = modifyData(data.customers);
+    const newCustomers = modifiedData.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
 
-    setTableData(newarchitects);
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        tag:item.tag
+      }
+    });
+    setOriginalData(modifiedData);
+    setTableData(newCustomers);
     setIsLoading(false);
   }
   const handlesalesman = (selected) => {
@@ -203,6 +232,14 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     // console.log("Parent Invoked!!")
     toast.success("Customer edited");
     fetchCustomers();
+  }
+
+  const getCustomerData = (mobileno) => {
+    alert(mobileno);
+    let customer = originalData.filter((item) => item.mobileno === mobileno);
+    console.log(customer);
+    setEditModalData(customer[0]);
+    setEditModal(true);
   }
 
   const customStyles = {
@@ -238,6 +275,7 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
+      { header: 'Tag', accessorKey:'tag'}
     ],
     [],
   );
@@ -246,16 +284,17 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
-    { header: 'Email', accessorKey: 'Email', },
-    { header: 'Company_Name', accessorKey: 'companyName', },
-    { header: 'Birth_Date', accessorKey: 'birthdate', },
-    { header: 'Marriage_Date', accessorKey: 'marriagedate', },
-    { header: 'Remarks', accessorKey: 'remarks', },
-    { header: 'Bank_Name', accessorKey: 'bankname', },
-    { header: 'IFS_Code', accessorKey: 'IFSCcode', },
-    { header: 'Branch_Name', accessorKey: 'branchname', },
-    { header: 'Adhar_Card', accessorKey: 'adharcard', },
-    { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+    { header: 'Tag', accessorKey:'tag'}
+    // { header: 'Email', accessorKey: 'Email', },
+    // { header: 'Company_Name', accessorKey: 'companyName', },
+    // { header: 'Birth_Date', accessorKey: 'birthdate', },
+    // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+    // { header: 'Remarks', accessorKey: 'remarks', },
+    // { header: 'Bank_Name', accessorKey: 'bankname', },
+    // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+    // { header: 'Branch_Name', accessorKey: 'branchname', },
+    // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+    // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
   ]
   const csvOptions = {
     fieldSeparator: ',',
@@ -364,8 +403,8 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
                       left: 0,
                       behavior: "smooth"
                     });
-
-                    setEditModalData(row.original)
+                    getCustomerData(row.original.mobileno);
+                    // setEditModalData(row.original)
                     setEditModal(true);
                   }}>
                     <Edit />
@@ -379,7 +418,7 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
                       left: 0,
                       behavior: "smooth"
                     });
-                    delteHandler(row.original._id);
+                    delteHandler(row.original.mobileno);
                     console.log(`delete `, row)
                   }}>
                     <Delete />

@@ -73,7 +73,7 @@ exports.deleteCustomer = catchAsyncErrors(async (req, res, next) => {
 
     let t = req.params.id;
 
-    const customer = await Customer.findByIdAndDelete(t);
+    const customer = await Customer.findOneAndDelete({mobileno:t});
 
     res.status(200).json({
         customer,

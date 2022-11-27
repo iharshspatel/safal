@@ -61,7 +61,8 @@ exports.deleteInquiry = catchAsyncErrors(async (req, res, next) => {
 
     let t = req.params.id;
 
-    const inquiry = await Inquiry.findByIdAndDelete(t);
+    // const inquiry = await Inquiry.findByIdAndDelete(t);
+    const inquiry = await Inquiry.findOneAndDelete({mobileno:t});
 
     res.status(200).json({
         inquiry,

@@ -74,6 +74,12 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         pmcTag: data.pmcTag,
         pmcName: data.pmcName,
         pmcNumber: data.pmcNumber,
+        mistryTag: data.mistryTag,
+        mistryNumber:data.mistryNumber,
+        mistryName:data.mistryName,
+        dealerTag:data.dealerTag,
+        dealerNumber:data.dealerNumber,
+        dealerName:data.dealerName,
         date: data.date ? data.date.substr(0, 10) : null,
         followupdate: data.followupdate ? data.followupdate.substr(0, 10) : null,
         // followupdate: "",
@@ -169,9 +175,15 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             architectTag: formData.architectTag,
             architectNumber: formData.architectNumber,
             architectName: formData.architectName,
+            mistryTag: formData.mistryTag,
+            mistryName:formData.mistryName,
+            mistryNumber:formData.mistryNumber,
             pmcTag: formData.pmcTag,
             pmcName: formData.pmcName,
             pmcNumber: formData.pmcNumber,
+            dealerTag:formData.dealerTag,
+            dealerNumber:formData.dealerNumber,
+            dealerName:formData.dealerName,
             requirement: selectedRequirement,
             stage: formData.stage,
             branches: selectedBranch,
@@ -388,8 +400,8 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             <div className={Styles.bankDetails}>
                 <div className={Styles.bankDetails1}>
 
-                    {/* <label htmlFor='name'>Mistry Tag</label>
-                    <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> */}
+                    <label htmlFor='name'>Mistry Tag</label>
+                    <Select defaultValue={defaultMistry} selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} />
 
                     <label htmlFor='name'>Architect Tag</label>
                     <Select selectedValue={formData.architectTag} defaultValue={defalutArchitect} onChange={(e) => ArchitectFormHandler(e)} options={architects} />

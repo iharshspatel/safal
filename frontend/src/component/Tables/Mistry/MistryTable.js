@@ -14,6 +14,7 @@ import TextField from '@mui/material/TextField';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MaterialReactTable from 'material-react-table';
 import { ExportToCsv } from 'export-to-csv';
+import { dateformater } from '../Utils/util';
 import {
   Box,
   Button,
@@ -33,6 +34,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [tabledata, setTableData] = useState([])
+  const [originalData, setOriginalData] = useState([]);
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
@@ -46,12 +48,6 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     setEndDate(new Date(e.target.value));
   }
 
-  const dateformater = (date) => {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-    return `${year}-${month}-${day}`
-  }
   const columns = useMemo(
     () => [
       { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
@@ -66,16 +62,16 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
-    { header: 'Email', accessorKey: 'Email', },
-    { header: 'Company_Name', accessorKey: 'companyName', },
-    { header: 'Birth_Date', accessorKey: 'birthdate', },
-    { header: 'Marriage_Date', accessorKey: 'marriagedate', },
-    { header: 'Remarks', accessorKey: 'remarks', },
-    { header: 'Bank_Name', accessorKey: 'bankname', },
-    { header: 'IFS_Code', accessorKey: 'IFSCcode', },
-    { header: 'Branch_Name', accessorKey: 'branchname', },
-    { header: 'Adhar_Card', accessorKey: 'adharcard', },
-    { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+    // { header: 'Email', accessorKey: 'Email', },
+    // { header: 'Company_Name', accessorKey: 'companyName', },
+    // { header: 'Birth_Date', accessorKey: 'birthdate', },
+    // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+    // { header: 'Remarks', accessorKey: 'remarks', },
+    // { header: 'Bank_Name', accessorKey: 'bankname', },
+    // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+    // { header: 'Branch_Name', accessorKey: 'branchname', },
+    // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+    // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
   ]
   const csvOptions = {
     fieldSeparator: ',',
@@ -109,15 +105,25 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     setTableData(data)
   }
 
-  const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/mistry/delete/${id}`);
+  const delteHandler = async (mobileno) => {
+    const data = await axios.delete(`/api/v1/mistry/delete/${mobileno}`);
     fetchMistry();
   }
 
   const fetchMistry = async () => {
     const { data } = await axios.get("/api/v1/mistry/getall");
+    const newMistries = data.mistries.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+      }
+    });
+    setOriginalData(data.mistries);
+    setTableData(newMistries);
     setMistry(data.mistries);
-    setTableData(data.mistries);
   }
   const fetchBranches = async () => {
     const { data } = await axios.get("/api/v1/branch/getall");
@@ -139,14 +145,20 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const fetchMistryofBranch = async () => {
     setIsLoading(true);
     sleep(500);
-    // let data=selectedBranch;
-    console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/mistry", selectedBranch, { headers: { "Content-Type": "application/json" } });
-    // const { data } = await axios.get("/api/v1/branch/architects");
-    console.log(response);
-    const newarchitects = response.data.mistry;
-    // setArchitects(newarchitects);
-    setTableData(newarchitects);
+    const {data} = await axios.post("/api/v1/branch/mistry", selectedBranch, { headers: { "Content-Type": "application/json" } });
+
+    const newMistries = data.mistries.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+      }
+    });
+
+    setOriginalData(data.mistries);
+    setTableData(newMistries);
     setIsLoading(false);
   }
   const handlebranch = (selected) => {
@@ -175,12 +187,20 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     sleep(500);
 
     // console.log(selectedSalesman);
-    const response = await axios.post("/api/v1/salesman/mistry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+    const {data} = await axios.post("/api/v1/salesman/mistry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
 
-    // console.log(response);
-    const newarchitects = response.data.mistries;
+    const newMistries = data.mistries.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+      }
+    });
 
-    setTableData(newarchitects);
+    setOriginalData(data.mistries);
+    setTableData(newMistries);
     setIsLoading(false);
   }
   const handlesalesman = (selected) => {
@@ -200,6 +220,14 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     // console.log("Parent Invoked!!")
     toast.success("Mistry edited");
     fetchMistry();
+  }
+
+  const getMistryData = (mobileno) => {
+    alert(mobileno);
+    let mistry = originalData.filter((item) => item.mobileno === mobileno);
+    console.log(mistry);
+    setEditModalData(mistry[0]);
+    setEditModal(true);
   }
 
   const customStyles = {
@@ -320,9 +348,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
                       left: 0,
                       behavior: "smooth"
                     });
-
-                    setEditModalData(row.original)
-                    setEditModal(true);
+                    getMistryData(row.original.mobileno);
                   }}>
                     <Edit />
 
@@ -335,7 +361,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
                       left: 0,
                       behavior: "smooth"
                     });
-                    delteHandler(row.original._id);
+                    delteHandler(row.original.mobileno);
                     console.log(`delete `, row)
                   }}>
                     <Delete />

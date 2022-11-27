@@ -36,6 +36,7 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
   let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false)
   const [tabledata, setTableData] = useState([])
+  const [originalData, setOriginalData] = useState([]);
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
 
@@ -69,8 +70,8 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
     setTableData(data)
   }
 
-  const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/salesman/delete/${id}`);
+  const delteHandler = async (mobileno) => {
+    const data = await axios.delete(`/api/v1/salesman/delete/${mobileno}`);
     fetchSalesman();
   }
 
@@ -78,7 +79,17 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
     const { data } = await axios.get("/api/v1/salesman/getall");
     console.log(data);
     setSalesman(data.salesmans);
-    setTableData(data.salesmans);
+    setOriginalData(data.salesmans);
+    let data1 = data.salesmans.map((item)=>{
+     return {
+        date:item.date,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno
+      }
+    })
+
+    setTableData(data1);
   }
 
   const fetchBranches = async () => {
@@ -129,6 +140,15 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
     fetchSalesman();
   }
 
+
+  const getSalesManData = (mobileno) => {
+    alert(mobileno);
+    let salesman = originalData.filter((item) => item.mobileno === mobileno);
+    console.log(salesman);
+    setEditModalData(salesman[0]);
+    setEditModal(true);
+  }
+
   const customStyles = {
     control: base => ({
         ...base,
@@ -170,16 +190,16 @@ const ops = [
   { header: 'Name', accessorKey: 'name' },
   { header: 'Address', accessorKey: 'address' },
   { header: 'Mobile Number', accessorKey: 'mobileno' },
-  { header: 'Email', accessorKey: 'Email', },
-  { header: 'Company_Name', accessorKey: 'companyName', },
-  { header: 'Birth_Date', accessorKey: 'birthdate', },
-  { header: 'Marriage_Date', accessorKey: 'marriagedate', },
-  { header: 'Remarks', accessorKey: 'remarks', },
-  { header: 'Bank_Name', accessorKey: 'bankname', },
-  { header: 'IFS_Code', accessorKey: 'IFSCcode', },
-  { header: 'Branch_Name', accessorKey: 'branchname', },
-  { header: 'Adhar_Card', accessorKey: 'adharcard', },
-  { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+  // { header: 'Email', accessorKey: 'Email', },
+  // { header: 'Company_Name', accessorKey: 'companyName', },
+  // { header: 'Birth_Date', accessorKey: 'birthdate', },
+  // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+  // { header: 'Remarks', accessorKey: 'remarks', },
+  // { header: 'Bank_Name', accessorKey: 'bankname', },
+  // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+  // { header: 'Branch_Name', accessorKey: 'branchname', },
+  // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+  // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
 ]
 const csvOptions = {
   fieldSeparator: ',',
@@ -212,37 +232,7 @@ const handleExportRows = (rows) => {
           </div>
         </div>
 
-        <div className={Styles.Yellow}>
-        <div className={Styles.DateRangeContainer}>
-          {/* <label>Branch</label> */}
-          <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
-          <TextField
-              className={Styles.InputDate}
-              id="date"
-              label="Start Date"
-              type="date"
-              // defaultValue="2017-05-24"
-              onChange={(e) => startDateHandler(e)}
-              sx={{ width: 180 ,margin:1}}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              className={Styles.InputDate}
-              id="date"
-              label="End Date"
-              type="date"
-              onChange={(e) => endDateHandler(e)}
-              // defaultValue="2017-05-24"
-              sx={{ width: 180 ,margin:1}}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
-        </div>
-        </div>
+        
 
         {Salesman &&
           <MaterialReactTable
@@ -286,7 +276,7 @@ const handleExportRows = (rows) => {
                       behavior: "smooth"
                     });
 
-                    setEditModalData(row.original)
+                   getSalesManData(row.original.mobileno)
                     setEditModal(true);
                   }}>
                     <Edit />
@@ -300,7 +290,7 @@ const handleExportRows = (rows) => {
                       left: 0,
                       behavior: "smooth"
                     });
-                    delteHandler(row.original._id);
+                    delteHandler(row.original.mobileno);
                     console.log(`delete `, row)
                   }}>
                     <Delete />

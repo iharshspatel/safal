@@ -327,8 +327,8 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       <div className={Styles.bankDetails}>
         <div className={Styles.bankDetails1}>
 
-          {/* <label htmlFor='name'>Mistry Tag</label>
-          <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> */}
+           <label htmlFor='name'>Mistry Tag</label>
+          <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> 
 
           <label htmlFor='name'>Architect Tag</label>
           <Select selectedValue={formData.architectTag} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
@@ -336,8 +336,8 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
         <div className={Styles.bankDetails2}>
 
-          {/* <label htmlFor='name'>Dealer Tag</label>
-          <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} /> */}
+          <label htmlFor='name'>Dealer Tag</label>
+          <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} />
 
           <label htmlFor='name'>PMC Tag</label>
           <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />

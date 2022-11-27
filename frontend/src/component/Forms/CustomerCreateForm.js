@@ -287,7 +287,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
         </div>
       </div>
-      <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
+      <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="submit">Submit</button>
+     
     </div>
   )
 }

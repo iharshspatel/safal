@@ -31,6 +31,18 @@ const inquirySchema = new mongoose.Schema({
     email:String,
     pmcName: String,
     pmcNumber: Number,
+    mistryTag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "architect"
+    },
+    mistryName: String,
+    mistryNumber: Number,
+    dealerTag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "architect"
+    },
+    dealerName: String,
+    dealerNumber: Number,
     branches: [
         { branchname: String }
     ],

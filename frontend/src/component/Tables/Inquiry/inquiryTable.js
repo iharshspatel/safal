@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
 import InquiryEditForm from '../../Forms/InquiryEditForm';
+import { dateformater } from '../Utils/util';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MaterialReactTable from 'material-react-table';
 import { ExportToCsv } from 'export-to-csv';
@@ -53,10 +54,13 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     const {data} = await axios.post("/api/v1/salesman/inquiry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
     setOriginalData(data.inquiries);
     let inquires = data.inquiries.map((item)=>{
+      let date = dateformater(item.date);
+      let followupdate = dateformater(item.followupdate);
+
       return {
-        date:item.date,
+        date:date,
         name:item.name,
-        followupdate:item.followupdate,
+        followupdate:followupdate,
         mobileno:item.mobileno
       }
     })
@@ -104,6 +108,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   }
 
   const delteHandler = async (id) => {
+    alert(id);
     const data = await axios.delete(`/api/v1/inquiry/delete/${id}`);
     fetchInquiry();
   }
@@ -116,12 +121,13 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     setEndDate(new Date(e.target.value));
   }
 
-  const dateformater = (date) => {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-    return `${year}-${month}-${day}`
-  }
+  // const dateformater = (date1) => {
+  //   let date = new Date(date1)
+  //   let year = date.getFullYear();
+  //   let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
+  //   let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
+  //   return `${year}-${month}-${day}`
+  // }
 
   const getInquiryData = (mobileno) => {
     let inquiry = originalData.filter((item) => item.mobileno === mobileno);
@@ -132,7 +138,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 
   const submitDateRangeHandler = (e) => {
     let data = inquiries.filter((item) => {
-      let date = item.date;
+      let date = item.followupdate;
       date = new Date(date);
       if (date < endDate && date > startDate) {
         return true
@@ -149,10 +155,13 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     const { data } = await axios.get("/api/v1/inquiry/getall");
     setOriginalData(data.inquiries);
     let inquires = data.inquiries.map((item)=>{
+    let date = dateformater(item.date);
+    let followupdate = dateformater(item.followupdate);
+    console.log(date, followupdate);
       return {
-        date:item.date,
+        date:date,
         name:item.name,
-        followupdate:item.followupdate,
+        followupdate:followupdate,
         mobileno:item.mobileno
       }
     })
@@ -380,7 +389,7 @@ const handleExportRows = (rows) => {
                       left: 0,
                       behavior: "smooth"
                     });
-                    delteHandler(row.original._id);
+                    delteHandler(row.original.mobileno);
                   }}>
                     <Delete />
                   </IconButton>

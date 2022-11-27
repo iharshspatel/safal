@@ -62,7 +62,7 @@ exports.deleteMistry = catchAsyncErrors(async(req, res, next)=>{
     
     let t = req.params.id;
 
-    const mistery = await Mistry.findByIdAndDelete(t);
+    const mistery = await Mistry.findOneAndDelete({mobileno:t});
 
     res.status(200).json({
         mistery,
