@@ -61,6 +61,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         date:date,
         name:item.name,
         followupdate:followupdate,
+        stage:item.stage,
         mobileno:item.mobileno
       }
     })
@@ -162,6 +163,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         date:date,
         name:item.name,
         followupdate:followupdate,
+        stage:item.stage,
         mobileno:item.mobileno
       }
     })
@@ -196,6 +198,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         date:item.date,
         name:item.name,
         followupdate:item.followupdate,
+        stage:item.stage,
         mobileno:item.mobileno
       }
     })
@@ -254,6 +257,7 @@ const columns = useMemo(
     { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
     { header: 'Name', accessorKey: 'name' },
     { header: 'Follow Update', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
+    {header: 'Stage', accessorKey:'stage'},
     { header: 'Mobile Number', accessorKey: 'mobileno' },
   ],
   [],
@@ -262,6 +266,7 @@ const ops = [
   { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
   { header: 'Name', accessorKey: 'name' },
   { header: 'Follow Date', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
+  {header: 'Stage', accessorKey:'stage'},
   { header: 'Mobile Number', accessorKey: 'mobileno' },
 ]
 const csvOptions = {

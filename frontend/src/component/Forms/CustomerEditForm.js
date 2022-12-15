@@ -251,8 +251,8 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
           <label htmlFor='name'>Annivarsary</label>
           <input className={Styles.inputTag} type="date" name="marriagedate" value={formData.marriagedate} onChange={(e) => formHandler(e)} placeholder='Annivarsary' />
 
-          <label htmlFor='name'>Sales Person</label>
-          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' />
+          {/* <label htmlFor='name'>Sales Person</label>
+          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
           <label>Branches</label>
           <ReactSelect lassName={Styles.inputTag}
             options={Branches}
