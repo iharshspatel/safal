@@ -37,8 +37,10 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
+  let [selectedBranch,setSelectedBranch] = useState(null);
+  let [selectedSalesman,setSelectedSalesman] = useState(null);
+
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
   }
@@ -76,7 +78,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     console.log(data);
     const newarchitects = data.architects.map((item)=>{
       console.log(item.date);
-      let formateddate = item.date ? dateformater(item.date) : ' ';
+      let formateddate = item.date ? dateformater(item.date) : new Date('01/01/1799');
       console.log(formateddate);
       return {
         date:formateddate,
@@ -88,7 +90,6 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     setOriginalData(data.architects);
     setTableData(newarchitects);
     setArchitects(newarchitects);
-    // setTableData(data.architects);
   }
 
   const getArchitectData = (mobileno) => {
@@ -117,40 +118,12 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     return new Promise(resolve => setTimeout(resolve, time));
   };
 
-  const fetchArchitectsofBranch = async () => {
-    setIsLoading(true);
-    sleep(500);
-
-    console.log(selectedBranch);
-    const {data} = await axios.post("/api/v1/branch/architects", selectedBranch, { headers: { "Content-Type": "application/json" } });
-    const newarchitects = data.architects.map((item)=>{
-      let formateddate = dateformater(item.date);
-      return {
-        date:formateddate,
-        name:item.name,
-        address:item.address,
-        mobileno:item.mobileno,
-      }
-    });
-    setOriginalData(data.architects);
-    setTableData(newarchitects);
-
-    setTableData(newarchitects);
-
-    // console.log(response);
-    // const newarchitects = response.data.architects;
-
-    // setTableData(newarchitects);
-    setIsLoading(false);
-  }
   const handlebranch = (selected) => {
     console.log(selected);
-
-    selectedBranch = selected;
-    fetchArchitectsofBranch();
+    setSelectedBranch(selected.value)
+    fetchFilteredArchitects(selectedSalesman, selected.value);
   }
   const [salesman, setSalesman] = useState([]);
-  let selectedSalesman = [];
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
 
@@ -164,32 +137,48 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     ))
     setSalesman(salesmen);
   }
-  const fetchArchitectsofSalesman = async () => {
-    setIsLoading(true);
-    sleep(500);
 
+  const handlesalesman = (selected) => {
+    setSelectedSalesman(selected.value);
+    fetchFilteredArchitects(selected.value, selectedBranch);
+  }
 
-    const {data} = await axios.post("/api/v1/salesman/architects", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+  
+  const fetchFilteredArchitects =(salesman, branch) => {
 
-    const newarchitects = data.architects.map((item)=>{
-      let formateddate = dateformater(item.date);
+    let filteredData = orginalData.filter((item)=>{
+      let isBranch = false;
+      let isSalesman = false;
+      
+      item.branches.forEach((branchObject)=>{
+        if(Object.values(branchObject).includes(branch) || branch===null){
+        isBranch = true;
+      }})
+      item.salesmen.forEach((salesmanObj)=>{
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+          isSalesman = true;
+        }})
+
+      console.log(isBranch, isSalesman)
+      if(isSalesman && isBranch){
+        return true
+      }
+    })
+    console.log(filteredData);
+    let data = filteredData.map((item)=>{
+      let formateddate = item.date ? item.date : '01/01/1799';
       return {
         date:formateddate,
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
       }
-    });
-    setOriginalData(data.architects);
-    setTableData(newarchitects);
-    setIsLoading(false);
-  }
-  const handlesalesman = (selected) => {
-    console.log(selected);
+      })
 
-    selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+    setArchitects(data);
+    setTableData(data);  
   }
+
 
   useEffect(() => {
 
@@ -234,7 +223,8 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   }
   const columns = useMemo(
     () => [
-      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },
+      Cell: ({cell})=>(dateformater(cell.getValue())) },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },

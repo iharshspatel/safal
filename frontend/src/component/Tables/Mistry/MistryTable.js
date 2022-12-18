@@ -38,7 +38,9 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
+  let [selectedBranch,setSelectedBranch] = useState(null);
+  let [selectedSalesman,setSelectedSalesman] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
@@ -50,7 +52,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
 
   const columns = useMemo(
     () => [
-      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },  Cell: ({cell})=>(dateformater(cell.getValue())) },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
@@ -113,7 +115,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const fetchMistry = async () => {
     const { data } = await axios.get("/api/v1/mistry/getall");
     const newMistries = data.mistries.map((item)=>{
-      let formateddate = item.date ? dateformater(item.date) : ' ';
+      let formateddate = item.date ? dateformater(item.date) : '01/01/1799';
       return {
         date:formateddate,
         name:item.name,
@@ -164,11 +166,10 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const handlebranch = (selected) => {
     console.log(selected);
     // setselectedBranch(selected);
-    selectedBranch = selected;
-    fetchMistryofBranch();
+    setSelectedBranch(selected.value);
+    fetchFilteredMistry(selectedSalesman, selected.value);
   }
   const [salesman, setSalesman] = useState([]);
-  let selectedSalesman = [];
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
 
@@ -204,10 +205,43 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     setIsLoading(false);
   }
   const handlesalesman = (selected) => {
-    console.log(selected);
+    setSelectedSalesman(selected.value)
+    fetchFilteredMistry(selected.value, selectedBranch);
+  }
 
-    selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+  const fetchFilteredMistry =(salesman, branch) => {
+
+    let filteredData = originalData.filter((item)=>{
+      let isBranch = false;
+      let isSalesman = false;
+      
+      item.branches.forEach((branchObject)=>{
+        if(Object.values(branchObject).includes(branch) || branch===null){
+        isBranch = true;
+      }})
+      item.salesmen.forEach((salesmanObj)=>{
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+          isSalesman = true;
+        }})
+
+      console.log(isBranch, isSalesman)
+      if(isSalesman && isBranch){
+        return true
+      }
+    })
+    console.log(filteredData);
+    let data = filteredData.map((item)=>{
+      let formateddate = item.date ? item.date : '01/01/1799';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+      }
+      })
+
+    setMistry(data);
+    setTableData(data);  
   }
 
   useEffect(() => {

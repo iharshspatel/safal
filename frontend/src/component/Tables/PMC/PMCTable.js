@@ -7,7 +7,6 @@ import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
-// import MistryEditForm from '../../Forms/MistryEditForm';
 import PMCEditForm from '../../Forms/PMCEditForm'
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
@@ -15,6 +14,7 @@ import TextField from '@mui/material/TextField';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MaterialReactTable from 'material-react-table';
 import { ExportToCsv } from 'export-to-csv';
+import { dateformater } from '../Utils/util';
 import {
   Box,
   Button,
@@ -34,10 +34,13 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [tabledata, setTableData] = useState([])
+  const [originalData, setOriginalData] = useState([])
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
+  let [selectedBranch,setSelectedBranch] = useState(null);
+  let [selectedSalesman,setSelectedSalesman] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false)
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
@@ -47,17 +50,11 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
     setEndDate(new Date(e.target.value));
   }
 
-  const dateformater = (date) => {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-    return `${year}-${month}-${day}`
-  }
 
   const submitDateRangeHandler = (e) => {
     console.log(startDate, endDate);
     let data = PMC.filter((item) => {
-      let date = item.date;
+      let date = item.date ? item.date : '01/01/1799';
       date = new Date(date);
       if (date < endDate && date > startDate) {
         return true
@@ -71,7 +68,7 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
 
   const columns = useMemo(
     () => [
-      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },  Cell: ({cell})=>(dateformater(cell.getValue())) },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
@@ -83,16 +80,16 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
-    { header: 'Email', accessorKey: 'Email', },
-    { header: 'Company_Name', accessorKey: 'companyName', },
-    { header: 'Birth_Date', accessorKey: 'birthdate', },
-    { header: 'Marriage_Date', accessorKey: 'marriagedate', },
-    { header: 'Remarks', accessorKey: 'remarks', },
-    { header: 'Bank_Name', accessorKey: 'bankname', },
-    { header: 'IFS_Code', accessorKey: 'IFSCcode', },
-    { header: 'Branch_Name', accessorKey: 'branchname', },
-    { header: 'Adhar_Card', accessorKey: 'adharcard', },
-    { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+    // { header: 'Email', accessorKey: 'Email', },
+    // { header: 'Company_Name', accessorKey: 'companyName', },
+    // { header: 'Birth_Date', accessorKey: 'birthdate', },
+    // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+    // { header: 'Remarks', accessorKey: 'remarks', },
+    // { header: 'Bank_Name', accessorKey: 'bankname', },
+    // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+    // { header: 'Branch_Name', accessorKey: 'branchname', },
+    // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+    // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
   ]
   const csvOptions = {
     fieldSeparator: ',',
@@ -119,6 +116,7 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
   const fetchPMC = async () => {
     const { data } = await axios.get("/api/v1/pmc/getall");
     setPMC(data.pmcs);
+    setOriginalData(data.pmcs)
     setTableData(data.pmcs);
   }
 
@@ -153,13 +151,10 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
     setIsLoading(false);
   }
   const handlebranch = (selected) => {
-    console.log(selected);
-    // setselectedBranch(selected);
-    selectedBranch = selected;
-    fetchPMCsofBranch();
+    setSelectedBranch(selected.value)
+    fetchFilteredPMC(selectedSalesman,selected.value);
   }
   const [salesman, setSalesman] = useState([]);
-  let selectedSalesman = [];
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
 
@@ -173,24 +168,45 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
     ))
     setSalesman(salesmen);
   }
-  const fetchArchitectsofSalesman = async () => {
-    setIsLoading(true);
-    sleep(500);
+  
+  const fetchFilteredPMC =(salesman, branch) => {
 
-    // console.log(selectedSalesman);
-    const response = await axios.post("/api/v1/salesman/pmc", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+    let filteredData = originalData.filter((item)=>{
+      let isBranch = false;
+      let isSalesman = false;
+      
+      item.branches.forEach((branchObject)=>{
+        if(Object.values(branchObject).includes(branch) || branch===null){
+        isBranch = true;
+      }})
+      item.salesmen.forEach((salesmanObj)=>{
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+          isSalesman = true;
+        }})
 
-    // console.log(response);
-    const newarchitects = response.data.pmcs;
+      console.log(isBranch, isSalesman)
+      if(isSalesman && isBranch){
+        return true
+      }
+    })
+    console.log(filteredData);
+    let data = filteredData.map((item)=>{
+      let formateddate = item.date ? item.date : '01/01/1799';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+      }
+      })
 
-    setTableData(newarchitects);
-    setIsLoading(false);
+    setPMC(data);
+    setTableData(data);  
   }
+  
   const handlesalesman = (selected) => {
-    console.log(selected);
-
-    selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+    setSelectedSalesman(selected.value);
+    fetchFilteredPMC(selected.value, selectedBranch);
   }
 
   useEffect(() => {

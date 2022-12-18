@@ -8,10 +8,11 @@ import { toast } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
 import InquiryEditForm from '../../Forms/InquiryEditForm';
-import { dateformater } from '../Utils/util';
+import { dateformater,dateParser } from '../Utils/util';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MaterialReactTable from 'material-react-table';
 import { ExportToCsv } from 'export-to-csv';
+
 import {
   Box,
   Button,
@@ -31,9 +32,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   const [branches, setBranches] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [salesman, setSalesman] = useState([]);
-
-  let selectedBranch = [];
-  let selectedSalesman = [];
+  let [selectedBranch,setSelectedBranch] = useState(null);
+  let [selectedSalesman,setSelectedSalesman] = useState(null);
 
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
@@ -48,35 +48,35 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     setSalesman(salesmen);
   }
 
-  const fetchArchitectsofSalesman = async () => {
-    setIsLoading(true);
-    sleep(500);
-    const {data} = await axios.post("/api/v1/salesman/inquiry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
-    setOriginalData(data.inquiries);
-    let inquires = data.inquiries.map((item)=>{
-      let date = dateformater(item.date);
-      let followupdate = dateformater(item.followupdate);
+  const fetchBranches = async () => {
+    const { data } = await axios.get("/api/v1/branch/getall");
+    
+    const branches = data.branches.map((branch) => (
+      {
+        branchname: branch.branchname,
+        value: branch.branchname,
+        label: branch.branchname
 
-      return {
-        date:date,
-        name:item.name,
-        followupdate:followupdate,
-        stage:item.stage,
-        mobileno:item.mobileno
       }
-    })
-    setTableData(inquires);
-    setIsLoading(false);
+    ))
+    setBranches(branches);
   }
 
   const handlesalesman = (selected) => {
-    selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+    console.log(selected);
+    setSelectedSalesman(selected.value);
+    console.log(selected.value)
+    fetchFilteredInquiries(selected.value,selectedBranch);
+  }
+
+  const handlebranch = (selected) => {
+    setSelectedBranch(selected.value);
+    console.log(selected.value)
+    console.log(selected);
+    fetchFilteredInquiries(selectedSalesman,selected.value);
   }
 
   const modifyData = (data) => {
-
-
     let datass1 = data.map((d) => {
       if (d.architectTag) {
         return {
@@ -105,7 +105,6 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
       return d
     })
     return datass1
-
   }
 
   const delteHandler = async (id) => {
@@ -122,76 +121,33 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     setEndDate(new Date(e.target.value));
   }
 
-  // const dateformater = (date1) => {
-  //   let date = new Date(date1)
-  //   let year = date.getFullYear();
-  //   let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-  //   let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-  //   return `${year}-${month}-${day}`
-  // }
-
   const getInquiryData = (mobileno) => {
     let inquiry = originalData.filter((item) => item.mobileno === mobileno);
-    console.log(inquiry)
     setEditModalData(inquiry[0]);
     setEditModal(true);
   }
 
   const submitDateRangeHandler = (e) => {
     let data = inquiries.filter((item) => {
-      let date = item.followupdate;
+      let date = (item.followupdate);
       date = new Date(date);
+      if(date){
       if (date < endDate && date > startDate) {
         return true
       }
       else {
         return false
       }
+    }
+    else{
+      return false
+    }
     })
     setTableData(data)
-    
   }
   
   const fetchInquiry = async () => {
     const { data } = await axios.get("/api/v1/inquiry/getall");
-    setOriginalData(data.inquiries);
-    let inquires = data.inquiries.map((item)=>{
-    let date = dateformater(item.date);
-    let followupdate = dateformater(item.followupdate);
-    console.log(date, followupdate);
-      return {
-        date:date,
-        name:item.name,
-        followupdate:followupdate,
-        stage:item.stage,
-        mobileno:item.mobileno
-      }
-    })
-    setInquiries(modifyData(inquires));
-    setTableData(modifyData(inquires));
-  }
-
-  const fetchBranches = async () => {
-    const { data } = await axios.get("/api/v1/branch/getall");
-    
-    const branches = data.branches.map((branch) => (
-      {
-        branchname: branch.branchname,
-        value: branch.branchname,
-        label: branch.branchname
-
-      }
-    ))
-    setBranches(branches);
-  }
-  const sleep = time => {
-    return new Promise(resolve => setTimeout(resolve, time));
-  };
-
-  const fetchInquiriesofBranch = async () => {
-    setIsLoading(true);
-    sleep(500);
-    const {data} = await axios.post("/api/v1/branch/inquiry", selectedBranch, { headers: { "Content-Type": "application/json" } });
     setOriginalData(data.inquiries);
     let inquires = data.inquiries.map((item)=>{
       return {
@@ -202,16 +158,50 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         mobileno:item.mobileno
       }
     })
-    
-    setTableData(inquires);
-    setIsLoading(false);
+    setInquiries(modifyData(inquires));
+    setTableData(modifyData(inquires));
   }
 
-  const handlebranch = (selected) => {
-    selectedBranch = selected;
-    fetchInquiriesofBranch();
-  }
 
+  const sleep = time => {
+    return new Promise(resolve => setTimeout(resolve, time));
+  };
+
+
+  const fetchFilteredInquiries =(salesman, branch) => {
+
+    let filteredData = originalData.filter((item)=>{
+      let isBranch = false;
+      let isSalesman = false;
+      
+      item.branches.forEach((branchObject)=>{
+        if(Object.values(branchObject).includes(branch) || branch===null){
+        isBranch = true;
+      }})
+      item.salesmen.forEach((salesmanObj)=>{
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+          isSalesman = true;
+        }})
+
+      console.log(isBranch, isSalesman)
+      if(isSalesman && isBranch){
+        return true
+      }
+    })
+    console.log(filteredData);
+    let data = filteredData.map((item)=>{
+        return {
+          date:item.date,
+          name:item.name,
+          followupdate:item.followupdate,
+          stage:item.stage,
+          mobileno:item.mobileno
+        }
+      })
+
+    setInquiries(modifyData(data));
+    setTableData(modifyData(data));  
+  }
 
   useEffect(() => {
     fetchInquiry();
@@ -219,8 +209,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     fetchSalesmen();
     
   }, [refresh]);
+
   const handleCallbackCreate = (childData) => {
-    
     toast.success("Inquiry edited");
     fetchInquiry();
   }
@@ -254,9 +244,10 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 };
 const columns = useMemo(
   () => [
-    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, 
+    Cell: ({cell})=>(dateformater(cell.getValue()))},
     { header: 'Name', accessorKey: 'name' },
-    { header: 'Follow Update', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
+    { header: 'Follow Update', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, Cell: ({cell})=>(dateformater(cell.getValue())) },
     {header: 'Stage', accessorKey:'stage'},
     { header: 'Mobile Number', accessorKey: 'mobileno' },
   ],

@@ -39,12 +39,11 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
+  let [selectedBranch,setSelectedBranch] = useState(null);
+  let [selectedSalesman,setSelectedSalesman] = useState(null);
 
   const modifyData = (data) => {
-
-
     let datass1 = data.map((d) => {
       if (d.architectTag) {
         return {
@@ -82,8 +81,6 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     fetchCustomers();
   }
 
-
-
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
   }
@@ -91,9 +88,12 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   const endDateHandler = (e) => {
     setEndDate(new Date(e.target.value));
   }
+
   const submitDateRangeHandler = (e) => {
     console.log(startDate, endDate);
     let data = customers.filter((item) => {
+      console.log(item.date)
+      if(item.date){    
       let date = item.date;
       date = new Date(date);
       if (date < endDate && date > startDate) {
@@ -102,17 +102,22 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
       else {
         return false
       }
-    })
-    console.log(data)
+    }
+    else{
+      return false
+    }
+
+
+  })
+    setCustomers(data);
     setTableData(data)
-    console.log(new Date(customers[0].date));
   }
-  //currently it is sending data
+ 
   const fetchCustomers = async () => {
     const { data } = await axios.get("/api/v1/customer/getall");
     let modifiedData = modifyData(data.customers);
     const newCustomers = modifiedData.map((item)=>{
-      let formateddate = item.date ? dateformater(item.date) : ' ';
+      let formateddate = item.date ? item.date : ' ';
 
       return {
         date:formateddate,
@@ -129,7 +134,6 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
 
   const fetchBranches = async () => {
     const { data } = await axios.get("/api/v1/branch/getall");
-    // console.log(data.branches);
     const branches = data.branches.map((branch) => (
       {
         branchname: branch.branchname,
@@ -144,40 +148,46 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     return new Promise(resolve => setTimeout(resolve, time));
   };
 
-  const fetchCustomersofBranch = async () => {
-    setIsLoading(true);
-    sleep(500);
-    // let data=selectedBranch;
-    console.log(selectedBranch);
-    const {data} = await axios.post("/api/v1/branch/customers", selectedBranch, { headers: { "Content-Type": "application/json" } });
+  const fetchFilteredCustomers =(salesman, branch) => {
 
-    let modifiedData = modifyData(data.customers);
-    const newCustomers = modifiedData.map((item)=>{
-      let formateddate = item.date ? dateformater(item.date) : ' ';
+    let filteredData = originalData.filter((item)=>{
+      let isBranch = false;
+      let isSalesman = false;
+      
+      item.branches.forEach((branchObject)=>{
+        if(Object.values(branchObject).includes(branch) || branch===null){
+        isBranch = true;
+      }})
+      item.salesmen.forEach((salesmanObj)=>{
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+          isSalesman = true;
+        }})
 
-      return {
-        date:formateddate,
-        name:item.name,
-        address:item.address,
-        mobileno:item.mobileno,
-        tag:item.tag
+      console.log(isBranch, isSalesman)
+      if(isSalesman && isBranch){
+        return true
       }
-    });
+    })
+    console.log(filteredData);
+    let data = filteredData.map((item)=>{
+      let formateddate = item.date ? item.date : ' ';
+        return {
+          date:formateddate,
+          name:item.name,
+          address:item.address,
+          mobileno:item.mobileno,
+          tag:item.tag
+        }
+      })
 
-
-    setOriginalData(modifiedData);
-    setTableData(newCustomers);
-
-    setIsLoading(false);
+    setCustomers(modifyData(data));
+    setTableData(modifyData(data));  
   }
   const handlebranch = (selected) => {
-    console.log(selected);
-    // setselectedBranch(selected);
-    selectedBranch = selected;
-    fetchCustomersofBranch();
+    setSelectedBranch(selected.value);
+    fetchFilteredCustomers(selectedSalesman, selected.value);
   }
   const [salesman, setSalesman] = useState([]);
-  let selectedSalesman = [];
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
 
@@ -191,34 +201,9 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     ))
     setSalesman(salesmen);
   }
-  const fetchArchitectsofSalesman = async () => {
-    setIsLoading(true);
-    sleep(500);
-
-    // console.log(selectedSalesman);
-    const {data} = await axios.post("/api/v1/salesman/customers", selectedSalesman, { headers: { "Content-Type": "application/json" } });
-
-    let modifiedData = modifyData(data.customers);
-    const newCustomers = modifiedData.map((item)=>{
-      let formateddate = item.date ? dateformater(item.date) : ' ';
-
-      return {
-        date:formateddate,
-        name:item.name,
-        address:item.address,
-        mobileno:item.mobileno,
-        tag:item.tag
-      }
-    });
-    setOriginalData(modifiedData);
-    setTableData(newCustomers);
-    setIsLoading(false);
-  }
   const handlesalesman = (selected) => {
-    console.log(selected);
-
     selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+    fetchFilteredCustomers(selected.value, selectedBranch);
   }
 
 
@@ -226,10 +211,9 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     fetchCustomers();
     fetchBranches();
     fetchSalesmen();
-    // console.log(`editModal`, editModal)
   }, [refresh]);
+  
   const handleCallbackCreate = (childData) => {
-    // console.log("Parent Invoked!!")
     toast.success("Customer edited");
     fetchCustomers();
   }
@@ -271,7 +255,8 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   };
   const columns = useMemo(
     () => [
-      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },
+      Cell: ({cell})=>(dateformater(cell.getValue())) },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
