@@ -155,7 +155,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         name:item.name,
         followupdate:item.followupdate,
         stage:item.stage,
-        mobileno:item.mobileno
+        mobileno:item.mobileno,
+        requirement:item.requirement.map((req)=>req.requirement).join('-')
       }
     })
     setInquiries(modifyData(inquires));
@@ -188,14 +189,15 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         return true
       }
     })
-    console.log(filteredData);
+    // console.log(filteredData);
     let data = filteredData.map((item)=>{
         return {
           date:item.date,
           name:item.name,
           followupdate:item.followupdate,
           stage:item.stage,
-          mobileno:item.mobileno
+          mobileno:item.mobileno,
+          requirement:item.requirement.map((req)=>req.requirement).join('-')
         }
       })
 
@@ -249,6 +251,7 @@ const columns = useMemo(
     { header: 'Name', accessorKey: 'name' },
     { header: 'Follow Update', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, Cell: ({cell})=>(dateformater(cell.getValue())) },
     {header: 'Stage', accessorKey:'stage'},
+    {header: 'Requirement', accessorKey: 'requirement'},
     { header: 'Mobile Number', accessorKey: 'mobileno' },
   ],
   [],
@@ -258,6 +261,7 @@ const ops = [
   { header: 'Name', accessorKey: 'name' },
   { header: 'Follow Date', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
   {header: 'Stage', accessorKey:'stage'},
+  {header: 'Requirement', accessorKey: 'requirement'},
   { header: 'Mobile Number', accessorKey: 'mobileno' },
 ]
 const csvOptions = {
