@@ -253,7 +253,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Mistry edited");
-    fetchMistry();
+    // fetchMistry();
   }
 
   const getMistryData = (mobileno) => {

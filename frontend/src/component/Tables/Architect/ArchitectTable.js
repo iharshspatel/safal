@@ -218,7 +218,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   const handleCallbackCreate = (childData) => {
 
     toast.success("Architect edited");
-    fetchArchitect();
+    // fetchArchitect();
     window.scrollTo(0, 0)
   }
   const columns = useMemo(

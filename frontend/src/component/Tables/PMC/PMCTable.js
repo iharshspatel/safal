@@ -217,7 +217,7 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("PMC edited");
-    fetchPMC();
+    // fetchPMC();
   }
   const customStyles = {
     control: base => ({

@@ -115,6 +115,7 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
  
   const fetchCustomers = async () => {
     const { data } = await axios.get("/api/v1/customer/getall");
+    console.log(data);
     let modifiedData = modifyData(data.customers);
     const newCustomers = modifiedData.map((item)=>{
       let formateddate = item.date ? item.date : ' ';
@@ -124,7 +125,9 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
-        tag:item.tag
+        // tag:item.tag,
+        mistry: item.mistryName ? item.mistryName : '',
+        architect : item.architectName ? item.architectName :  ''
       }
     });
     setOriginalData(modifiedData);
@@ -176,7 +179,9 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
           name:item.name,
           address:item.address,
           mobileno:item.mobileno,
-          tag:item.tag
+          // tag:item.tag
+          mistry: item.mistryName ? item.mistryName : '',
+          architect : item.architectName ? item.architectName :  ''
         }
       })
 
@@ -215,7 +220,7 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   
   const handleCallbackCreate = (childData) => {
     toast.success("Customer edited");
-    fetchCustomers();
+    // fetchCustomers();
   }
 
   const getCustomerData = (mobileno) => {
@@ -260,7 +265,10 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
-      { header: 'Tag', accessorKey:'tag'}
+      // { header: 'Tag', accessorKey:'tag'},
+      { header: 'Mistry Name', accessorKey:'mistry'},
+      { header: 'Architect Name', accessorKey:'architect'},
+      
     ],
     [],
   );
@@ -269,7 +277,9 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
-    { header: 'Tag', accessorKey:'tag'}
+    // { header: 'Tag', accessorKey:'tag'},
+    { header: 'Mistry Name', accessorKey:'mistry'},
+    { header: 'Architect Name', accessorKey:'architect'},
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },

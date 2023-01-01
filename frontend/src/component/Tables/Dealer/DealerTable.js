@@ -160,7 +160,7 @@ const DealerTable = ({ modalHandler, refresh ,isOpen}) => {
   const handleCallbackCreate = (childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Dealer edited");
-    fetchDealer();
+    // fetchDealer();
   }
 
   const customStyles = {

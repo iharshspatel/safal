@@ -149,6 +149,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   const fetchInquiry = async () => {
     const { data } = await axios.get("/api/v1/inquiry/getall");
     setOriginalData(data.inquiries);
+    console.log(data.inquiries);
     let inquires = data.inquiries.map((item)=>{
       return {
         date:item.date,
@@ -156,9 +157,11 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         followupdate:item.followupdate,
         stage:item.stage,
         mobileno:item.mobileno,
-        requirement:item.requirement.map((req)=>req.requirement).join('-')
+        requirement:item.requirement.map((req)=>req.requirement).join('-'),
+        salesmen:item.salesmen.map((req)=>req.name).join('-')
       }
     })
+    console.log(inquires);
     setInquiries(modifyData(inquires));
     setTableData(modifyData(inquires));
   }
@@ -197,7 +200,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
           followupdate:item.followupdate,
           stage:item.stage,
           mobileno:item.mobileno,
-          requirement:item.requirement.map((req)=>req.requirement).join('-')
+          requirement:item.requirement.map((req)=>req.requirement).join('-'),
+          salesmen:item.salesmen.map((req)=>req.name).join('-')
         }
       })
 
@@ -207,6 +211,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 
   useEffect(() => {
     fetchInquiry();
+    fetchFilteredInquiries(selectedSalesman, selectedBranch)
     fetchBranches();
     fetchSalesmen();
     
@@ -214,7 +219,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 
   const handleCallbackCreate = (childData) => {
     toast.success("Inquiry edited");
-    fetchInquiry();
+    // fetchInquiry();
+    // fetchFilteredInquiries(selectedSalesman, selectedBranch);
   }
 
   const customStyles = {
@@ -252,6 +258,7 @@ const columns = useMemo(
     { header: 'Follow Update', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, Cell: ({cell})=>(dateformater(cell.getValue())) },
     {header: 'Stage', accessorKey:'stage'},
     {header: 'Requirement', accessorKey: 'requirement'},
+    {header: 'Salesman', accessorKey:'salesmen'},
     { header: 'Mobile Number', accessorKey: 'mobileno' },
   ],
   [],
@@ -262,6 +269,7 @@ const ops = [
   { header: 'Follow Date', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
   {header: 'Stage', accessorKey:'stage'},
   {header: 'Requirement', accessorKey: 'requirement'},
+  {header: 'Salesman', accessorKey:'salesmen'},
   { header: 'Mobile Number', accessorKey: 'mobileno' },
 ]
 const csvOptions = {
