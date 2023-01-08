@@ -1,7 +1,7 @@
 import dateTime from 'date-and-time';
 
 export const dateformater = (date1) => {
-    console.log(date1);
+    // console.log(date1);
     let date = new Date(date1)
     if(date){
     let year = date.getFullYear();

@@ -63,16 +63,12 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   }
 
   const handlesalesman = (selected) => {
-    console.log(selected);
     setSelectedSalesman(selected.value);
-    console.log(selected.value)
     fetchFilteredInquiries(selected.value,selectedBranch);
   }
 
   const handlebranch = (selected) => {
     setSelectedBranch(selected.value);
-    console.log(selected.value)
-    console.log(selected);
     fetchFilteredInquiries(selectedSalesman,selected.value);
   }
 
@@ -109,8 +105,11 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 
   const delteHandler = async (id) => {
     alert(id);
-    const data = await axios.delete(`/api/v1/inquiry/delete/${id}`);
-    fetchInquiry();
+    const data1 = await axios.delete(`/api/v1/inquiry/delete/${id}`);
+    // fetchInquiry();
+    const { data } = await axios.get("/api/v1/inquiry/getall");
+    setOriginalData(data.inquiries);
+
   }
 
   const startDateHandler = (e) => {
@@ -127,29 +126,55 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     setEditModal(true);
   }
 
-  const submitDateRangeHandler = (e) => {
-    let data = inquiries.filter((item) => {
-      let date = (item.followupdate);
-      date = new Date(date);
-      if(date){
-      if (date < endDate && date > startDate) {
-        return true
+  const submitDateRangeHandler = () => {
+
+    if(startDate && endDate){
+
+      let data = originalData.filter((item) => {
+        let date = (item.followupdate);
+        date = new Date(date);
+        
+        if(date){
+        if (date < endDate && date > startDate) {
+          return true
+        }
+        else {
+          return false
+        }
       }
-      else {
+      else{
         return false
       }
+      })
+      // setInquiries()
+      setTableData(getInquiry(data))
+
     }
-    else{
-      return false
-    }
+
+  }
+
+
+  function getInquiry(data){
+    let inquires = data.map((item)=>{
+      return {
+        date:item.date,
+        name:item.name,
+        followupdate:item.followupdate,
+        stage:item.stage,
+        mobileno:item.mobileno,
+        requirement:item.requirement.map((req)=>req.requirement).join('-'),
+        salesmen:item.salesmen.map((req)=>req.name).join('-')
+      }
     })
-    setTableData(data)
+
+    return inquires;
+
+
   }
   
   const fetchInquiry = async () => {
     const { data } = await axios.get("/api/v1/inquiry/getall");
     setOriginalData(data.inquiries);
-    console.log(data.inquiries);
     let inquires = data.inquiries.map((item)=>{
       return {
         date:item.date,
@@ -161,7 +186,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         salesmen:item.salesmen.map((req)=>req.name).join('-')
       }
     })
-    console.log(inquires);
+    console.log(modifyData(inquires))
     setInquiries(modifyData(inquires));
     setTableData(modifyData(inquires));
   }
@@ -172,7 +197,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   };
 
 
-  const fetchFilteredInquiries =(salesman, branch) => {
+  const fetchFilteredInquiries =async(salesman, branch) => {
 
     let filteredData = originalData.filter((item)=>{
       let isBranch = false;
@@ -187,12 +212,10 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
           isSalesman = true;
         }})
 
-      console.log(isBranch, isSalesman)
       if(isSalesman && isBranch){
         return true
       }
     })
-    // console.log(filteredData);
     let data = filteredData.map((item)=>{
         return {
           date:item.date,
@@ -204,7 +227,6 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
           salesmen:item.salesmen.map((req)=>req.name).join('-')
         }
       })
-
     setInquiries(modifyData(data));
     setTableData(modifyData(data));  
   }
@@ -217,10 +239,16 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     
   }, [refresh]);
 
-  const handleCallbackCreate = (childData) => {
+  useEffect(()=>{
+    fetchFilteredInquiries(selectedSalesman, selectedBranch);
+    // submitDateRangeHandler();
+  },[originalData])
+
+  const handleCallbackCreate = async(childData) => {
     toast.success("Inquiry edited");
-    // fetchInquiry();
-    // fetchFilteredInquiries(selectedSalesman, selectedBranch);
+    const { data } = await axios.get("/api/v1/inquiry/getall");
+    setOriginalData(data.inquiries);
+
   }
 
   const customStyles = {
@@ -264,9 +292,9 @@ const columns = useMemo(
   [],
 );
 const ops = [
-  { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+  { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, Cell: ({cell})=>(dateformater(cell.getValue())) },
   { header: 'Name', accessorKey: 'name' },
-  { header: 'Follow Date', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" }, },
+  { header: 'Follow Update', accessorKey: 'followupdate', type: "date", dateSetting: { locale: "en-GB" },Cell: ({cell})=>(dateformater(cell.getValue()))  },
   {header: 'Stage', accessorKey:'stage'},
   {header: 'Requirement', accessorKey: 'requirement'},
   {header: 'Salesman', accessorKey:'salesmen'},
