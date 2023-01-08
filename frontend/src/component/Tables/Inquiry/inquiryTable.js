@@ -396,7 +396,7 @@ const handleExportRows = (rows) => {
             enableTopToolbar={!editModal && !isOpen}
 
             muiTablePaginationProps={{
-              rowsPerPageOptions: [5, 10],
+              rowsPerPageOptions: [200,300,400],
               showFirstLastPageButtons: true,
             }}
             enableGlobalFilter={true}
