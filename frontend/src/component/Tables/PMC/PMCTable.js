@@ -109,6 +109,7 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
     csvExporter.generateCsv(rows.map((row) => row.original));
   };
   const delteHandler = async (id) => {
+    alert("Are you sure ?")
     const data = await axios.delete(`/api/v1/pmc/delete/${id}`);
     fetchPMC();
   }

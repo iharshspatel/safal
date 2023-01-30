@@ -77,6 +77,7 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   }
 
   const delteHandler = async (mobileno) => {
+    alert("Are you sure ?")
     const data = await axios.delete(`/api/v1/customer/delete/${mobileno}`);
     fetchCustomers();
   }

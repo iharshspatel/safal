@@ -71,6 +71,7 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
   }
 
   const delteHandler = async (mobileno) => {
+    alert("Are you sure ?")
     const data = await axios.delete(`/api/v1/salesman/delete/${mobileno}`);
     fetchSalesman();
   }

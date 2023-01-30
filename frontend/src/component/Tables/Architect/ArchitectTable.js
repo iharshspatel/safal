@@ -69,6 +69,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   }
 
   const delteHandler = async (mobileno) => {
+    alert("Are you sure ?")
     const data = await axios.delete(`/api/v1/architect/delete/${mobileno}`);
     fetchArchitect();
   }
