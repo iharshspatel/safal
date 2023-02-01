@@ -77,8 +77,11 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   }
 
   const delteHandler = async (mobileno) => {
-    const data = await axios.delete(`/api/v1/customer/delete/${mobileno}`);
-    fetchCustomers();
+    
+    if(window.confirm("Are you sure ?")){
+      const data = await axios.delete(`/api/v1/customer/delete/${mobileno}`);
+      fetchCustomers();
+    }
   }
 
   const startDateHandler = (e) => {

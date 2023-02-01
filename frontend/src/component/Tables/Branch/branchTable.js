@@ -32,9 +32,11 @@ const BranchTable = ({ modalHandler, refresh ,isOpen}) => {
     const [tabledata, setTableData] = useState([])
     const [branches, setBranches] = useState([]);
     const delteHandler = async (id) => {
-        const data = await axios.delete(`/api/v1/branch/delete/${id}`);
-        console.log(id)
-        fetchBranches();
+        if(window.confirm("Are you sure ?")){
+            const data = await axios.delete(`/api/v1/branch/delete/${id}`);
+            console.log(id)
+            fetchBranches();
+        }
     }
     const fetchBranches = async () => {
         const { data } = await axios.get("/api/v1/branch/getall");

@@ -105,8 +105,10 @@ const DealerTable = ({ modalHandler, refresh ,isOpen}) => {
   }
 
   const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/dealer/delete/${id}`);
-    fetchDealer();
+    if(window.confirm("Are you sure ?")){
+      const data = await axios.delete(`/api/v1/dealer/delete/${id}`);
+      fetchDealer();
+    }
   }
 
   const fetchDealer = async () => {

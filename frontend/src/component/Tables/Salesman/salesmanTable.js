@@ -71,8 +71,11 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
   }
 
   const delteHandler = async (mobileno) => {
-    const data = await axios.delete(`/api/v1/salesman/delete/${mobileno}`);
-    fetchSalesman();
+    // eslint-disable-next-line no-restricted-globals
+    if(window.confirm("Are you sure ?")){
+      const data = await axios.delete(`/api/v1/salesman/delete/${mobileno}`);
+      fetchSalesman();
+    }
   }
 
   const fetchSalesman = async () => {

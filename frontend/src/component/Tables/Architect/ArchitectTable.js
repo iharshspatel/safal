@@ -69,8 +69,11 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   }
 
   const delteHandler = async (mobileno) => {
-    const data = await axios.delete(`/api/v1/architect/delete/${mobileno}`);
-    fetchArchitect();
+
+    if(window.confirm("Are you sure ?")){
+      const data = await axios.delete(`/api/v1/architect/delete/${mobileno}`);
+      fetchArchitect();
+    }
   }
 
   const fetchArchitect = async () => {
@@ -78,7 +81,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     console.log(data);
     const newarchitects = data.architects.map((item)=>{
       console.log(item.date);
-      let formateddate = item.date ? dateformater(item.date) : new Date('01/01/1799');
+      let formateddate = item.date ? (item.date) : new Date('01/01/1799');
       console.log(formateddate);
       return {
         date:formateddate,
@@ -232,7 +235,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     [],
   );
   const ops = [
-    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, Cell: ({cell})=>(dateformater(cell.getValue())) },
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
