@@ -94,9 +94,10 @@ const InquiryTableFlitered = ({ modalHandler, refresh }) => {
     }
 
     const delteHandler = async (id) => {
-        alert("Are you sure ?")
-        const data = await axios.delete(`/api/v1/inquiry/delete/${id}`);
-        fetchInquiry();
+        if(window.confirm("Are you sure ?")){
+            const data = await axios.delete(`/api/v1/inquiry/delete/${id}`);
+            fetchInquiry();
+        }
     }
 
 

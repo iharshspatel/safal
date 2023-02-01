@@ -108,9 +108,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   }
 
   const delteHandler = async (mobileno) => {
-    alert("Are you sure ?")
-    const data = await axios.delete(`/api/v1/mistry/delete/${mobileno}`);
-    fetchMistry();
+    // eslint-disable-next-line no-restricted-globals
+    if(window.confirm("Are you sure ?")){
+      const data = await axios.delete(`/api/v1/mistry/delete/${mobileno}`);
+      fetchMistry();
+    }
   }
 
   const fetchMistry = async () => {

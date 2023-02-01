@@ -104,11 +104,12 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   }
 
   const delteHandler = async (id) => {
-    alert(id);
-    const data1 = await axios.delete(`/api/v1/inquiry/delete/${id}`);
-    // fetchInquiry();
-    const { data } = await axios.get("/api/v1/inquiry/getall");
-    setOriginalData(data.inquiries);
+    if( window.confirm(id)){      
+       const data1 = await axios.delete(`/api/v1/inquiry/delete/${id}`);
+       // fetchInquiry();
+       const { data } = await axios.get("/api/v1/inquiry/getall");
+       setOriginalData(data.inquiries);
+    }
 
   }
 
