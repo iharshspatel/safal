@@ -182,9 +182,9 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         name:item.name,
         followupdate:item.followupdate,
         stage:item.stage,
-        mobileno:item.mobileno,
         requirement:item.requirement.map((req)=>req.requirement).join('-'),
-        salesmen:item.salesmen.map((req)=>req.name).join('-')
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        mobileno:item.mobileno
       }
     })
     console.log(modifyData(inquires))
@@ -223,9 +223,9 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
           name:item.name,
           followupdate:item.followupdate,
           stage:item.stage,
-          mobileno:item.mobileno,
           requirement:item.requirement.map((req)=>req.requirement).join('-'),
-          salesmen:item.salesmen.map((req)=>req.name).join('-')
+          salesmen:item.salesmen.map((req)=>req.name).join('-'),
+          mobileno:item.mobileno
         }
       })
     setInquiries(modifyData(data));
