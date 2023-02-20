@@ -33,7 +33,8 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     date: "",
     followupdate: "",
     branches: [],
-    salesmen: []
+    salesmen: [],
+    remarks:""
   }
   // ["Plywood", "Laminate","Veneer","Other","Hardware"]
   const requirement = [
@@ -62,6 +63,52 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       value: "Hardware",
       label:"Hardware"
     },
+    {
+        requirement:'P',
+        value: "P",
+        label:"P"
+    },
+    {
+        requirement:'V',
+        value: "V",
+        label:"V"
+    },
+    {
+        requirement:'L',
+        value: "L",
+        label:"L"
+    },
+    {
+        requirement:'K',
+        value: "K",
+        label:"K"
+    },
+    {
+        requirement:'W',
+        value: "W",
+        label:"W"
+    },
+    {
+        requirement:'FD',
+        value: "FD",
+        label:"FD"
+    },
+    {
+        requirement:'WP',
+        value: "WP",
+        label:"WP"
+    },
+    {
+        requirement:'C',
+        value: "C",
+        label:"C"
+    },
+    {
+        requirement:'HI',
+        value: "HI",
+        label:"HI"
+    },
+
   ]
   const stage = [
     {
@@ -177,7 +224,8 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       requirement: selectedRequirement,
       stage:formData.stage,
       branches: selectedBranch,
-      salesmen: selectedSalesmen
+      salesmen: selectedSalesmen,
+      remarks:formData.remarks
     }
     console.log(data);
     try {
@@ -264,10 +312,10 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <input className={Styles.inputTag} name="address" value={formData.address} onChange={(e) => formHandler(e)} placeholder='Address' />
 
           <label htmlFor='ordervalue'>Order Value</label>
-          <input className={Styles.inputTag} name="orderValue" value={formData.orderValue} onChange={(e) => formHandler(e)} placeholder='Order Value' />
+          <input className={Styles.inputTag} name="orderValue" value={formData.orderValue} onChange={(e) => formHandler(e)} placeholder='Order Value' />*/}
 
           <label htmlFor='name'>Remarks</label>
-          <input className={Styles.inputTag} name="remarks" value={formData.remarks} onChange={(e) => formHandler(e)} placeholder='Remarks' /> */}
+          <input className={Styles.inputTag} name="remarks" value={formData.remarks} onChange={(e) => formHandler(e)} placeholder='Remarks' /> 
         </div>
 
         <div className={Styles.personalDetails2}>

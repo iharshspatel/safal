@@ -183,8 +183,8 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
           address:item.address,
           mobileno:item.mobileno,
           // tag:item.tag
-          mistry: item.mistryName ? item.mistryName : '',
-          architect : item.architectName ? item.architectName :  ''
+           mistry: item.mistryName && item.mistryNumber ? item.mistryName + ' - ' + item.mistryNumber: '',
+        architect : item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber :  ''
         }
       })
 

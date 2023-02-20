@@ -46,7 +46,8 @@ const inquirySchema = new mongoose.Schema({
     branches: [
         { branchname: String }
     ],
-    salesmen: [{ name: String }]
+    salesmen: [{ name: String }],
+    remarks:String
 
 });
 
