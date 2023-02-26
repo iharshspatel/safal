@@ -139,7 +139,7 @@ const SalesmanCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                 <div className={Styles.personalDetails1}>
 
                     <label htmlFor='name'>Name</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.name} name="name" placeholder='Dealer Name' />
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.name} name="name" placeholder='Salesman Name' />
 
                     <label htmlFor='mobileno'>Mobile Number</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.mobileno} name="mobileno" placeholder='Mobile Number' />

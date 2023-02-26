@@ -135,6 +135,7 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
       setIsOpen(false);
     }
     catch (e) {
+      console.log("<++++++failed")
       console.log(e.response.data.message)
       setIsDisabled(false);
     }

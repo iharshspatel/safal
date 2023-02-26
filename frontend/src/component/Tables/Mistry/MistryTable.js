@@ -56,6 +56,8 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
+      {header: 'Salesman', accessorKey:'salesmen'},
+      {header: 'BranchName', accessorKey:'branchname'},
     ],
     [],
   );
@@ -64,6 +66,8 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
+    {header: 'Salesman', accessorKey:'salesmen'},
+      {header: 'BranchName', accessorKey:'branchname'},
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },
@@ -124,6 +128,8 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
       }
     });
     setOriginalData(data.mistries);
@@ -159,6 +165,8 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
       }
     });
 
@@ -200,6 +208,8 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
       }
     });
 
@@ -240,6 +250,9 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+        
       }
       })
 

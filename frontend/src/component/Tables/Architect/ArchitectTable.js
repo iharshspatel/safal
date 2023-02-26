@@ -80,7 +80,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     const { data } = await axios.get("/api/v1/architect/getall");
     console.log(data);
     const newarchitects = data.architects.map((item)=>{
-      console.log(item.date);
+      // console.log(item.date);
       let formateddate = item.date ? (item.date) : new Date('01/01/1799');
       console.log(formateddate);
       return {
@@ -88,8 +88,11 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
       }
     });
+    console.log(newarchitects, "<========================");
     setOriginalData(data.architects);
     setTableData(newarchitects);
     setArchitects(newarchitects);
@@ -175,6 +178,9 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
         name:item.name,
         address:item.address,
         mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+        
       }
       })
 
@@ -231,6 +237,8 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
+      {header: 'Salesman', accessorKey:'salesmen'},
+      {header: 'BranchName', accessorKey:'branchname'},
     ],
     [],
   );
@@ -239,6 +247,8 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
+    {header: 'Salesman', accessorKey:'salesmen'},
+    {header: 'BranchName', accessorKey:'branchname'},
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },

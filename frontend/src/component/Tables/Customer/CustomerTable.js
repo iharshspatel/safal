@@ -217,13 +217,22 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
 
   useEffect(() => {
     fetchCustomers();
+    fetchFilteredCustomers(selectedSalesman,selectedBranch);
     fetchBranches();
     fetchSalesmen();
   }, [refresh]);
+
+  useEffect(()=>{
+    fetchFilteredCustomers(selectedSalesman,selectedBranch)
+    console.log(`SET FILTERED DATA AGAIN`)
+  },[originalData]);
   
-  const handleCallbackCreate = (childData) => {
+  const handleCallbackCreate = async (childData) => {
     toast.success("Customer edited");
     // fetchCustomers();
+    const { data } = await axios.get("/api/v1/customer/getall");
+    setOriginalData( modifyData(data.customers));
+    console.log(`FETCH ALL THE CUSTOMERS`)
   }
 
   const getCustomerData = (mobileno) => {
