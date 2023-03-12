@@ -190,9 +190,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
 
 
   useEffect(() => {
-
     fetchBranches();
-
     fetchArchitect();
     fetchSalesmen();
   }, [refresh]);
@@ -224,12 +222,20 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
       padding: 0
     })
   };
-  const handleCallbackCreate = (childData) => {
+  const handleCallbackCreate = async(childData) => {
 
     toast.success("Architect edited");
+    const { data } = await axios.get("/api/v1/architect/getall");
+    setOriginalData(data.architects);
     // fetchArchitect();
     window.scrollTo(0, 0)
   }
+
+  useEffect(()=>{
+    fetchFilteredArchitects(selectedSalesman,selectedBranch)
+    console.log(`SET FILTERED DATA AGAIN`)
+  },[orginalData]);
+
   const columns = useMemo(
     () => [
       { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },

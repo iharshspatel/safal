@@ -266,9 +266,16 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     fetchSalesmen();
 
   }, [refresh]);
-  const handleCallbackCreate = (childData) => {
+
+  useEffect(() => {
+    fetchFilteredMistry(selectedSalesman, selectedBranch);
+  }, [originalData]);
+  
+  const handleCallbackCreate = async(childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Mistry edited");
+    const { data } = await axios.get("/api/v1/mistry/getall");
+    setOriginalData(data.mistries);
     // fetchMistry();
   }
 
