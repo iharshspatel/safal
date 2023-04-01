@@ -155,13 +155,19 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     let filteredData = orginalData.filter((item)=>{
       let isBranch = false;
       let isSalesman = false;
-      
+      if(item.branches.length === 0 && branch===null){
+        isBranch = true;
+      }
+
+      if(item.salesmen.length === 0 && salesman===null){
+        isSalesman = true;
+      }
       item.branches.forEach((branchObject)=>{
-        if(Object.values(branchObject).includes(branch) || branch===null){
+        if(Object.values(branchObject).includes(branch) || branch===null || branch===""){
         isBranch = true;
       }})
       item.salesmen.forEach((salesmanObj)=>{
-        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null || salesman===""){
           isSalesman = true;
         }})
 
@@ -183,7 +189,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
         
       }
       })
-
+    console.log(data.length, "<++++++++++THIS IS THE LENGTH");
     setArchitects(data);
     setTableData(data);  
   }

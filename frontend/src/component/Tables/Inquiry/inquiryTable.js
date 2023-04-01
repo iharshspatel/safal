@@ -203,6 +203,14 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
     let filteredData = originalData.filter((item)=>{
       let isBranch = false;
       let isSalesman = false;
+
+      if(item.branches.length === 0 && branch===null){
+        isBranch = true;
+      }
+
+      if(item.salesmen.length === 0 && salesman===null){
+        isSalesman = true;
+      }
       
       item.branches.forEach((branchObject)=>{
         if(Object.values(branchObject).includes(branch) || branch===null){
