@@ -15,7 +15,7 @@ import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const StatBox = ({ name, username }) => {
+const StatBox = ({ name, username, refresh }) => {
   //drawer
   const [open, setState] = useState(false);
   const toggleDrawer = (open) => (event) => {
@@ -33,6 +33,8 @@ const StatBox = ({ name, username }) => {
   const [totalcustomers, setTotalCustomer] = useState(0);
   const [totalPMC, setTotalPMC] = useState(0);
   const [totalHealth, setTotalHealth] = useState(0);
+  const [totaltasks, setTotalTask] = useState(0);
+
   const getStats = async () => {
     {
       let { data } = await axios.get("/api/v1/architect/totalarchitects");
@@ -70,19 +72,19 @@ const StatBox = ({ name, username }) => {
       setTotalPMC(pmclength);
     }
 
+    {
+      let { data } = await axios.get("/api/v1/task/totaltasks");
+      let { taskslength } = data
+      setTotalTask(taskslength);
+    }
+
     let { data } = await axios.get("/api/v1/customer/totalOrder");
     let { orderValue } = data
     setTotalHealth(orderValue);
-
-
-
-
-
-
   }
   useEffect(() => {
     getStats();
-  }, []);
+  }, [refresh]);
   return (
     <>
       <nav className={Styles.nav}>
@@ -99,6 +101,7 @@ const StatBox = ({ name, username }) => {
           {name === "Customer" && <p>Total Customer : {totalcustomers}</p>}
           {name === "Dealer" && <p>Total Customer : {totalcustomers}</p>}
           {name === "Branch" && <p>Total Branches : {totalbranches}</p>}
+          {name === "Task" && <p>Total Tasks : {totaltasks}</p>}
           {/* {username} */}
         </div>
       </nav>
@@ -155,6 +158,17 @@ const StatBox = ({ name, username }) => {
             <div className={Styles.subBox}>
               <p>Total Customers</p>
               <h1>{totalcustomers}</h1>
+            </div>
+
+            <div className={Styles.imgContainer}>
+              <img src={CustomerStat} alt="Architect" />
+            </div>
+          </div>}
+
+          {name === "Task" && <div className={Styles.Box}>
+            <div className={Styles.subBox}>
+              <p>Total Tasks</p>
+              <h1>{totaltasks}</h1>
             </div>
 
             <div className={Styles.imgContainer}>

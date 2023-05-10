@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from './CustomerTable.module.css'
 import Add from '../../../Assets/Add.svg'
@@ -40,8 +40,8 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  let [selectedBranch,setSelectedBranch] = useState(null);
-  let [selectedSalesman,setSelectedSalesman] = useState(null);
+  let [selectedBranch, setSelectedBranch] = useState(null);
+  let [selectedSalesman, setSelectedSalesman] = useState(null);
 
   const modifyData = (data) => {
     let datass1 = data.map((d) => {
@@ -77,8 +77,8 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   }
 
   const delteHandler = async (mobileno) => {
-    
-    if(window.confirm("Are you sure ?")){
+
+    if (window.confirm("Are you sure ?")) {
       const data = await axios.delete(`/api/v1/customer/delete/${mobileno}`);
       fetchCustomers();
     }
@@ -96,41 +96,41 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     console.log(startDate, endDate);
     let data = customers.filter((item) => {
       console.log(item.date)
-      if(item.date){    
-      let date = item.date;
-      date = new Date(date);
-      if (date < endDate && date > startDate) {
-        return true
+      if (item.date) {
+        let date = item.date;
+        date = new Date(date);
+        if (date < endDate && date > startDate) {
+          return true
+        }
+        else {
+          return false
+        }
       }
       else {
         return false
       }
-    }
-    else{
-      return false
-    }
 
 
-  })
+    })
     setCustomers(data);
     setTableData(data)
   }
- 
+
   const fetchCustomers = async () => {
     const { data } = await axios.get("/api/v1/customer/getall");
     console.log(data);
     let modifiedData = modifyData(data.customers);
-    const newCustomers = modifiedData.map((item)=>{
+    const newCustomers = modifiedData.map((item) => {
       let formateddate = item.date ? item.date : ' ';
 
       return {
-        date:formateddate,
-        name:item.name,
-        address:item.address,
-        mobileno:item.mobileno,
+        date: formateddate,
+        name: item.name,
+        address: item.address,
+        mobileno: item.mobileno,
         // tag:item.tag,
-        mistry: item.mistryName && item.mistryNumber ? item.mistryName + ' - ' + item.mistryNumber: '',
-        architect : item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber :  ''
+        mistry: item.mistryName && item.mistryNumber ? item.mistryName + ' - ' + item.mistryNumber : '',
+        architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : ''
       }
     });
     setOriginalData(modifiedData);
@@ -154,50 +154,52 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     return new Promise(resolve => setTimeout(resolve, time));
   };
 
-  const fetchFilteredCustomers =(salesman, branch) => {
+  const fetchFilteredCustomers = (salesman, branch) => {
 
-    let filteredData = originalData.filter((item)=>{
+    let filteredData = originalData.filter((item) => {
       let isBranch = false;
       let isSalesman = false;
 
-      if(item.branches.length === 0 && branch===null){
+      if (item.branches.length === 0 && branch === null) {
         isBranch = true;
       }
 
-      if(item.salesmen.length === 0 && salesman===null){
+      if (item.salesmen.length === 0 && salesman === null) {
         isSalesman = true;
       }
-      
-      item.branches.forEach((branchObject)=>{
-        if(Object.values(branchObject).includes(branch) || branch===null){
-        isBranch = true;
-      }})
-      item.salesmen.forEach((salesmanObj)=>{
-        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+
+      item.branches.forEach((branchObject) => {
+        if (Object.values(branchObject).includes(branch) || branch === null) {
+          isBranch = true;
+        }
+      })
+      item.salesmen.forEach((salesmanObj) => {
+        if (Object.values(salesmanObj).includes(salesman) || salesman === null) {
           isSalesman = true;
-        }})
+        }
+      })
 
       console.log(isBranch, isSalesman)
-      if(isSalesman && isBranch){
+      if (isSalesman && isBranch) {
         return true
       }
     })
     console.log(filteredData);
-    let data = filteredData.map((item)=>{
+    let data = filteredData.map((item) => {
       let formateddate = item.date ? item.date : ' ';
-        return {
-          date:formateddate,
-          name:item.name,
-          address:item.address,
-          mobileno:item.mobileno,
-          // tag:item.tag
-           mistry: item.mistryName && item.mistryNumber ? item.mistryName + ' - ' + item.mistryNumber: '',
-        architect : item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber :  ''
-        }
-      })
+      return {
+        date: formateddate,
+        name: item.name,
+        address: item.address,
+        mobileno: item.mobileno,
+        // tag:item.tag
+        mistry: item.mistryName && item.mistryNumber ? item.mistryName + ' - ' + item.mistryNumber : '',
+        architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : ''
+      }
+    })
 
     setCustomers(modifyData(data));
-    setTableData(modifyData(data));  
+    setTableData(modifyData(data));
   }
   const handlebranch = (selected) => {
     setSelectedBranch(selected.value);
@@ -225,21 +227,21 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
 
   useEffect(() => {
     fetchCustomers();
-    fetchFilteredCustomers(selectedSalesman,selectedBranch);
+    fetchFilteredCustomers(selectedSalesman, selectedBranch);
     fetchBranches();
     fetchSalesmen();
   }, [refresh]);
 
-  useEffect(()=>{
-    fetchFilteredCustomers(selectedSalesman,selectedBranch)
+  useEffect(() => {
+    fetchFilteredCustomers(selectedSalesman, selectedBranch)
     console.log(`SET FILTERED DATA AGAIN`)
-  },[originalData]);
-  
+  }, [originalData]);
+
   const handleCallbackCreate = async (childData) => {
     toast.success("Customer edited");
     // fetchCustomers();
     const { data } = await axios.get("/api/v1/customer/getall");
-    setOriginalData( modifyData(data.customers));
+    setOriginalData(modifyData(data.customers));
     console.log(`FETCH ALL THE CUSTOMERS`)
   }
 
@@ -280,15 +282,17 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
   };
   const columns = useMemo(
     () => [
-      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },
-      Cell: ({cell})=>(dateformater(cell.getValue())) },
+      {
+        header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },
+        Cell: ({ cell }) => (dateformater(cell.getValue()))
+      },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
       // { header: 'Tag', accessorKey:'tag'},
-      { header: 'Mistry Name', accessorKey:'mistry'},
-      { header: 'Architect Name', accessorKey:'architect'},
-      
+      { header: 'Mistry Name', accessorKey: 'mistry' },
+      { header: 'Architect Name', accessorKey: 'architect' },
+
     ],
     [],
   );
@@ -298,8 +302,8 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
     // { header: 'Tag', accessorKey:'tag'},
-    { header: 'Mistry Name', accessorKey:'mistry'},
-    { header: 'Architect Name', accessorKey:'architect'},
+    { header: 'Mistry Name', accessorKey: 'mistry' },
+    { header: 'Architect Name', accessorKey: 'architect' },
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },
