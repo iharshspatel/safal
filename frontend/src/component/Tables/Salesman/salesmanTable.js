@@ -1,4 +1,4 @@
-import React, { useEffect, useState ,useMemo} from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from '../Dealer/DealerTable.module.css'
 import axios from 'axios'
@@ -28,8 +28,8 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
-  const [Salesman,setSalesman] = useState([]);
+const SalesmanTable = ({ modalHandler, refresh, isOpen }) => {
+  const [Salesman, setSalesman] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [branches, setBranches] = useState([]);
@@ -72,7 +72,7 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
 
   const delteHandler = async (mobileno) => {
     // eslint-disable-next-line no-restricted-globals
-    if(window.confirm("Are you sure ?")){
+    if (window.confirm("Are you sure ?")) {
       const data = await axios.delete(`/api/v1/salesman/delete/${mobileno}`);
       fetchSalesman();
     }
@@ -83,12 +83,12 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
     console.log(data);
     setSalesman(data.salesmans);
     setOriginalData(data.salesmans);
-    let data1 = data.salesmans.map((item)=>{
-     return {
-        date:item.date,
-        name:item.name,
-        address:item.address,
-        mobileno:item.mobileno
+    let data1 = data.salesmans.map((item) => {
+      return {
+        date: item.date,
+        name: item.name,
+        address: item.address,
+        mobileno: item.mobileno
       }
     })
 
@@ -154,73 +154,73 @@ const SalesmanTable = ({ modalHandler ,refresh,isOpen}) => {
 
   const customStyles = {
     control: base => ({
-        ...base,
-        minHeight: 55
+      ...base,
+      minHeight: 55
     }),
     dropdownIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     clearIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     multiValue: base => ({
-        ...base,
-        // backgroundColor: variables.colorPrimaryLighter
+      ...base,
+      // backgroundColor: variables.colorPrimaryLighter
     }),
     valueContainer: base => ({
-        ...base,
-        padding: '0px 6px'
+      ...base,
+      padding: '0px 6px'
     }),
     input: base => ({
-        ...base,
-        margin: 0,
-        padding: 0
+      ...base,
+      margin: 0,
+      padding: 0
     })
-};
-const columns = useMemo(
-  () => [
+  };
+  const columns = useMemo(
+    () => [
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+      { header: 'Name', accessorKey: 'name' },
+      { header: 'Address', accessorKey: 'address' },
+      { header: 'Mobile Number', accessorKey: 'mobileno' },
+    ],
+    [],
+  );
+  const ops = [
     { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
-  ],
-  [],
-);
-const ops = [
-  { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
-  { header: 'Name', accessorKey: 'name' },
-  { header: 'Address', accessorKey: 'address' },
-  { header: 'Mobile Number', accessorKey: 'mobileno' },
-  // { header: 'Email', accessorKey: 'Email', },
-  // { header: 'Company_Name', accessorKey: 'companyName', },
-  // { header: 'Birth_Date', accessorKey: 'birthdate', },
-  // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
-  // { header: 'Remarks', accessorKey: 'remarks', },
-  // { header: 'Bank_Name', accessorKey: 'bankname', },
-  // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
-  // { header: 'Branch_Name', accessorKey: 'branchname', },
-  // { header: 'Adhar_Card', accessorKey: 'adharcard', },
-  // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
-]
-const csvOptions = {
-  fieldSeparator: ',',
-  quoteStrings: '"',
-  decimalSeparator: '.',
-  showLabels: true,
-  useBom: true,
-  useKeysAsHeaders: false,
-  headers: ops.map((c) => c.header),
-};
-const csvExporter = new ExportToCsv(csvOptions);
-const handleExportData = () => {
+    // { header: 'Email', accessorKey: 'Email', },
+    // { header: 'Company_Name', accessorKey: 'companyName', },
+    // { header: 'Birth_Date', accessorKey: 'birthdate', },
+    // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+    // { header: 'Remarks', accessorKey: 'remarks', },
+    // { header: 'Bank_Name', accessorKey: 'bankname', },
+    // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+    // { header: 'Branch_Name', accessorKey: 'branchname', },
+    // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+    // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+  ]
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: ops.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+  const handleExportData = () => {
 
-  csvExporter.generateCsv(tabledata);
-};
-const handleExportRows = (rows) => {
-  csvExporter.generateCsv(rows.map((row) => row.original));
-};
+    csvExporter.generateCsv(tabledata);
+  };
+  const handleExportRows = (rows) => {
+    csvExporter.generateCsv(rows.map((row) => row.original));
+  };
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -235,7 +235,7 @@ const handleExportRows = (rows) => {
           </div>
         </div>
 
-        
+
 
         {Salesman &&
           <MaterialReactTable
@@ -279,7 +279,7 @@ const handleExportRows = (rows) => {
                       behavior: "smooth"
                     });
 
-                   getSalesManData(row.original.mobileno)
+                    getSalesManData(row.original.mobileno)
                     setEditModal(true);
                   }}>
                     <Edit />

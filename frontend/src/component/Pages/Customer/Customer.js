@@ -18,12 +18,12 @@ const Customer = () => {
     if (!isAuthenticated) {
       navigate('/signin')
     }
- 
+
   }, [isAuthenticated]);
 
   const modalHandler = () => {
     setIsOpen(!isOpen);
-    
+
   }
   const [refresh, doRefresh] = useState(true);
 
@@ -49,8 +49,8 @@ const Customer = () => {
           pauseOnHover
         />
         <div className={Styles.rightcontainer}>
-          <StatBox name="Customer" username={user.name}/>
-          <CustomerTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen}/>
+          <StatBox name="Customer" username={user.name} />
+          <CustomerTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen} />
           {
             isOpen ? <Modal setIsOpen={setIsOpen}>
               <AnimatePresence>

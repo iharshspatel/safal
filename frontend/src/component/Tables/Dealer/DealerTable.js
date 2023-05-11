@@ -29,7 +29,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 import ReactSelect from 'react-select';
 
-const DealerTable = ({ modalHandler, refresh ,isOpen}) => {
+const DealerTable = ({ modalHandler, refresh, isOpen }) => {
   const [dealers, setDealers] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -105,7 +105,7 @@ const DealerTable = ({ modalHandler, refresh ,isOpen}) => {
   }
 
   const delteHandler = async (id) => {
-    if(window.confirm("Are you sure ?")){
+    if (window.confirm("Are you sure ?")) {
       const data = await axios.delete(`/api/v1/dealer/delete/${id}`);
       fetchDealer();
     }

@@ -112,16 +112,16 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
       salesPerson: formData.salesPerson,
       mistryTag: formData.mistryTag,
       mistryName: formData.mistryName,
-      mistryNumber:formData.mistryNumber,
+      mistryNumber: formData.mistryNumber,
       architectTag: formData.architectTag,
       architectName: formData.architectName,
-      architectNumber:formData.architectNumber,
+      architectNumber: formData.architectNumber,
       dealerTag: formData.dealerTag,
       dealerName: formData.dealerName,
-      dealerNumber:formData.dealerNumber,
+      dealerNumber: formData.dealerNumber,
       pmcTag: formData.pmcTag,
       pmcName: formData.pmcName,
-      pmcNumber:formData.pmcNumber,
+      pmcNumber: formData.pmcNumber,
       branches: selectedBranch,
       salesmen: selectedSalesman
 
@@ -182,7 +182,7 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
   }
 
   const MistryFormHandler = (e) => {
-    console.log(e.label,e.label.split('-'));
+    console.log(e.label, e.label.split('-'));
     setFormData({ ...formData, mistryTag: e.value, mistryName: e.label.split('-')[0], mistryNumber: e.label.split('-')[1] })
   }
 
