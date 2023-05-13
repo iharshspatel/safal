@@ -78,12 +78,13 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
     }
 
     const submitDateRangeHandler = (e) => {
-        let data = customers.filter((item) => {
+        console.log(startDate, endDate);
+        let filteredData = originalData.filter((item) => {
             console.log(item.date)
             if (item.date) {
                 let date = item.date;
                 date = new Date(date);
-                if (date < endDate && date > startDate) {
+                if (date <= endDate && date >= startDate) {
                     return true
                 }
                 else {
@@ -93,11 +94,21 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
             else {
                 return false
             }
-
-
         })
-        setCustomers(data);
-        setTableData(data)
+
+        let data = filteredData.map((item) => {
+            let formateddate = item.date ? item.date : ' ';
+            return {
+                date: formateddate,
+                tag: item.tag,
+                remarks: item.remarks,
+                salesman: item.salesmanId.name,
+                _id: item._id
+            }
+        })
+
+        setCustomers(modifyData(data));
+        setTableData(modifyData(data));
     }
 
     const fetchCustomers = async () => {
