@@ -12,18 +12,18 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         salesmen: data.salesmen,
         mistryTag: data.mistryTag,
         architectTag: data.architectTag,
-        dealerTag: data.dealerTag,
-        pmcTag: data.pmcTag,
+        // dealerTag: data.dealerTag,
+        // pmcTag: data.pmcTag,
     }
     const [formData, setFormData] = useState(initialState)
     const [architects, setArchitects] = useState([]);
     const [defalutArchitect, setDefaultArchitect] = useState(() => data.architectTag ? { value: data.architectTag, label: `${data.architectTag.name}-${data.architectTag.mobileno}` } : "");
     const [defaultMistry, setDefaultMistry] = useState(() => data.mistryTag ? { value: data.mistryTag, label: `${data.mistryTag.name}-${data.mistryTag.mobileno}` } : "");
-    const [defaultDealer, setDefaultDealer] = useState(() => data.dealerTag ? { value: data.dealerTag, label: `${data.dealerTag.name}-${data.dealerTag.mobileno}` } : "");
-    const [deafultPMC, setDefaultPMC] = useState(() => data.pmcTag ? { value: data.pmcTag, label: `${data.pmcTag.name}-${data.pmcTag.mobileno}` } : "");
+    // const [defaultDealer, setDefaultDealer] = useState(() => data.dealerTag ? { value: data.dealerTag, label: `${data.dealerTag.name}-${data.dealerTag.mobileno}` } : "");
+    // const [deafultPMC, setDefaultPMC] = useState(() => data.pmcTag ? { value: data.pmcTag, label: `${data.pmcTag.name}-${data.pmcTag.mobileno}` } : "");
     const [Mistries, setMistries] = useState([]);
-    const [Dealers, setDealers] = useState([]);
-    const [PMCs, setPMCs] = useState([]);
+    // const [Dealers, setDealers] = useState([]);
+    // const [PMCs, setPMCs] = useState([]);
     const [defaultSalesman, setDefaultSalesman] = useState(() => data.salesmanId ? { value: data.salesmanId._id, label: `${data.salesmanId.name}` } : "");
 
     const getAllsalesmen = async () => {
@@ -56,8 +56,8 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             salesmanId: defaultSalesman.value,
             mistryTag: formData.mistryTag,
             architectTag: formData.architectTag,
-            dealerTag: formData.dealerTag,
-            pmcTag: formData.pmcTag,
+            // dealerTag: formData.dealerTag,
+            // pmcTag: formData.pmcTag,
         }
 
         try {
@@ -82,23 +82,23 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         setMistries(mistries);
     }
 
-    const getAllDealer = async () => {
-        const { data } = await axios.get("/api/v1/dealer/getall");
-        const dealers = data.dealers.map((dealer) => ({ value: dealer._id, label: `${dealer.name}-${dealer.mobileno}` }))
-        setDealers(dealers);
-    }
+    // const getAllDealer = async () => {
+    //     const { data } = await axios.get("/api/v1/dealer/getall");
+    //     const dealers = data.dealers.map((dealer) => ({ value: dealer._id, label: `${dealer.name}-${dealer.mobileno}` }))
+    //     setDealers(dealers);
+    // }
 
-    const getAllPMC = async () => {
-        const { data } = await axios.get("/api/v1/pmc/getall");
-        const pmcs = data.pmcs.map((pmc) => ({ value: pmc._id, label: `${pmc.name}-${pmc.mobileno}` }))
-        setPMCs(pmcs);
-    }
+    // const getAllPMC = async () => {
+    //     const { data } = await axios.get("/api/v1/pmc/getall");
+    //     const pmcs = data.pmcs.map((pmc) => ({ value: pmc._id, label: `${pmc.name}-${pmc.mobileno}` }))
+    //     setPMCs(pmcs);
+    // }
 
     useEffect(() => {
         getAllArchitects();
-        getAllDealer();
+        // getAllDealer();
         getAllMistry();
-        getAllPMC();
+        // getAllPMC();
     }, []);
 
     const ArchitectFormHandler = (e) => {
@@ -109,13 +109,13 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         setFormData({ ...formData, mistryTag: e.value, mistryName: e.label.split('-')[0], mistryNumber: e.label.split('-')[1] })
     }
 
-    const DealerFormHandler = (e) => {
-        setFormData({ ...formData, dealerTag: e.value, dealerName: e.label.split('-')[0], dealerNumber: e.label.split('-')[1] })
-    }
+    // const DealerFormHandler = (e) => {
+    //     setFormData({ ...formData, dealerTag: e.value, dealerName: e.label.split('-')[0], dealerNumber: e.label.split('-')[1] })
+    // }
 
-    const PMCFormHandler = (e) => {
-        setFormData({ ...formData, pmcTag: e.value, pmcName: e.label.split('-')[0], pmcNumber: e.label.split('-')[1] })
-    }
+    // const PMCFormHandler = (e) => {
+    //     setFormData({ ...formData, pmcTag: e.value, pmcName: e.label.split('-')[0], pmcNumber: e.label.split('-')[1] })
+    // }
 
     useEffect(() => {
         getAllsalesmen()
@@ -159,14 +159,14 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
                     <Select defaultValue={defalutArchitect} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
                 </div>
 
-                <div className={Styles.bankDetails2}>
+                {/* <div className={Styles.bankDetails2}>
 
                     <label htmlFor='name'>Dealer Tag</label>
                     <Select defaultValue={defaultDealer} onChange={(e) => DealerFormHandler(e)} options={Dealers} />
 
                     <label htmlFor='name'>PMC Tag</label>
                     <Select defaultValue={deafultPMC} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
-                </div>
+                </div> */}
             </div>
             <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
         </div>
