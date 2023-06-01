@@ -78,14 +78,18 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
     }
 
     const submitDateRangeHandler = (e) => {
-        console.log(startDate, endDate);
+        console.log(selectedSalesman);
         let filteredData = originalData.filter((item) => {
-            console.log(item.date)
             if (item.date) {
                 let date = item.date;
                 date = new Date(date);
                 if (date <= endDate && date >= startDate) {
-                    return true
+                    if (selectedSalesman !== null) {
+                        if (item.salesmanId.name === selectedSalesman.name) return true
+                    }
+                    else {
+                        return true
+                    }
                 }
                 else {
                     return false
@@ -103,7 +107,9 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                 tag: item.tag,
                 remarks: item.remarks,
                 salesman: item.salesmanId.name,
-                _id: item._id
+                _id: item._id,
+                architect: item.architectTag ? item.architectTag.name + ' - ' + item.architectTag.mobileno : '',
+                mistry: item.mistryTag ? item.mistryTag.name + ' - ' + item.mistryTag.mobileno : '',
             }
         })
 
@@ -122,7 +128,10 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                 tag: item.tag,
                 remarks: item.remarks,
                 salesman: item.salesmanId.name,
-                _id: item._id
+                _id: item._id,
+                architect: item.architectTag ? item.architectTag.name + ' - ' + item.architectTag.mobileno : '',
+                mistry: item.mistryTag ? item.mistryTag.name + ' - ' + item.mistryTag.mobileno : '',
+                // architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : ''
             }
         });
         setOriginalData(modifiedData);
@@ -143,7 +152,9 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                 tag: item.tag,
                 remarks: item.remarks,
                 salesman: item.salesmanId.name,
-                _id: item._id
+                _id: item._id,
+                architect: item.architectTag ? item.architectTag.name + ' - ' + item.architectTag.mobileno : '',
+                mistry: item.mistryTag ? item.mistryTag.name + ' - ' + item.mistryTag.mobileno : '',
             }
         })
 
@@ -165,7 +176,8 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
         setSalesman(salesmen);
     }
     const handlesalesman = (selected) => {
-        selectedSalesman = selected;
+        setSelectedSalesman(selected);
+        // selectedSalesman = selected;
         fetchFilteredCustomers(selected.value);
     }
 
@@ -184,6 +196,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
         toast.success("Task edited");
         const { data } = await axios.get("/api/v1/task/totaltasks");
         setOriginalData(modifyData(data.tasks));
+        doRefresh(!refresh)
     }
 
     const getCustomerData = (id) => {
@@ -228,16 +241,20 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                 Cell: ({ cell }) => (dateformater(cell.getValue()))
             },
             { header: 'Remarks', accessorKey: 'remarks', },
-            { header: 'Tag', accessorKey: 'tag' },
+            // { header: 'Tag', accessorKey: 'tag' },
             { header: 'Salesman', accessorKey: 'salesman' },
+            { header: 'Architect', accessorKey: 'architect' },
+            { header: 'Mistry', accessorKey: 'mistry' }
         ],
         [],
     );
     const ops = [
         { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
         { header: 'Remarks', accessorKey: 'remarks', },
-        { header: 'Tag', accessorKey: 'tag' },
+        // { header: 'Tag', accessorKey: 'tag' },
         { header: 'Salesman', accessorKey: 'salesman' },
+        { header: 'Architect', accessorKey: 'architect' },
+        { header: 'Mistry', accessorKey: 'mistry' }
     ]
     const csvOptions = {
         fieldSeparator: ',',
