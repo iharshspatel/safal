@@ -24,10 +24,11 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
     const [originalData, setOriginalData] = useState([]);
     const [editModal, setEditModal] = useState(false);
     const [editModalData, setEditModalData] = useState({});
-    const [startDate, setStartDate] = useState(new Date('2022-08-01'));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(new Date('2020-08-01'));
+    const [endDate, setEndDate] = useState(new Date('2025-01-01'));
     const [isLoading, setIsLoading] = useState(false);
     let [selectedSalesman, setSelectedSalesman] = useState(null);
+    const [edited, setEdited] = useState(false)
 
     const modifyData = (data) => {
         let datass1 = data.map((d) => {
@@ -57,7 +58,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
             }
             return d
         })
-        console.log(datass1)
+        // console.log(datass1)
         return datass1
     }
 
@@ -78,7 +79,8 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
     }
 
     const submitDateRangeHandler = (e) => {
-        console.log(selectedSalesman);
+        // console.log("OK");
+        // console.log(originalData);
         let filteredData = originalData.filter((item) => {
             if (item.date) {
                 let date = item.date;
@@ -122,7 +124,6 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
         let modifiedData = modifyData(data.tasks);
         const newCustomers = modifiedData.map((item) => {
             let formateddate = item.date ? item.date : ' ';
-
             return {
                 date: formateddate,
                 tag: item.tag,
@@ -131,7 +132,6 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                 _id: item._id,
                 architect: item.architectTag ? item.architectTag.name + ' - ' + item.architectTag.mobileno : '',
                 mistry: item.mistryTag ? item.mistryTag.name + ' - ' + item.mistryTag.mobileno : '',
-                // architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : ''
             }
         });
         setOriginalData(modifiedData);
@@ -192,17 +192,38 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
         fetchFilteredCustomers(selectedSalesman)
     }, [originalData]);
 
-    const handleCallbackCreate = async (childData) => {
-        toast.success("Task edited");
+    const handleCallbackCreate = async () => {
         const { data } = await axios.get("/api/v1/task/totaltasks");
-        setOriginalData(modifyData(data.tasks));
-        doRefresh(!refresh)
+        let modifiedData = modifyData(data.tasks);
+        const newCustomers = modifiedData.map((item) => {
+            let formateddate = item.date ? item.date : ' ';
+            return {
+                date: formateddate,
+                tag: item.tag,
+                remarks: item.remarks,
+                salesman: item.salesmanId.name,
+                _id: item._id,
+                architect: item.architectTag ? item.architectTag.name + ' - ' + item.architectTag.mobileno : '',
+                mistry: item.mistryTag ? item.mistryTag.name + ' - ' + item.mistryTag.mobileno : '',
+            }
+        });
+        setOriginalData(modifiedData);
+        setCustomers(newCustomers);
+        setTableData(newCustomers);
+
+        toast.success("Task edited");
+        setEdited(!edited);
     }
 
+    useEffect(() => {
+        submitDateRangeHandler()
+    }, [edited])
+
+
     const getCustomerData = (id) => {
-        console.log(originalData);
+        // console.log(originalData);
         let customer = originalData.filter((item) => item._id === id);
-        console.log(customer);
+        // console.log(customer);
         setEditModalData(customer[0]);
         setEditModal(true);
     }
@@ -370,7 +391,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                                             behavior: "smooth"
                                         });
                                         delteHandler(row.original._id);
-                                        console.log(`delete `, row)
+                                        // console.log(`delete `, row)
                                     }}>
                                         <Delete />
                                     </IconButton>
