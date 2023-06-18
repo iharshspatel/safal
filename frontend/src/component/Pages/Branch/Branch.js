@@ -47,7 +47,7 @@ const Branch = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="Branch" username={user.name}/>
-    <BranchTable modalHandler={modalHandler} refresh={refresh}/>
+    <BranchTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

@@ -112,12 +112,16 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
       salesPerson: formData.salesPerson,
       mistryTag: formData.mistryTag,
       mistryName: formData.mistryName,
+      mistryNumber: formData.mistryNumber,
       architectTag: formData.architectTag,
       architectName: formData.architectName,
+      architectNumber: formData.architectNumber,
       dealerTag: formData.dealerTag,
       dealerName: formData.dealerName,
+      dealerNumber: formData.dealerNumber,
       pmcTag: formData.pmcTag,
       pmcName: formData.pmcName,
+      pmcNumber: formData.pmcNumber,
       branches: selectedBranch,
       salesmen: selectedSalesman
 
@@ -131,6 +135,7 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
       setIsOpen(false);
     }
     catch (e) {
+      console.log("<++++++failed")
       console.log(e.response.data.message)
       setIsDisabled(false);
     }
@@ -145,7 +150,9 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
 
   const getAllMistry = async () => {
     const { data } = await axios.get("/api/v1/mistry/getall");
+
     const mistries = data.mistries.map((mistry) => ({ value: mistry._id, label: `${mistry.name}-${mistry.mobileno}` }))
+    console.log(mistries);
     setMistries(mistries);
   }
 
@@ -175,6 +182,7 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
   }
 
   const MistryFormHandler = (e) => {
+    console.log(e.label, e.label.split('-'));
     setFormData({ ...formData, mistryTag: e.value, mistryName: e.label.split('-')[0], mistryNumber: e.label.split('-')[1] })
   }
 
@@ -244,8 +252,8 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
           <label htmlFor='name'>Annivarsary</label>
           <input className={Styles.inputTag} type="date" name="marriagedate" value={formData.marriagedate} onChange={(e) => formHandler(e)} placeholder='Annivarsary' />
 
-          <label htmlFor='name'>Sales Person</label>
-          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' />
+          {/* <label htmlFor='name'>Sales Person</label>
+          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
           <label>Branches</label>
           <ReactSelect lassName={Styles.inputTag}
             options={Branches}

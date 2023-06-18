@@ -13,6 +13,7 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   const [PMCs, setPMCs] = useState([]);
   const [Branches, setBranches] = useState([]);
   const [selectedBranch, setselectedBranch] = useState([]);
+  const [selectedRequirement, setSelectedRequirement] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
   const [Salesmen, setSalesmen] = useState([]);
   const [selectedSalesmen, setselectedSalesmen] = useState([]);
@@ -32,30 +33,82 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     date: "",
     followupdate: "",
     branches: [],
-    salesmen: []
+    salesmen: [],
+    remarks:""
   }
   // ["Plywood", "Laminate","Veneer","Other","Hardware"]
   const requirement = [
     {
+      requirement:"Plywood",
       value: "Plywood",
       label:"Plywood"
     },
     {
+      requirement:'Laminate',
       value: "Laminate",
       label:"Laminate"
     },
     {
+      requirement:'Veneer',
       value: "Veneer",
       label:"Veneer"
     },
     {
+      requirement:'Other',
       value: "Other",
       label:"Other"
     },
     {
+      requirement:'Hardware',
       value: "Hardware",
       label:"Hardware"
     },
+    {
+        requirement:'P',
+        value: "P",
+        label:"P"
+    },
+    {
+        requirement:'V',
+        value: "V",
+        label:"V"
+    },
+    {
+        requirement:'L',
+        value: "L",
+        label:"L"
+    },
+    {
+        requirement:'K',
+        value: "K",
+        label:"K"
+    },
+    {
+        requirement:'W',
+        value: "W",
+        label:"W"
+    },
+    {
+        requirement:'FD',
+        value: "FD",
+        label:"FD"
+    },
+    {
+        requirement:'WP',
+        value: "WP",
+        label:"WP"
+    },
+    {
+        requirement:'C',
+        value: "C",
+        label:"C"
+    },
+    {
+        requirement:'HI',
+        value: "HI",
+        label:"HI"
+    },
+
   ]
   const stage = [
     {
@@ -155,18 +208,26 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       mobileno: formData.mobileno,
       address: formData.address,
       date: formData.date,
-      followupdate: formData.fdate,
+      dealerTag:formData.dealerTag,
+      dealerNumber:formData.dealerNumber,
+      dealerName:formData.dealerName,
+      mistryTag: formData.mistryTag,
+      mistryName:formData.mistryName,
+      mistryNumber:formData.mistryNumber,
+      followupdate: formData.followupdate,
       architectTag: formData.architectTag,
       architectNumber: formData.architectNumber,
       architectName: formData.architectName,
       pmcTag: formData.pmcTag,
       pmcName: formData.pmcName,
       pmcNumber: formData.pmcNumber,
-      requirement: formData.requirement,
+      requirement: selectedRequirement,
       stage:formData.stage,
       branches: selectedBranch,
-      salesmen: selectedSalesmen
+      salesmen: selectedSalesmen,
+      remarks:formData.remarks
     }
+    console.log(data);
     try {
       const response = await axios.post("/api/v1/inquiry/create", data, { headers: { "Content-Type": "application/json" } });
       console.log(response);
@@ -189,6 +250,11 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     console.log(selected);
     setFormData({ ...formData, selectedBranch })
   };
+
+  const RequirementsChangeHandler = (selected) => {
+    setSelectedRequirement(selected);
+    setFormData({...formData, selectedRequirement})
+  }
   const ArchitectFormHandler = (e) => {
     setFormData({ ...formData, architectTag: e.value, architectName: e.label.split('-')[0], architectNumber: e.label.split('-')[1] })
   }
@@ -246,10 +312,10 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <input className={Styles.inputTag} name="address" value={formData.address} onChange={(e) => formHandler(e)} placeholder='Address' />
 
           <label htmlFor='ordervalue'>Order Value</label>
-          <input className={Styles.inputTag} name="orderValue" value={formData.orderValue} onChange={(e) => formHandler(e)} placeholder='Order Value' />
+          <input className={Styles.inputTag} name="orderValue" value={formData.orderValue} onChange={(e) => formHandler(e)} placeholder='Order Value' />*/}
 
           <label htmlFor='name'>Remarks</label>
-          <input className={Styles.inputTag} name="remarks" value={formData.remarks} onChange={(e) => formHandler(e)} placeholder='Remarks' /> */}
+          <input className={Styles.inputTag} name="remarks" value={formData.remarks} onChange={(e) => formHandler(e)} placeholder='Remarks' /> 
         </div>
 
         <div className={Styles.personalDetails2}>
@@ -266,7 +332,21 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           {/* <label htmlFor='name'>Sales Person</label>
           <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
           <label>Requirements</label>
-          <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} options={ requirement} />
+          {/* <Select selectedValue={formData.requirement} onChange={(e) => Requirehandler(e)} options={ requirement} /> */}
+          <ReactSelect className={Styles.inputTag}
+            options={requirement}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false} 
+            components={{
+              Option
+            }}
+            onChange={RequirementsChangeHandler}
+            allowSelectAll={true}
+            value={selectedRequirement}
+          />
+
+
           <label>Stage</label>
           <Select selectedValue={formData.stage} onChange={(e) => Stagehandler(e)} options={ stage} />
           <label>Branches</label>
@@ -301,8 +381,8 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       <div className={Styles.bankDetails}>
         <div className={Styles.bankDetails1}>
 
-          {/* <label htmlFor='name'>Mistry Tag</label>
-          <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> */}
+           <label htmlFor='name'>Mistry Tag</label>
+          <Select selectedValue={formData.mistryTag} onChange={(e) => MistryFormHandler(e)} options={Mistries} /> 
 
           <label htmlFor='name'>Architect Tag</label>
           <Select selectedValue={formData.architectTag} onChange={(e) => ArchitectFormHandler(e)} options={architects} />
@@ -310,8 +390,8 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
         <div className={Styles.bankDetails2}>
 
-          {/* <label htmlFor='name'>Dealer Tag</label>
-          <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} /> */}
+          <label htmlFor='name'>Dealer Tag</label>
+          <Select selectedValue={formData.dealerTag} onChange={(e) => DealerFormHandler(e)} options={Dealers} />
 
           <label htmlFor='name'>PMC Tag</label>
           <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />

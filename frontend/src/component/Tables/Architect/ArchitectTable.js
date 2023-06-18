@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from './ArchitectTable.module.css'
 import axios from 'axios'
@@ -9,17 +9,38 @@ import Modal from '../../Layout/Modal/Modal';
 import ArchitectEditForm from '../../Forms/ArchitectEditForm';
 import { toast, ToastContainer } from 'react-toastify';
 import Select from 'react-select'
-import TextField from '@mui/material/TextField';
-const ArchitecTable = ({ modalHandler, refresh }) => {
+import { dateformater } from '../Utils/util';
+import MaterialReactTable from 'material-react-table';
+import { ExportToCsv } from 'export-to-csv';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  Stack,
+  TextField,
+  Tooltip,
+} from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
-  const [tabledata, setTableData] = useState([])
+  const [tabledata, setTableData] = useState([]);
+  const [orginalData, setOriginalData] = useState([]);
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false);
+  let [selectedBranch,setSelectedBranch] = useState(null);
+  let [selectedSalesman,setSelectedSalesman] = useState(null);
+
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
   }
@@ -28,18 +49,15 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     setEndDate(new Date(e.target.value));
   }
 
-  const dateformater = (date) => {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-    return `${year}-${month}-${day}`
-  }
-
   const submitDateRangeHandler = (e) => {
     console.log(startDate, endDate);
+    console.log(architects)
     let data = architects.filter((item) => {
       let date = item.date;
       date = new Date(date);
+      if(!date){
+        return false;
+      }
       if (date < endDate && date > startDate) {
         return true
       }
@@ -50,15 +68,42 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     setTableData(data)
   }
 
-  const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/architect/delete/${id}`);
-    fetchArchitect();
+  const delteHandler = async (mobileno) => {
+
+    if(window.confirm("Are you sure ?")){
+      const data = await axios.delete(`/api/v1/architect/delete/${mobileno}`);
+      fetchArchitect();
+    }
   }
 
   const fetchArchitect = async () => {
     const { data } = await axios.get("/api/v1/architect/getall");
-    setArchitects(data.architects);
-    setTableData(data.architects);
+    console.log(data);
+    const newarchitects = data.architects.map((item)=>{
+      // console.log(item.date);
+      let formateddate = item.date ? (item.date) : new Date('01/01/1799');
+      console.log(formateddate);
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+      }
+    });
+    console.log(newarchitects, "<========================");
+    setOriginalData(data.architects);
+    setTableData(newarchitects);
+    setArchitects(newarchitects);
+  }
+
+  const getArchitectData = (mobileno) => {
+    alert(mobileno);
+    let architect = orginalData.filter((item) => item.mobileno === mobileno);
+    console.log(architect);
+    setEditModalData(architect[0]);
+    setEditModal(true);
   }
 
 
@@ -79,27 +124,12 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     return new Promise(resolve => setTimeout(resolve, time));
   };
 
-  const fetchArchitectsofBranch = async () => {
-    setIsLoading(true);
-    sleep(500);
-
-    console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/architects", selectedBranch, { headers: { "Content-Type": "application/json" } });
-
-    console.log(response);
-    const newarchitects = response.data.architects;
-
-    setTableData(newarchitects);
-    setIsLoading(false);
-  }
   const handlebranch = (selected) => {
     console.log(selected);
-
-    selectedBranch = selected;
-    fetchArchitectsofBranch();
+    setSelectedBranch(selected.value)
+    fetchFilteredArchitects(selectedSalesman, selected.value);
   }
   const [salesman, setSalesman] = useState([]);
-  let selectedSalesman = [];
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
 
@@ -113,30 +143,60 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
     ))
     setSalesman(salesmen);
   }
-  const fetchArchitectsofSalesman = async () => {
-    setIsLoading(true);
-    sleep(500);
 
-    // console.log(selectedSalesman);
-    const response = await axios.post("/api/v1/salesman/architects", selectedSalesman, { headers: { "Content-Type": "application/json" } });
-
-    // console.log(response);
-    const newarchitects = response.data.architects;
-
-    setTableData(newarchitects);
-    setIsLoading(false);
-  }
   const handlesalesman = (selected) => {
-    console.log(selected);
-
-    selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+    setSelectedSalesman(selected.value);
+    fetchFilteredArchitects(selected.value, selectedBranch);
   }
+
+  
+  const fetchFilteredArchitects =(salesman, branch) => {
+
+    let filteredData = orginalData.filter((item)=>{
+      let isBranch = false;
+      let isSalesman = false;
+      if(item.branches.length === 0 && branch===null){
+        isBranch = true;
+      }
+
+      if(item.salesmen.length === 0 && salesman===null){
+        isSalesman = true;
+      }
+      item.branches.forEach((branchObject)=>{
+        if(Object.values(branchObject).includes(branch) || branch===null || branch===""){
+        isBranch = true;
+      }})
+      item.salesmen.forEach((salesmanObj)=>{
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null || salesman===""){
+          isSalesman = true;
+        }})
+
+      console.log(isBranch, isSalesman)
+      if(isSalesman && isBranch){
+        return true
+      }
+    })
+    console.log(filteredData);
+    let data = filteredData.map((item)=>{
+      let formateddate = item.date ? item.date : '01/01/1799';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+        
+      }
+      })
+    console.log(data.length, "<++++++++++THIS IS THE LENGTH");
+    setArchitects(data);
+    setTableData(data);  
+  }
+
 
   useEffect(() => {
-
     fetchBranches();
-
     fetchArchitect();
     fetchSalesmen();
   }, [refresh]);
@@ -168,12 +228,67 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
       padding: 0
     })
   };
-  const handleCallbackCreate = (childData) => {
+  const handleCallbackCreate = async(childData) => {
 
     toast.success("Architect edited");
-    fetchArchitect();
+    const { data } = await axios.get("/api/v1/architect/getall");
+    setOriginalData(data.architects);
+    // fetchArchitect();
     window.scrollTo(0, 0)
   }
+
+  useEffect(()=>{
+    fetchFilteredArchitects(selectedSalesman,selectedBranch)
+    console.log(`SET FILTERED DATA AGAIN`)
+  },[orginalData]);
+
+  const columns = useMemo(
+    () => [
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },
+      Cell: ({cell})=>(dateformater(cell.getValue())) },
+      { header: 'Name', accessorKey: 'name' },
+      { header: 'Address', accessorKey: 'address' },
+      { header: 'Mobile Number', accessorKey: 'mobileno' },
+      {header: 'Salesman', accessorKey:'salesmen'},
+      {header: 'BranchName', accessorKey:'branchname'},
+    ],
+    [],
+  );
+  const ops = [
+    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, Cell: ({cell})=>(dateformater(cell.getValue())) },
+    { header: 'Name', accessorKey: 'name' },
+    { header: 'Address', accessorKey: 'address' },
+    { header: 'Mobile Number', accessorKey: 'mobileno' },
+    {header: 'Salesman', accessorKey:'salesmen'},
+    {header: 'BranchName', accessorKey:'branchname'},
+    // { header: 'Email', accessorKey: 'Email', },
+    // { header: 'Company_Name', accessorKey: 'companyName', },
+    // { header: 'Birth_Date', accessorKey: 'birthdate', },
+    // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+    // { header: 'Remarks', accessorKey: 'remarks', },
+    // { header: 'Bank_Name', accessorKey: 'bankname', },
+    // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+    // { header: 'Branch_Name', accessorKey: 'branchname', },
+    // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+    // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+  ]
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: ops.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+  const handleExportData = () => {
+
+    csvExporter.generateCsv(tabledata);
+  };
+  const handleExportRows = (rows) => {
+    csvExporter.generateCsv(rows.map((row) => row.original));
+  };
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -223,80 +338,101 @@ const ArchitecTable = ({ modalHandler, refresh }) => {
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>
+        {architects &&
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              'mrt-row-actions': {
+                muiTableHeadCellProps: {
+                  align: 'center',
+                },
 
-        {architects && <MaterialTable
-          isLoading={isLoading}
-          className={Styles.Table}
-          columns={[
-            { title: 'Date', field: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
-            { title: 'Name', field: 'name' },
-            { title: 'Email', field: 'Email', hidden: 'true' },
-            { title: 'Address', field: 'address' },
-            { title: 'Company Name', field: 'companyName', hidden: 'true' },
-            { title: 'Birth Date', field: 'birthdate', hidden: 'true' },
-            { title: 'Marriage Date', field: 'marriagedate', hidden: 'true' },
-            { title: 'Remarks', field: 'remarks', hidden: 'true' },
-            { title: 'Bank Name', field: 'bankname', hidden: 'true' },
-            { title: 'IFS Code', field: 'IFSCcode', hidden: 'true' },
-            { title: 'Branch Name', field: 'branchname', hidden: 'true' },
-            { title: 'Adhar Card', field: 'adharcard', hidden: 'true' },
-            { title: 'Pan Card', field: 'pancard', hidden: 'true' },
-          ]}
-          data={tabledata}
-          options={{
-            sorting: true,
-            headerStyle: {
-              zIndex: 0
-            },
-            showTitle: false,
-            actionsColumnIndex: -1,
-            filtering: true,
-            exportButton:true
-          }}
-          components={{
-            Container: props => <Paper {...props}
-              elevation={0}
-              style={{
-                padding: 20,
-                width: "100%",
-              }} />
-          }}
+                size: 120,
+              },
+            }}
 
-          actions={[
-            {
-              icon: 'edit',
-              tooltip: 'Edit',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                setEditModalData(rowData);
-                setEditModal(true);
-                console.log(`Edit `, rowData)
-              }
-            },
-            {
-              icon: 'delete',
-              tooltip: 'Delete',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                delteHandler(rowData._id);
-                console.log(`delete `, rowData)
-              }
+            muiTopToolbarProps={
+              ({ }) => ({
+                color: 'green',
+                sx: { display: 'block' },
+                zIndex: '0'
+              })
             }
-          ]}
-        />}
+            columns={columns}
+            data={tabledata}
+            enableEditing
+            enableRowNumbers
+            rowNumberMode='original'
+            enableTopToolbar={!editModal && !isOpen}
+
+            muiTablePaginationProps={{
+              rowsPerPageOptions: [5, 10],
+              showFirstLastPageButtons: true,
+            }}
+            enableGlobalFilter={true}
+            positionActionsColumn='last'
+            renderRowActions={({ row, table }) => (
+              <Box sx={{ display: 'flex', gap: '1rem' }}>
+                <Tooltip arrow placement="left" title="Edit">
+                  <IconButton onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+                    getArchitectData(row.original.mobileno)
+                    // setEditModalData(row.original)
+                    setEditModal(true);
+                  }}>
+                    <Edit />
+
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow placement="right" title="Delete">
+                  <IconButton color="error" onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+                    delteHandler(row.original.mobileno);
+                    console.log(`delete `, row)
+                  }}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+            renderTopToolbarCustomActions={({ table }) => (
+              <Box
+                sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+              >
+                <Button
+                  disabled={table.getPrePaginationRowModel().rows.length === 0}
+
+                  onClick={() =>
+                    handleExportRows(table.getPrePaginationRowModel().rows)
+                  }
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >Export All Rows</Button>
+                <Button
+                  // className={Styles.bu}
+                  color="primary"
+                  onClick={handleExportData}
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >
+                  Export All Data
+                </Button>
+              </Box>)}
+
+          />}
+
 
       </div>
 
       {
-        editModal ? <Modal><ArchitectEditForm modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null}
+        editModal ? <Modal ><ArchitectEditForm className={Styles.zi} modalHandler={() => { setEditModal(false) }} data={editModalData} setIsOpen={setEditModal} parentCallback={handleCallbackCreate} /></Modal> : null}
 
       <div className={Styles.filter}>
 

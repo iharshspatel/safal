@@ -47,7 +47,7 @@ const Mistry = () => {
         />
         <div className={Styles.rightcontainer}>
           <StatBox name="Mistry" username={user.name} />
-          <MistryTable modalHandler={modalHandler} refresh={refresh} />
+          <MistryTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen} />
           {
             isOpen ? <Modal setIsOpen={setIsOpen} >
               <AnimatePresence>

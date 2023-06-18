@@ -54,7 +54,7 @@ exports.deleteSalesman = catchAsyncErrors(async (req, res, next) => {
 
     let t = req.params.id;
 
-    const salesman = await Salesman.findByIdAndDelete(t);
+    const salesman = await Salesman.findOneAndDelete({mobileno:t});
 
     res.status(200).json({
         salesman,

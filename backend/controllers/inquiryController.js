@@ -17,7 +17,6 @@ const Inquiry = require("../models/inquiryModel")
 
 exports.createInquiry = catchAsyncErrors(async (req, res, next) => {
     const t = req.body;
-    // console.log(req.body);
 
     const inquiry = await Inquiry.create(t);
     // console.log(cust);/
@@ -62,7 +61,8 @@ exports.deleteInquiry = catchAsyncErrors(async (req, res, next) => {
 
     let t = req.params.id;
 
-    const inquiry = await Inquiry.findByIdAndDelete(t);
+    // const inquiry = await Inquiry.findByIdAndDelete(t);
+    const inquiry = await Inquiry.findOneAndDelete({mobileno:t});
 
     res.status(200).json({
         inquiry,

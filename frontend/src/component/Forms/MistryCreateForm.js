@@ -167,8 +167,8 @@ pauseOnHover
                     <label htmlFor='companyName'>Company Name</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.companyName} name="companyName" placeholder='Company Name' />
 
-                    <label htmlFor='salesMan'>Sales Man </label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Company Name' />
+                    {/* <label htmlFor='salesMan'>Sales Man </label>
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.salesMan} name="salesMan" placeholder='Company Name' /> */}
                     <label>Branches</label>
                     <ReactSelect lassName={Styles.inputTag}
                         options={Branches}

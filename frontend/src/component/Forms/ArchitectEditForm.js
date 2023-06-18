@@ -8,6 +8,7 @@ import Select from 'react-select'
 import { default as ReactSelect } from "react-select";
 
 const ArchitectEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
+    console.log(`data inside architect edit`, data);
     const [Branches, setBranches] = useState([]);
     const [selectedBranch, setselectedBranch] = useState(data.branches);
     const [Salesmen, setSalesmen] = useState([]);

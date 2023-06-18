@@ -14,10 +14,9 @@ const inquirySchema = new mongoose.Schema({
     address: String,
     date: Date,
     followupdate: Date,
-    requirement: {
-        type: String,
-        // enum: ["Plywood", "Veneer","Laminate",""]
-    },
+    requirement: [
+    {requirement:String}
+    ],
     stage:String,
     architectTag: {
         type: mongoose.Schema.Types.ObjectId,
@@ -29,15 +28,28 @@ const inquirySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "pmc"
     },
+    email:String,
     pmcName: String,
     pmcNumber: Number,
+    mistryTag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "architect"
+    },
+    mistryName: String,
+    mistryNumber: Number,
+    dealerTag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "architect"
+    },
+    dealerName: String,
+    dealerNumber: Number,
     branches: [
         { branchname: String }
     ],
-    salesmen: [{ name: String }]
+    salesmen: [{ name: String }],
+    remarks:String
 
 });
-
 
 
 module.exports = mongoose.model("Inquiry", inquirySchema)

@@ -63,7 +63,7 @@ exports.deleteArchitect = catchAsyncErrors(async(req, res, next)=>{
     
     let t = req.params.id;
 
-    const architect = await Architect.findByIdAndDelete(t);
+    const architect = await Architect.findOneAndDelete({mobileno:t});
 
     res.status(200).json({
         architect,

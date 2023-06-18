@@ -237,8 +237,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <label htmlFor='name'>Annivarsary</label>
           <input className={Styles.inputTag} type="date" name="marriagedate" value={formData.marriagedate} onChange={(e) => formHandler(e)} placeholder='Annivarsary' />
 
-          <label htmlFor='name'>Sales Person</label>
-          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' />
+          {/* <label htmlFor='name'>Sales Person</label>
+          <input className={Styles.inputTag} name="salesPerson" value={formData.salesPerson} onChange={(e) => formHandler(e)} placeholder='Sales Person' /> */}
           <label>Branches</label>
           <ReactSelect lassName={Styles.inputTag}
             options={Branches}
@@ -287,7 +287,8 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
         </div>
       </div>
-      <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
+      <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="submit">Submit</button>
+     
     </div>
   )
 }

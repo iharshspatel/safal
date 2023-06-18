@@ -4,6 +4,10 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.MuiToolbar-root{
+    z-index: 0 !important;
+}
 label{
     margin: 100px;
 }

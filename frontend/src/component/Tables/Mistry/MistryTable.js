@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from './MistryTable.module.css'
 import axios from 'axios'
@@ -11,16 +11,36 @@ import MistryEditForm from '../../Forms/MistryEditForm';
 import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
-
-const MistryTable = ({ modalHandler,refresh }) => {
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import MaterialReactTable from 'material-react-table';
+import { ExportToCsv } from 'export-to-csv';
+import { dateformater } from '../Utils/util';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  Stack,
+  // TextField,
+  Tooltip,
+} from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const [mistry, setMistry] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [tabledata, setTableData] = useState([])
+  const [originalData, setOriginalData] = useState([]);
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
   const [branches, setBranches] = useState([]);
-  let selectedBranch = [];
+  let [selectedBranch,setSelectedBranch] = useState(null);
+  let [selectedSalesman,setSelectedSalesman] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
@@ -30,13 +50,52 @@ const MistryTable = ({ modalHandler,refresh }) => {
     setEndDate(new Date(e.target.value));
   }
 
-  const dateformater = (date) => {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
-    let day = (date.getDay() + 1) > 9 ? date.getDay() + 1 : '0' + date.getDay();
-    return `${year}-${month}-${day}`
-  }
+  const columns = useMemo(
+    () => [
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },  Cell: ({cell})=>(dateformater(cell.getValue())) },
+      { header: 'Name', accessorKey: 'name' },
+      { header: 'Address', accessorKey: 'address' },
+      { header: 'Mobile Number', accessorKey: 'mobileno' },
+      {header: 'Salesman', accessorKey:'salesmen'},
+      {header: 'BranchName', accessorKey:'branchname'},
+    ],
+    [],
+  );
+  const ops = [
+    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+    { header: 'Name', accessorKey: 'name' },
+    { header: 'Address', accessorKey: 'address' },
+    { header: 'Mobile Number', accessorKey: 'mobileno' },
+    {header: 'Salesman', accessorKey:'salesmen'},
+      {header: 'BranchName', accessorKey:'branchname'},
+    // { header: 'Email', accessorKey: 'Email', },
+    // { header: 'Company_Name', accessorKey: 'companyName', },
+    // { header: 'Birth_Date', accessorKey: 'birthdate', },
+    // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+    // { header: 'Remarks', accessorKey: 'remarks', },
+    // { header: 'Bank_Name', accessorKey: 'bankname', },
+    // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+    // { header: 'Branch_Name', accessorKey: 'branchname', },
+    // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+    // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+  ]
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: ops.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+  const handleExportData = () => {
 
+    csvExporter.generateCsv(tabledata);
+  };
+  const handleExportRows = (rows) => {
+    csvExporter.generateCsv(rows.map((row) => row.original));
+  };
   const submitDateRangeHandler = (e) => {
     console.log(startDate, endDate);
     let data = mistry.filter((item) => {
@@ -52,15 +111,30 @@ const MistryTable = ({ modalHandler,refresh }) => {
     setTableData(data)
   }
 
-  const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/mistry/delete/${id}`);
-    fetchMistry();
+  const delteHandler = async (mobileno) => {
+    // eslint-disable-next-line no-restricted-globals
+    if(window.confirm("Are you sure ?")){
+      const data = await axios.delete(`/api/v1/mistry/delete/${mobileno}`);
+      fetchMistry();
+    }
   }
 
   const fetchMistry = async () => {
     const { data } = await axios.get("/api/v1/mistry/getall");
+    const newMistries = data.mistries.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : '01/01/1799';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+      }
+    });
+    setOriginalData(data.mistries);
+    setTableData(newMistries);
     setMistry(data.mistries);
-    setTableData(data.mistries);
   }
   const fetchBranches = async () => {
     const { data } = await axios.get("/api/v1/branch/getall");
@@ -82,24 +156,31 @@ const MistryTable = ({ modalHandler,refresh }) => {
   const fetchMistryofBranch = async () => {
     setIsLoading(true);
     sleep(500);
-    // let data=selectedBranch;
-    console.log(selectedBranch);
-    const response = await axios.post("/api/v1/branch/mistry", selectedBranch, { headers: { "Content-Type": "application/json" } });
-    // const { data } = await axios.get("/api/v1/branch/architects");
-    console.log(response);
-    const newarchitects = response.data.mistry;
-    // setArchitects(newarchitects);
-    setTableData(newarchitects);
+    const {data} = await axios.post("/api/v1/branch/mistry", selectedBranch, { headers: { "Content-Type": "application/json" } });
+
+    const newMistries = data.mistries.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+      }
+    });
+
+    setOriginalData(data.mistries);
+    setTableData(newMistries);
     setIsLoading(false);
   }
   const handlebranch = (selected) => {
     console.log(selected);
     // setselectedBranch(selected);
-    selectedBranch = selected;
-    fetchMistryofBranch();
+    setSelectedBranch(selected.value);
+    fetchFilteredMistry(selectedSalesman, selected.value);
   }
   const [salesman, setSalesman] = useState([]);
-  let selectedSalesman = [];
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
 
@@ -118,19 +199,73 @@ const MistryTable = ({ modalHandler,refresh }) => {
     sleep(500);
 
     // console.log(selectedSalesman);
-    const response = await axios.post("/api/v1/salesman/mistry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
+    const {data} = await axios.post("/api/v1/salesman/mistry", selectedSalesman, { headers: { "Content-Type": "application/json" } });
 
-    // console.log(response);
-    const newarchitects = response.data.mistries;
+    const newMistries = data.mistries.map((item)=>{
+      let formateddate = item.date ? dateformater(item.date) : ' ';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+      }
+    });
 
-    setTableData(newarchitects);
+    setOriginalData(data.mistries);
+    setTableData(newMistries);
     setIsLoading(false);
   }
   const handlesalesman = (selected) => {
-    console.log(selected);
+    setSelectedSalesman(selected.value)
+    fetchFilteredMistry(selected.value, selectedBranch);
+  }
 
-    selectedSalesman = selected;
-    fetchArchitectsofSalesman();
+  const fetchFilteredMistry =(salesman, branch) => {
+
+    let filteredData = originalData.filter((item)=>{
+      let isBranch = false;
+      let isSalesman = false;
+
+      if(item.branches.length === 0 && branch===null){
+        isBranch = true;
+      }
+
+      if(item.salesmen.length === 0 && salesman===null){
+        isSalesman = true;
+      }
+      
+      item.branches.forEach((branchObject)=>{
+        if(Object.values(branchObject).includes(branch) || branch===null){
+        isBranch = true;
+      }})
+      item.salesmen.forEach((salesmanObj)=>{
+        if(Object.values(salesmanObj).includes(salesman) || salesman===null){
+          isSalesman = true;
+        }})
+
+      console.log(isBranch, isSalesman)
+      if(isSalesman && isBranch){
+        return true
+      }
+    })
+    console.log(filteredData);
+    let data = filteredData.map((item)=>{
+      let formateddate = item.date ? item.date : '01/01/1799';
+      return {
+        date:formateddate,
+        name:item.name,
+        address:item.address,
+        mobileno:item.mobileno,
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        branchname:item.branches.map((req)=>req.branchname).join('-'),
+        
+      }
+      })
+
+    setMistry(data);
+    setTableData(data);  
   }
 
   useEffect(() => {
@@ -139,39 +274,54 @@ const MistryTable = ({ modalHandler,refresh }) => {
     fetchSalesmen();
 
   }, [refresh]);
-  const handleCallbackCreate = (childData) => {
+
+  useEffect(() => {
+    fetchFilteredMistry(selectedSalesman, selectedBranch);
+  }, [originalData]);
+  
+  const handleCallbackCreate = async(childData) => {
     // console.log("Parent Invoked!!")
     toast.success("Mistry edited");
-    fetchMistry();
+    const { data } = await axios.get("/api/v1/mistry/getall");
+    setOriginalData(data.mistries);
+    // fetchMistry();
+  }
+
+  const getMistryData = (mobileno) => {
+    alert(mobileno);
+    let mistry = originalData.filter((item) => item.mobileno === mobileno);
+    console.log(mistry);
+    setEditModalData(mistry[0]);
+    setEditModal(true);
   }
 
   const customStyles = {
     control: base => ({
-        ...base,
-        minHeight: 55
+      ...base,
+      minHeight: 55
     }),
     dropdownIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     clearIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     multiValue: base => ({
-        ...base,
-        // backgroundColor: variables.colorPrimaryLighter
+      ...base,
+      // backgroundColor: variables.colorPrimaryLighter
     }),
     valueContainer: base => ({
-        ...base,
-        padding: '0px 6px'
+      ...base,
+      padding: '0px 6px'
     }),
     input: base => ({
-        ...base,
-        margin: 0,
-        padding: 0
+      ...base,
+      margin: 0,
+      padding: 0
     })
-};
+  };
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -201,7 +351,7 @@ const MistryTable = ({ modalHandler,refresh }) => {
               type="date"
               // defaultValue="2017-05-24"
               onChange={(e) => startDateHandler(e)}
-              sx={{ width: 180 ,margin:1}}
+              sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -213,7 +363,7 @@ const MistryTable = ({ modalHandler,refresh }) => {
               type="date"
               onChange={(e) => endDateHandler(e)}
               // defaultValue="2017-05-24"
-              sx={{ width: 180 ,margin:1}}
+              sx={{ width: 180, margin: 1 }}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -222,75 +372,95 @@ const MistryTable = ({ modalHandler,refresh }) => {
           </div>
 
         </div>
-        {mistry && <MaterialTable
-          className={Styles.Table}
-          columns={[
-            { title: 'Date', field: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
-            { title: 'Name', field: 'name' },
-            { title: 'Email', field: 'Email', hidden: 'true' },
-            { title: 'Address', field: 'address' },
-            { title: 'Company Name', field: 'companyName', hidden: 'true' },
-            { title: 'Birth Date', field: 'birthdate', hidden: 'true' },
-            { title: 'Marriage Date', field: 'marriagedate', hidden: 'true' },
-            { title: 'Remarks', field: 'remarks', hidden: 'true' },
-            { title: 'Bank Name', field: 'bankname', hidden: 'true' },
-            { title: 'IFS Code', field: 'IFSCcode', hidden: 'true' },
-            { title: 'Branch Name', field: 'branchname', hidden: 'true' },
-            { title: 'Adhar Card', field: 'adharcard', hidden: 'true' },
-            { title: 'Pan Card', field: 'pancard', hidden: 'true' },
-          ]}
-          data={tabledata}
-          isLoading={isLoading}
-          options={{
-            sorting: true,
-            headerStyle: {
-              zIndex: 0
-            },
-            showTitle: false,
-            actionsColumnIndex: -1,
-            filtering: true,
-            exportButton:true
-          }}
-          components={{
-            Container: props => <Paper {...props}
-              elevation={0}
-              style={{
-                padding: 20,
-                width: "100%",
-              }} />
-          }}
+        {mistry &&
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              'mrt-row-actions': {
+                muiTableHeadCellProps: {
+                  align: 'center',
+                },
 
-          actions={[
-            {
-              icon: 'edit',
-              tooltip: 'Edit',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                setEditModalData(rowData);
-                setEditModal(true);
-                console.log(`Edit `, rowData)
-              }
-            },
-            {
-              icon: 'delete',
-              tooltip: 'Delete',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                // Do save operation
-                delteHandler(rowData._id);
-                console.log(`delete `, rowData)
-              }
+                size: 120,
+              },
+            }}
+
+            muiTopToolbarProps={
+              ({ }) => ({
+                color: 'green',
+                sx: { display: 'block' },
+                zIndex: '0'
+              })
             }
-          ]}
-        />}
+            columns={columns}
+            data={tabledata}
+            enableEditing
+            enableRowNumbers
+            rowNumberMode='original'
+            enableTopToolbar={!editModal && !isOpen}
+
+            muiTablePaginationProps={{
+              rowsPerPageOptions: [5, 10],
+              showFirstLastPageButtons: true,
+            }}
+            enableGlobalFilter={true}
+            positionActionsColumn='last'
+            renderRowActions={({ row, table }) => (
+              <Box sx={{ display: 'flex', gap: '1rem' }}>
+                <Tooltip arrow placement="left" title="Edit">
+                  <IconButton onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+                    getMistryData(row.original.mobileno);
+                  }}>
+                    <Edit />
+
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow placement="right" title="Delete">
+                  <IconButton color="error" onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+                    delteHandler(row.original.mobileno);
+                    console.log(`delete `, row)
+                  }}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+            renderTopToolbarCustomActions={({ table }) => (
+              <Box
+                sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+              >
+                <Button
+                  disabled={table.getPrePaginationRowModel().rows.length === 0}
+
+                  onClick={() =>
+                    handleExportRows(table.getPrePaginationRowModel().rows)
+                  }
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >Export All Rows</Button>
+                <Button
+                  className={Styles.bu}
+                  color="primary"
+                  onClick={handleExportData}
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >
+                  Export All Data
+                </Button>
+              </Box>)}
+
+          />}
+
+
 
       </div>
 

@@ -11,7 +11,7 @@ const { createSalesman,
     getInquiriesofSalesman,
     getMistryofSalesman,
     getPMCofSalesman
-     } = require("../controllers/SalesmanController");
+     } = require("../controllers/salesmanController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 router.route("/create").post(isAuthenticatedUser, createSalesman);

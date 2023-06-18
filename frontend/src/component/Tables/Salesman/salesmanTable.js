@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from '../Dealer/DealerTable.module.css'
 import axios from 'axios'
@@ -11,15 +11,32 @@ import { toast, ToastContainer } from 'react-toastify'
 import Select from 'react-select'
 import TextField from '@mui/material/TextField';
 import SalesmanEditForm from '../../Forms/SalesmanEditForm';
-
-const SalesmanTable = ({ modalHandler ,refresh}) => {
-  const [Salesman,setSalesman] = useState([]);
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import MaterialReactTable from 'material-react-table';
+import { ExportToCsv } from 'export-to-csv';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  Stack,
+  // TextField,
+  Tooltip,
+} from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+const SalesmanTable = ({ modalHandler, refresh, isOpen }) => {
+  const [Salesman, setSalesman] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
   const [branches, setBranches] = useState([]);
   let selectedBranch = [];
   const [isLoading, setIsLoading] = useState(false)
   const [tabledata, setTableData] = useState([])
+  const [originalData, setOriginalData] = useState([]);
   const [startDate, setStartDate] = useState(new Date('2022-08-01'));
   const [endDate, setEndDate] = useState(new Date());
 
@@ -53,16 +70,29 @@ const SalesmanTable = ({ modalHandler ,refresh}) => {
     setTableData(data)
   }
 
-  const delteHandler = async (id) => {
-    const data = await axios.delete(`/api/v1/salesman/delete/${id}`);
-    fetchSalesman();
+  const delteHandler = async (mobileno) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (window.confirm("Are you sure ?")) {
+      const data = await axios.delete(`/api/v1/salesman/delete/${mobileno}`);
+      fetchSalesman();
+    }
   }
 
   const fetchSalesman = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
     console.log(data);
     setSalesman(data.salesmans);
-    setTableData(data.salesmans);
+    setOriginalData(data.salesmans);
+    let data1 = data.salesmans.map((item) => {
+      return {
+        date: item.date,
+        name: item.name,
+        address: item.address,
+        mobileno: item.mobileno
+      }
+    })
+
+    setTableData(data1);
   }
 
   const fetchBranches = async () => {
@@ -113,34 +143,84 @@ const SalesmanTable = ({ modalHandler ,refresh}) => {
     fetchSalesman();
   }
 
+
+  const getSalesManData = (mobileno) => {
+    alert(mobileno);
+    let salesman = originalData.filter((item) => item.mobileno === mobileno);
+    console.log(salesman);
+    setEditModalData(salesman[0]);
+    setEditModal(true);
+  }
+
   const customStyles = {
     control: base => ({
-        ...base,
-        minHeight: 55
+      ...base,
+      minHeight: 55
     }),
     dropdownIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     clearIndicator: base => ({
-        ...base,
-        padding: 4
+      ...base,
+      padding: 4
     }),
     multiValue: base => ({
-        ...base,
-        // backgroundColor: variables.colorPrimaryLighter
+      ...base,
+      // backgroundColor: variables.colorPrimaryLighter
     }),
     valueContainer: base => ({
-        ...base,
-        padding: '0px 6px'
+      ...base,
+      padding: '0px 6px'
     }),
     input: base => ({
-        ...base,
-        margin: 0,
-        padding: 0
+      ...base,
+      margin: 0,
+      padding: 0
     })
-};
+  };
+  const columns = useMemo(
+    () => [
+      { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+      { header: 'Name', accessorKey: 'name' },
+      { header: 'Address', accessorKey: 'address' },
+      { header: 'Mobile Number', accessorKey: 'mobileno' },
+    ],
+    [],
+  );
+  const ops = [
+    { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
+    { header: 'Name', accessorKey: 'name' },
+    { header: 'Address', accessorKey: 'address' },
+    { header: 'Mobile Number', accessorKey: 'mobileno' },
+    // { header: 'Email', accessorKey: 'Email', },
+    // { header: 'Company_Name', accessorKey: 'companyName', },
+    // { header: 'Birth_Date', accessorKey: 'birthdate', },
+    // { header: 'Marriage_Date', accessorKey: 'marriagedate', },
+    // { header: 'Remarks', accessorKey: 'remarks', },
+    // { header: 'Bank_Name', accessorKey: 'bankname', },
+    // { header: 'IFS_Code', accessorKey: 'IFSCcode', },
+    // { header: 'Branch_Name', accessorKey: 'branchname', },
+    // { header: 'Adhar_Card', accessorKey: 'adharcard', },
+    // { header: 'Pan_Card', accessorKey: 'pancard', columnVisibility: 'false' },
+  ]
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: ops.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+  const handleExportData = () => {
 
+    csvExporter.generateCsv(tabledata);
+  };
+  const handleExportRows = (rows) => {
+    csvExporter.generateCsv(rows.map((row) => row.original));
+  };
   return (
     <div className={Styles.container}>
       <div className={Styles.table}>
@@ -155,107 +235,100 @@ const SalesmanTable = ({ modalHandler ,refresh}) => {
           </div>
         </div>
 
-        <div className={Styles.Yellow}>
-        <div className={Styles.DateRangeContainer}>
-          {/* <label>Branch</label> */}
-          <Select styles={customStyles} onChange={(e) => handlebranch(e)} options={branches} />
-          <TextField
-              className={Styles.InputDate}
-              id="date"
-              label="Start Date"
-              type="date"
-              // defaultValue="2017-05-24"
-              onChange={(e) => startDateHandler(e)}
-              sx={{ width: 180 ,margin:1}}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              className={Styles.InputDate}
-              id="date"
-              label="End Date"
-              type="date"
-              onChange={(e) => endDateHandler(e)}
-              // defaultValue="2017-05-24"
-              sx={{ width: 180 ,margin:1}}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
-        </div>
-        </div>
 
-        {Salesman && <MaterialTable
-          isLoading={isLoading}
-          className={Styles.Table}
-          columns={[
-            { title: 'Date', field: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
-            { title: 'Name', field: 'name' },
-            { title: 'Email', field: 'Email', hidden: 'true' },
-            { title: 'Address', field: 'address' },
-            { title: 'Company Name', field: 'companyName', hidden: 'true' },
-            { title: 'Birth Date', field: 'birthdate', hidden: 'true' },
-            { title: 'Marriage Date', field: 'marriagedate', hidden: 'true' },
-            { title: 'Remarks', field: 'remarks', hidden: 'true' },
-            { title: 'Bank Name', field: 'bankname', hidden: 'true' },
-            { title: 'IFS Code', field: 'IFSCcode', hidden: 'true' },
-            { title: 'Branch Name', field: 'branchname', hidden: 'true' },
-            { title: 'Adhar Card', field: 'adharcard', hidden: 'true' },
-            { title: 'Pan Card', field: 'pancard', hidden: 'true' },
-          ]}
-          data={tabledata}
-          options={{
-            sorting: true,
-            headerStyle: {
-              zIndex: 0
-            },
-            showTitle: false,
-            actionsColumnIndex: -1,
-            filtering: true,
-            exportButton:true
-          }}
-          components={{
-            Container: props => <Paper {...props}
-              elevation={0}
-              style={{
-                padding: 20,
-                width: "100%",
-              }} />
-          }}
 
-          actions={[
-            {
-              icon: 'edit',
-              tooltip: 'Edit',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                setEditModalData(rowData);
-                setEditModal(true);
-                console.log(`Edit `, rowData)
-              }
-            },
-            {
-              icon: 'delete',
-              tooltip: 'Delete',
-              onClick: (event, rowData) => {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth"
-                });
-                // Do save operation
-                delteHandler(rowData._id);
-                console.log(`delete `, rowData)
-              }
+        {Salesman &&
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              'mrt-row-actions': {
+                muiTableHeadCellProps: {
+                  align: 'center',
+                },
+
+                size: 120,
+              },
+            }}
+
+            muiTopToolbarProps={
+              ({ }) => ({
+                color: 'green',
+                sx: { display: 'block' },
+                zIndex: '0'
+              })
             }
-          ]}
-        />}
+            columns={columns}
+            data={tabledata}
+            enableEditing
+            enableRowNumbers
+            rowNumberMode='original'
+            enableTopToolbar={!editModal && !isOpen}
+
+            muiTablePaginationProps={{
+              rowsPerPageOptions: [5, 10],
+              showFirstLastPageButtons: true,
+            }}
+            enableGlobalFilter={true}
+            positionActionsColumn='last'
+            renderRowActions={({ row, table }) => (
+              <Box sx={{ display: 'flex', gap: '1rem' }}>
+                <Tooltip arrow placement="left" title="Edit">
+                  <IconButton onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+
+                    getSalesManData(row.original.mobileno)
+                    setEditModal(true);
+                  }}>
+                    <Edit />
+
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow placement="right" title="Delete">
+                  <IconButton color="error" onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth"
+                    });
+                    delteHandler(row.original.mobileno);
+                    console.log(`delete `, row)
+                  }}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+            renderTopToolbarCustomActions={({ table }) => (
+              <Box
+                sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+              >
+                <Button
+                  disabled={table.getPrePaginationRowModel().rows.length === 0}
+
+                  onClick={() =>
+                    handleExportRows(table.getPrePaginationRowModel().rows)
+                  }
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >Export All Rows</Button>
+                <Button
+                  className={Styles.bu}
+                  color="primary"
+                  onClick={handleExportData}
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >
+                  Export All Data
+                </Button>
+              </Box>)}
+
+          />}
+
+
+
 
       </div>
 

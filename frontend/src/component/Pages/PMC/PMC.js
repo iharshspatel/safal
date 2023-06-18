@@ -47,7 +47,7 @@ const PMC = () => {
         />
     <div className={Styles.rightcontainer}>
     <StatBox name="PMC" username={user.name}/>
-    <PMCTable modalHandler={modalHandler} refresh={refresh}/>
+    <PMCTable modalHandler={modalHandler} refresh={refresh} isOpen={isOpen}/>
     {
       isOpen ? <Modal setIsOpen={setIsOpen}>
         <AnimatePresence>

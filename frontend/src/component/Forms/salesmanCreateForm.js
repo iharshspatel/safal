@@ -139,7 +139,7 @@ const SalesmanCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                 <div className={Styles.personalDetails1}>
 
                     <label htmlFor='name'>Name</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.name} name="name" placeholder='Dealer Name' />
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.name} name="name" placeholder='Salesman Name' />
 
                     <label htmlFor='mobileno'>Mobile Number</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.mobileno} name="mobileno" placeholder='Mobile Number' />
@@ -163,10 +163,11 @@ const SalesmanCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.birthdate} name="birthdate" type="date" placeholder='Birthdate' />
 
                     <label htmlFor='marrieagedate'>Marriage Date</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.marrieagedate} name="marriagedate" type="date" placeholder='Annivarsary' />
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.marriagedate} name="marriagedate" type="date" placeholder='Annivarsary' />
 
-                    <label htmlFor='companyName'>Company Name</label>
+                    {/* <label htmlFor='companyName'>Company Name</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.companyName} name="companyName" placeholder='Company Name' />
+                    */}
                     <label>Branches</label>
                     <ReactSelect lassName={Styles.inputTag}
                         options={Branches}
@@ -185,44 +186,7 @@ const SalesmanCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
                 </div>
             </div>
 
-            <h1 className={Styles.heading}>Bank Details</h1>
-            <div className={Styles.bankDetails}>
-
-                <div className={Styles.bankDetails1}>
-                    <label htmlFor='bankname'>Bank Name</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.bankname} name="bankname" placeholder='Bank Name' />
-
-                    <label htmlFor='branchname'>Branch Name</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.branchname} name="branchname" placeholder='Branch Name' />
-
-                    <label htmlFor='IFSCCode'>IFSC Code</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.IFSCcode} name="IFSCcode" placeholder='IFSC Code' />
-                    
-                    {/* <label>Salesmen</label>
-                    <ReactSelect className={Styles.inputTag}
-                        options={Salesmen}
-                        isMulti
-                        closeMenuOnSelect={false}
-                        hideSelectedOptions={false}
-                        components={{
-                            Option
-                        }}
-                        onChange={Salesmenchangehandler}
-                        allowSelectAll={true}
-                        value={selectedSalesmen}
-                    /> */}
-                </div>
-
-                <div className={Styles.bankDetails2}>
-                    <label htmlFor='adharcard'>Adhar Card</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.adharcard} name="adharcard" placeholder='Adhar Card' />
-
-                    <label htmlFor='pancard'>Pan Card</label>
-                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.pancard} name="pancard" placeholder='Pan Card' />
-
-                </div>
-            </div>
-
+            
             <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={submitHandler} type="Submit">Submit</button>
         </div>
     )
