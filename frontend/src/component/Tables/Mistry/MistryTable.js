@@ -29,6 +29,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
 const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const [mistry, setMistry] = useState([]);
   const [editModal, setEditModal] = useState(false);
@@ -40,6 +41,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
   const [branches, setBranches] = useState([]);
   let [selectedBranch,setSelectedBranch] = useState(null);
   let [selectedSalesman,setSelectedSalesman] = useState(null);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const [isLoading, setIsLoading] = useState(false);
   const startDateHandler = (e) => {
@@ -55,9 +57,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
       { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },  Cell: ({cell})=>(dateformater(cell.getValue())) },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
+      { header: 'Area', accessorKey: 'area' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
       {header: 'Salesman', accessorKey:'salesmen'},
       {header: 'BranchName', accessorKey:'branchname'},
+      { header: 'Remarks', accessorKey: 'remarks' },
     ],
     [],
   );
@@ -65,9 +69,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
+    { header: 'Area', accessorKey: 'area' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
     {header: 'Salesman', accessorKey:'salesmen'},
       {header: 'BranchName', accessorKey:'branchname'},
+      { header: 'Remarks', accessorKey: 'remarks' },
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },
@@ -127,9 +133,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
+        remarks:item.remarks
       }
     });
     setOriginalData(data.mistries);
@@ -164,9 +172,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
+        remarks:item.remarks
       }
     });
 
@@ -207,9 +217,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
+        remarks:item.remarks
       }
     });
 
@@ -257,10 +269,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
-        
+        remarks:item.remarks
       }
       })
 
@@ -372,7 +385,7 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
           </div>
 
         </div>
-        {mistry &&
+        {(mistry && user.role === "admin") &&
           <MaterialReactTable
             displayColumnDefOptions={{
               'mrt-row-actions': {

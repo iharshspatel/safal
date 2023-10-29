@@ -14,6 +14,10 @@ const pmcSchema = new mongoose.Schema({
         required:[true, "Please Enter Mobile Number"]
     },
     address:String,
+    area:{
+        type:String,
+        default:""
+    },
     companyName:String,
     birthdate:Date,
     marriagedate:Date,

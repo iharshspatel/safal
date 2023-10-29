@@ -13,6 +13,7 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     email: "",
     mobileno: "",
     address: "",
+    area:"",
     companyName: "",
     birthdate: "",
     marriagedate: "",
@@ -74,6 +75,7 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       email: formData.email,
       mobileno: formData.mobileno,
       address: formData.address,
+      area:formData.area,
       companyName: formData.companyName,
       birthdate: formData.birthdate,
       marriagedate: formData.marriagedate,
@@ -138,6 +140,9 @@ const ArchitectCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
           <label htmlFor='AddressLine1'>Address</label>
           <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.address} name="address" placeholder='address' />
+
+          <label htmlFor='area'>Area</label>
+          <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.area} name="area" placeholder='area' />
 
           <label htmlFor='AddressLine1'>Remarks</label>
           <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} value={formData.remarks} name="remarks" placeholder='Remarks' />

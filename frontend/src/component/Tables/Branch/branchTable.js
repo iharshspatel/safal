@@ -26,11 +26,14 @@ import {
     Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
 
 
 const BranchTable = ({ modalHandler, refresh ,isOpen}) => {
     const [tabledata, setTableData] = useState([])
     const [branches, setBranches] = useState([]);
+    const { user, isAuthenticated } = useSelector((state) => state.user);
+
     const delteHandler = async (id) => {
         if(window.confirm("Are you sure ?")){
             const data = await axios.delete(`/api/v1/branch/delete/${id}`);
@@ -117,7 +120,7 @@ const BranchTable = ({ modalHandler, refresh ,isOpen}) => {
                     </div>
                 </div>
 
-                {branches &&
+                {(branches && user.role === "admin" ) &&
                     <MaterialReactTable
                         displayColumnDefOptions={{
                             'mrt-row-actions': {

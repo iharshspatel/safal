@@ -29,6 +29,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
 const PMCTable = ({ modalHandler, refresh,isOpen }) => {
   const [PMC, setPMC] = useState([]);
   const [editModal, setEditModal] = useState(false);
@@ -40,6 +41,7 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
   const [branches, setBranches] = useState([]);
   let [selectedBranch,setSelectedBranch] = useState(null);
   let [selectedSalesman,setSelectedSalesman] = useState(null);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const [isLoading, setIsLoading] = useState(false)
   const startDateHandler = (e) => {
@@ -71,7 +73,9 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
       { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" },  Cell: ({cell})=>(dateformater(cell.getValue())) },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
+      { header: 'area', accessorKey: 'area' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
+      { header: 'Remarks', accessorKey: 'remarks' },
     ],
     [],
   );
@@ -79,7 +83,9 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
     { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
+    { header: 'area', accessorKey: 'area' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
+    { header: 'Remarks', accessorKey: 'remarks' },
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },
@@ -199,7 +205,9 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
+        remarks:item.remarks
       }
       })
 
@@ -299,7 +307,7 @@ const PMCTable = ({ modalHandler, refresh,isOpen }) => {
           </div>
         </div>
 
-        {PMC &&
+        {(PMC && user.role === "admin" ) &&
           <MaterialReactTable
             displayColumnDefOptions={{
               'mrt-row-actions': {

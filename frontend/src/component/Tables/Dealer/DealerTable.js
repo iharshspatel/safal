@@ -28,8 +28,10 @@ import {
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import ReactSelect from 'react-select';
+import { useSelector } from 'react-redux';
 
 const DealerTable = ({ modalHandler, refresh, isOpen }) => {
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const [dealers, setDealers] = useState([]);
   const [editModal, setEditModal] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -284,7 +286,7 @@ const DealerTable = ({ modalHandler, refresh, isOpen }) => {
           </div>
         </div>
 
-        {dealers &&
+        {(dealers && user.role === "admin" )&&
           <MaterialReactTable
             displayColumnDefOptions={{
               'mrt-row-actions': {

@@ -20,6 +20,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
 const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
 
   const [inquiries, setInquiries] = useState([]);
@@ -34,6 +35,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   const [salesman, setSalesman] = useState([]);
   let [selectedBranch,setSelectedBranch] = useState(null);
   let [selectedSalesman,setSelectedSalesman] = useState(null);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const fetchSalesmen = async () => {
     const { data } = await axios.get("/api/v1/salesman/getall");
@@ -164,7 +166,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         stage:item.stage,
         mobileno:item.mobileno,
         requirement:item.requirement.map((req)=>req.requirement).join('-'),
-        salesmen:item.salesmen.map((req)=>req.name).join('-')
+        salesmen:item.salesmen.map((req)=>req.name).join('-'),
+        remarks:item.remarks,
       }
     })
 
@@ -184,7 +187,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
         stage:item.stage,
         requirement:item.requirement.map((req)=>req.requirement).join('-'),
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
-        mobileno:item.mobileno
+        mobileno:item.mobileno,
+        remarks:item.remarks
       }
     })
     console.log(modifyData(inquires))
@@ -297,6 +301,7 @@ const columns = useMemo(
     {header: 'Requirement', accessorKey: 'requirement'},
     {header: 'Salesman', accessorKey:'salesmen'},
     { header: 'Mobile Number', accessorKey: 'mobileno' },
+    { header: 'Remarks', accessorKey: 'remarks' },
   ],
   [],
 );
@@ -308,6 +313,7 @@ const ops = [
   {header: 'Requirement', accessorKey: 'requirement'},
   {header: 'Salesman', accessorKey:'salesmen'},
   { header: 'Mobile Number', accessorKey: 'mobileno' },
+  { header: 'Remarks', accessorKey: 'remarks' },
 ]
 const csvOptions = {
   fieldSeparator: ',',
@@ -378,7 +384,7 @@ const handleExportRows = (rows) => {
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>
-        {inquiries &&
+        {(inquiries && user.role === "admin") &&
           <MaterialReactTable
             displayColumnDefOptions={{
               'mrt-row-actions': {
