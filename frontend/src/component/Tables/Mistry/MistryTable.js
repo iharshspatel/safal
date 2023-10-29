@@ -217,9 +217,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
+        remarks:item.remarks
       }
     });
 
@@ -267,10 +269,11 @@ const MistryTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
-        
+        remarks:item.remarks
       }
       })
 
