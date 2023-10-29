@@ -17,6 +17,7 @@ import { ExportToCsv } from 'export-to-csv';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Stack, Tooltip, } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import TaskEditForm from '../../Forms/TaskEditForm';
+import { useSelector } from 'react-redux';
 const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
 
     const [customers, setCustomers] = useState([]);
@@ -29,6 +30,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
     const [isLoading, setIsLoading] = useState(false);
     let [selectedSalesman, setSelectedSalesman] = useState(null);
     const [edited, setEdited] = useState(false)
+    const { user, isAuthenticated } = useSelector((state) => state.user);
 
     const modifyData = (data) => {
         let datass1 = data.map((d) => {
@@ -335,7 +337,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                         <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
                     </div>
                 </div>
-                {customers &&
+                {(customers && user.role === "admin" ) &&
                     <MaterialReactTable
                         displayColumnDefOptions={{
                             'mrt-row-actions': {

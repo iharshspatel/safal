@@ -29,8 +29,10 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
 const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
 
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
   const [tabledata, setTableData] = useState([])
   const [originalData, setOriginalData] = useState([]);
@@ -127,10 +129,12 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
         date: formateddate,
         name: item.name,
         address: item.address,
+        area:item.area,
         mobileno: item.mobileno,
         // tag:item.tag,
         mistry: item.mistryName && item.mistryNumber ? item.mistryName + ' - ' + item.mistryNumber : '',
-        architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : ''
+        architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : '',
+        remarks:item.remarks
       }
     });
     setOriginalData(modifiedData);
@@ -191,10 +195,12 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
         date: formateddate,
         name: item.name,
         address: item.address,
+        area:item.area,
         mobileno: item.mobileno,
         // tag:item.tag
         mistry: item.mistryName && item.mistryNumber ? item.mistryName + ' - ' + item.mistryNumber : '',
-        architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : ''
+        architect: item.architectName && item.architectNumber ? item.architectName + ' - ' + item.architectNumber : '',
+        remarks:item.remarks
       }
     })
 
@@ -288,11 +294,12 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
       },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
+      { header: 'Area', accessorKey: 'area' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
       // { header: 'Tag', accessorKey:'tag'},
       { header: 'Mistry Name', accessorKey: 'mistry' },
       { header: 'Architect Name', accessorKey: 'architect' },
-
+      { header: 'Remarks', accessorKey: 'remarks' },
     ],
     [],
   );
@@ -300,10 +307,12 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, },
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
+    { header: 'Area', accessorKey: 'area' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
     // { header: 'Tag', accessorKey:'tag'},
     { header: 'Mistry Name', accessorKey: 'mistry' },
     { header: 'Architect Name', accessorKey: 'architect' },
+    { header: 'Remarks', accessorKey: 'remarks' },
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },
@@ -381,7 +390,7 @@ const CustomerTable = ({ modalHandler, refresh, isOpen }) => {
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>
-        {customers &&
+        {(customers && user.role === "admin") &&
           <MaterialReactTable
             displayColumnDefOptions={{
               'mrt-row-actions': {

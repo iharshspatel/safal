@@ -61,6 +61,7 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
     email: data.email,
     mobileno: data.mobileno,
     address: data.address,
+    area:data.area,
     remarks: data.remarks,
     orderValue: data.orderValue,
     salesPerson: data.salesPerson,
@@ -103,6 +104,7 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
       email: formData.email,
       mobileno: formData.mobileno,
       address: formData.address,
+      area:formData.area,
       companyName: formData.companyName,
       birthdate: formData.birthdate,
       marriagedate: formData.marriagedate,
@@ -233,6 +235,10 @@ const CustomerEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => 
 
           <label htmlFor='address'>Address</label>
           <input className={Styles.inputTag} name="address" value={formData.address} onChange={(e) => formHandler(e)} placeholder='Address' />
+
+          <label htmlFor='area'>area</label>
+          <input className={Styles.inputTag} name="area" value={formData.area} onChange={(e) => formHandler(e)} placeholder='area' />
+
 
           <label htmlFor='ordervalue'>Order Value</label>
           <input className={Styles.inputTag} name="orderValue" value={formData.orderValue} onChange={(e) => formHandler(e)} placeholder='Order Value' />

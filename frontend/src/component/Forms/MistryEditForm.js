@@ -52,6 +52,7 @@ const MistryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
         email: data.email,
         mobileno: data.mobileno,
         address: data.address,
+        area:data.area,
         companyName: data.companyName,
         birthdate: data.birthdate ? data.birthdate.substr(0, 10) : null,
         marriagedate: data.marriagedate ? data.marriagedate.substr(0, 10) : null,
@@ -87,6 +88,7 @@ const MistryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             email: formData.email,
             mobileno: formData.mobileno,
             address: formData.address,
+            area:formData.area,
             companyName: formData.companyName,
             birthdate: formData.birthdate,
             marriagedate: formData.marriagedate,
@@ -158,6 +160,8 @@ pauseOnHover
                     <label htmlFor='AddressLine1'>Address</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} defaultValue={formData.address} value={formData.address} name="address" placeholder='address' />
 
+                    <label htmlFor='area'>Area</label>
+                    <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} defaultValue={formData.area} value={formData.area} name="area" placeholder='area' />
 
                     <label htmlFor='AddressLine1'>Remarks</label>
                     <input className={Styles.inputTag} onChange={(e) => { formHandler(e) }} defaultValue={formData.remarks} value={formData.remarks} name="remarks" placeholder='Remarks' />

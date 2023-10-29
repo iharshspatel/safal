@@ -28,6 +28,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { useSelector } from 'react-redux';
 const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   const [architects, setArchitects] = useState([]);
   const [editModal, setEditModal] = useState(false);
@@ -40,6 +41,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
   let [selectedBranch,setSelectedBranch] = useState(null);
   let [selectedSalesman,setSelectedSalesman] = useState(null);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const startDateHandler = (e) => {
     setStartDate(new Date(e.target.value));
@@ -87,9 +89,11 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
+        remarks:item.remarks
       }
     });
     console.log(newarchitects, "<========================");
@@ -183,9 +187,11 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
         date:formateddate,
         name:item.name,
         address:item.address,
+        area:item.area,
         mobileno:item.mobileno,
         salesmen:item.salesmen.map((req)=>req.name).join('-'),
         branchname:item.branches.map((req)=>req.branchname).join('-'),
+        remarks:item.remarks
         
       }
       })
@@ -248,9 +254,11 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
       Cell: ({cell})=>(dateformater(cell.getValue())) },
       { header: 'Name', accessorKey: 'name' },
       { header: 'Address', accessorKey: 'address' },
+      { header: 'Area', accessorKey: 'area' },
       { header: 'Mobile Number', accessorKey: 'mobileno' },
       {header: 'Salesman', accessorKey:'salesmen'},
       {header: 'BranchName', accessorKey:'branchname'},
+      { header: 'Remarks', accessorKey: 'remarks' },
     ],
     [],
   );
@@ -258,9 +266,11 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
     { header: 'Date', accessorKey: 'date', type: "date", dateSetting: { locale: "en-GB" }, Cell: ({cell})=>(dateformater(cell.getValue())) },
     { header: 'Name', accessorKey: 'name' },
     { header: 'Address', accessorKey: 'address' },
+    { header: 'Area', accessorKey: 'area' },
     { header: 'Mobile Number', accessorKey: 'mobileno' },
     {header: 'Salesman', accessorKey:'salesmen'},
     {header: 'BranchName', accessorKey:'branchname'},
+    { header: 'Remarks', accessorKey: 'remarks' },
     // { header: 'Email', accessorKey: 'Email', },
     // { header: 'Company_Name', accessorKey: 'companyName', },
     // { header: 'Birth_Date', accessorKey: 'birthdate', },
@@ -338,7 +348,7 @@ const ArchitecTable = ({ modalHandler, refresh, isOpen }) => {
             <button className={Styles.SubmitButton} onClick={(e) => submitDateRangeHandler(e)} type="submit"> Submit </button>
           </div>
         </div>
-        {architects &&
+        {(architects&& user.role === "admin") &&
           <MaterialReactTable
             displayColumnDefOptions={{
               'mrt-row-actions': {

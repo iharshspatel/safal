@@ -21,6 +21,7 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
     email: "",
     mobileno: "",
     address: "",
+    area:"",
     companyName: "",
     birthdate: "",
     marriagedate: "",
@@ -125,6 +126,7 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
       email: formData.email,
       mobileno: formData.mobileno,
       address: formData.address,
+      area:formData.area,
       companyName: formData.companyName,
       birthdate: formData.birthdate,
       marriagedate: formData.marriagedate,
@@ -218,6 +220,9 @@ const CustomerCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
           <label htmlFor='address'>Address</label>
           <input className={Styles.inputTag} name="address" value={formData.address} onChange={(e) => formHandler(e)} placeholder='Address' />
+
+          <label htmlFor='area'>Area</label>
+          <input className={Styles.inputTag} name="area" value={formData.area} onChange={(e) => formHandler(e)} placeholder='area' />
 
           <label htmlFor='ordervalue'>Order Value</label>
           <input className={Styles.inputTag} name="orderValue" value={formData.orderValue} onChange={(e) => formHandler(e)} placeholder='Order Value' />

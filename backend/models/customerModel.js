@@ -15,6 +15,10 @@ const customerSchema = new mongoose.Schema({
         required:[true, "Please Enter Mobile Number"]
     },
     address:String,
+    area:{
+        type:String,
+        default:""
+    },
     birthdate:String,
     marriagedate:String,
     date:Date,
