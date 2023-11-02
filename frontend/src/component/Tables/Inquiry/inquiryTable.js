@@ -179,7 +179,7 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
   const fetchInquiry = async () => {
     const { data } = await axios.get("/api/v1/inquiry/getall");
     if(user.role !== "admin"){
-      data.inquiries = data.inquiries.filter((inquiry)=>inquiry.stage !== "Process")
+      data.inquiries = data.inquiries.filter((inquiry)=>inquiry.stage === "Process")
     }
     setOriginalData(data.inquiries);
     let inquires = data.inquiries.map((item)=>{
