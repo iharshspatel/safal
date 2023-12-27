@@ -240,7 +240,8 @@ const InquiryTable = ({ modalHandler ,modalHandler2,refresh,isOpen}) => {
           stage:item.stage,
           requirement:item.requirement.map((req)=>req.requirement).join('-'),
           salesmen:item.salesmen.map((req)=>req.name).join('-'),
-          mobileno:item.mobileno
+          mobileno:item.mobileno,
+          remarks:item.remarks
         }
       })
     setInquiries(modifyData(data));
