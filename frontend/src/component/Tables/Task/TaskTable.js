@@ -110,7 +110,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                 date: formateddate,
                 tag: item.tag,
                 remarks: item.remarks,
-                salesman: item.salesmanId.name,
+                salesman: item.salesmanId?.name,
                 _id: item._id,
                 architect: item.architectTag ? item.architectTag.name + ' - ' + item.architectTag.mobileno : '',
                 mistry: item.mistryTag ? item.mistryTag.name + ' - ' + item.mistryTag.mobileno : '',
@@ -130,7 +130,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
                 date: formateddate,
                 tag: item.tag,
                 remarks: item.remarks,
-                salesman: item.salesmanId.name,
+                salesman: item.salesmanId?.name,
                 _id: item._id,
                 architect: item.architectTag ? item.architectTag.name + ' - ' + item.architectTag.mobileno : '',
                 mistry: item.mistryTag ? item.mistryTag.name + ' - ' + item.mistryTag.mobileno : '',
@@ -146,7 +146,7 @@ const TaskTable = ({ modalHandler, refresh, isOpen, doRefresh }) => {
     };
 
     const fetchFilteredCustomers = (salesman) => {
-        let filteredData = originalData.filter((item) => item.salesmanId.name === salesman)
+        let filteredData = originalData.filter((item) => item?.salesmanId?.name === salesman)
         let data = filteredData.map((item) => {
             let formateddate = item.date ? item.date : ' ';
             return {

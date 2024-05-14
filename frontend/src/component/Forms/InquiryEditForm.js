@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import Option from '../DropDown/Options'
 import Select from 'react-select'
 import { default as ReactSelect } from "react-select";
+import { useSelector } from 'react-redux'
 
 const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const [Branches, setBranches] = useState([]);
@@ -193,7 +194,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     let id = data._id;
     const [formData, setFormData] = useState(initialState)
     const [isDisabled, setIsDisabled] = useState(false);
-
+    const { user, isAuthenticated } = useSelector((state) => state.user);
     const formHandler = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -444,7 +445,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
                 </div>
             </div>
 
-            <div className={Styles.bankDetails}>
+          { user.role == "admin" && <div className={Styles.bankDetails}>
                 <div className={Styles.bankDetails1}>
 
                     <label htmlFor='name'>Mistry Tag</label>
@@ -462,7 +463,7 @@ const InquiryEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
                     <label htmlFor='name'>PMC Tag</label>
                     <Select defaultValue={deafultPMC} selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
                 </div>
-            </div>
+            </div>}
             <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
         </div>
 

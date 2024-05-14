@@ -4,6 +4,7 @@ import Styles from './TaskCreateForm.module.css'
 import axios from 'axios'
 import { default as ReactSelect } from "react-select";
 import Select from 'react-select'
+import { useSelector } from 'react-redux';
 const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     const [Salesmen, setSalesmen] = useState([]);
     let initialState = {
@@ -25,7 +26,7 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
     // const [Dealers, setDealers] = useState([]);
     // const [PMCs, setPMCs] = useState([]);
     const [defaultSalesman, setDefaultSalesman] = useState(() => data.salesmanId ? { value: data.salesmanId._id, label: `${data.salesmanId.name}` } : "");
-
+    const { user, isAuthenticated } = useSelector((state) => state.user);
     const getAllsalesmen = async () => {
         const { data } = await axios.get("/api/v1/salesman/getall");
         const salesmen = data.salesmans.map((salesman) => ({ value: salesman._id, label: `${salesman.name}-${salesman.mobileno}` }))
@@ -149,7 +150,7 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
             </div>
 
 
-            <div className={Styles.bankDetails}>
+            {user.role == "admin" && <div className={Styles.bankDetails}>
                 <div className={Styles.bankDetails1}>
 
                     <label htmlFor='name'>Mistry Tag</label>
@@ -167,7 +168,7 @@ const TaskEditForm = ({ modalHandler, data, setIsOpen, parentCallback }) => {
                     <label htmlFor='name'>PMC Tag</label>
                     <Select defaultValue={deafultPMC} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
                 </div> */}
-            </div>
+            </div>}
             <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
         </div>
     )
