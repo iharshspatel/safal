@@ -6,6 +6,7 @@ import axios from 'axios'
 import Select from 'react-select'
 import { default as ReactSelect } from "react-select";
 import Option from '../DropDown/Options'
+import { useSelector } from 'react-redux'
 const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
   const [architects, setArchitects] = useState([]);
   const [Mistries, setMistries] = useState([]);
@@ -126,7 +127,7 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
 
   ]
   const [formData, setFormData] = useState(initialState)
-
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const formHandler = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -378,7 +379,7 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
         </div>
       </div>
 
-      <div className={Styles.bankDetails}>
+{user.role =="admin" &&      <div className={Styles.bankDetails}>
         <div className={Styles.bankDetails1}>
 
            <label htmlFor='name'>Mistry Tag</label>
@@ -396,7 +397,7 @@ const InquiryCreateForm = ({ modalHandler, setIsOpen, parentCallback }) => {
           <label htmlFor='name'>PMC Tag</label>
           <Select selectedValue={formData.pmcTag} onChange={(e) => PMCFormHandler(e)} options={PMCs} />
         </div>
-      </div>
+      </div>}
       <button disabled={isDisabled} className={isDisabled ? Styles.disable : Styles.submitButton} onClick={(e) => submitHandler(e)} type="Submit">Submit</button>
     </div>
   )
